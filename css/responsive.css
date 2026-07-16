@@ -181,7 +181,10 @@
   /* Blur is the main scroll-jank risk on mid-range phones: shrink the radius
      and turn the one large frosted surface solid. */
   .glass-backdrop {
-    background: color-mix(in srgb, var(--color-white) 92%, transparent);
+    /* Solid white, matching the reduced-transparency value — a 92% tint here
+       would win the specificity tie against components.css's solid fallback
+       (same specificity, later file) and break the collapse-to-solid promise. */
+    background: var(--color-white);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
