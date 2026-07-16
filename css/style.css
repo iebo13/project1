@@ -124,8 +124,6 @@ p {
   padding-inline: var(--container-pad);
 }
 
-.container--wide  { max-width: var(--container-wide); }
-.container--narrow { max-width: var(--container-narrow); }
 
 .section {
   padding-block: var(--section-pad-y);
@@ -1607,102 +1605,19 @@ p {
   margin-bottom: var(--space-12);
 }
 
-/* ---------- Reviews page extra ---------- */
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: var(--space-6);
-}
 
-.reviews-summary {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-12);
-  align-items: center;
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-12);
-  margin-bottom: var(--space-16);
-  box-shadow: var(--shadow-md);
-}
 
-.reviews-summary__score {
-  text-align: center;
-}
 
-.reviews-summary__num {
-  font-size: var(--fs-6xl);
-  font-weight: var(--fw-extrabold);
-  background: var(--gradient-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
 
-.reviews-summary__stars {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  margin-top: var(--space-3);
-  color: #F59E0B;
-}
 
-.reviews-summary__stars svg {
-  width: 24px;
-  height: 24px;
-}
 
-.reviews-summary__count {
-  margin-top: var(--space-2);
-  color: var(--color-muted);
-  font-size: var(--fs-sm);
-}
 
-.reviews-summary__bars {
-  display: grid;
-  gap: var(--space-3);
-}
 
-.review-bar {
-  display: grid;
-  grid-template-columns: 60px 1fr 50px;
-  align-items: center;
-  gap: var(--space-4);
-}
 
-.review-bar__label {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--color-primary-soft);
-}
 
-.review-bar__track {
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--color-bg);
-  overflow: hidden;
-}
 
-.review-bar__fill {
-  height: 100%;
-  background: var(--gradient-primary);
-  border-radius: var(--radius-pill);
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 1.2s var(--ease-out);
-}
 
-.review-bar__fill.is-animated {
-  transform: scaleX(var(--fill, 1));
-}
 
-.review-bar__count {
-  font-size: var(--fs-sm);
-  color: var(--color-muted);
-  text-align: right;
-}
 
 /* ---------- Brands marquee ---------- */
 .brands {

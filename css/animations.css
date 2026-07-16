@@ -199,10 +199,6 @@
   animation-delay: -3s;
 }
 
-.blob--green {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.45) 0%, transparent 70%);
-  animation-delay: -5s;
-}
 
 /* ---------- Scroll indicator (hero) ---------- */
 .scroll-indicator {
@@ -271,7 +267,8 @@
 /* Carries no `animation` of its own: as an equal-specificity rule later in
    the cascade it replaced the `animation` shorthand on anything it was
    combined with. On .hero-line that cancelled fadeInUp and left the text at
-   opacity 0 permanently. Shimmer is opt-in via .text-gradient--shimmer. */
+   opacity 0 permanently. The hero applies its own shimmer via the
+   .hero__title .text-gradient two-animation shorthand below. */
 .text-gradient {
   background-image: var(--gradient-text);
   background-size: 200% 200%;
@@ -281,9 +278,6 @@
   color: transparent;
 }
 
-.text-gradient--shimmer {
-  animation: gradientShift 6s ease infinite;
-}
 
 /* Hero sits on a dark blue overlay; the default blue→cyan ramp is
    effectively invisible there. Entrance first, then shimmer. */
@@ -304,10 +298,6 @@
   pointer-events: none;
 }
 
-/* ---------- Counter pulse ---------- */
-.counter-pulse {
-  animation: pulseGlow 2.4s ease-in-out infinite;
-}
 
 /* ---------- Card tilt/hover (set in components.css, refined here) ---------- */
 @media (prefers-reduced-motion: reduce) {

@@ -18,7 +18,6 @@ const Slider = (() => {
       this.autoplay = root.dataset.autoplay === 'true';
       this.interval = parseInt(root.dataset.interval || 5500, 10);
       this.timer = null;
-      this.isAnimating = false;
       this.perView = 1;
 
       if (!this.track || !this.slides.length) return;

@@ -24,17 +24,4 @@ document.addEventListener('DOMContentLoaded', () => {
   window.Slider && window.Slider.init();
   window.Gallery && window.Gallery.init();
   window.Contact && window.Contact.init();
-
-  // Console watermark — agency touch
-  if (window.console && console.log) {
-    const styles = [
-      'color: #fff',
-      'background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)',
-      'padding: 8px 14px',
-      'border-radius: 8px',
-      'font-weight: 700',
-      'font-family: Inter, sans-serif',
-    ].join(';');
-    console.log('%cBlitzBlank — Premium Reinigung · Düsseldorf', styles);
-  }
 });

@@ -102,8 +102,6 @@
 
   /* ---------- Layout ---------- */
   --container-max: 1280px;
-  --container-wide: 1440px;
-  --container-narrow: 768px;
   --container-pad: clamp(1.25rem, 0.5rem + 3.5vw, 4rem);
   /* The navbar packs logo + 7 links + lang switch + phone + CTA into one row,
      which needs ~1330px in German — more than --container-max can give. It gets
