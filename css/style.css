@@ -219,19 +219,20 @@ p {
 
 .navbar__inner {
   width: 100%;
-  max-width: var(--container-max);
+  max-width: var(--navbar-max);
   margin-inline: auto;
   padding-inline: var(--container-pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 /* Logo */
 .logo {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: var(--space-3);
   font-weight: var(--fw-extrabold);
   font-size: var(--fs-lg);
@@ -291,12 +292,21 @@ p {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  flex-shrink: 0;
+  gap: var(--space-1);
 }
 
+/* Nothing in the navbar row may shrink below its text: a flex item that gives up
+   width here does not get smaller, it wraps mid-label ("Über uns" over two
+   lines) or clips ("Angebot anfordern" -> "ngebot anfordern"). Holding every
+   item at its natural width means a too-narrow viewport overflows the row
+   instead — which the breakpoints below prevent, and tests/navbar.spec.js
+   guards. */
 .nav-link {
   position: relative;
-  padding: var(--space-2) var(--space-4);
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: var(--space-2) var(--space-3);
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-wide);
@@ -321,8 +331,10 @@ p {
 
 .nav-link__underline {
   position: absolute;
-  left: var(--space-4);
-  right: var(--space-4);
+  /* Inset to match .nav-link's horizontal padding so the rule sits under the
+     label, not under the padding. */
+  left: var(--space-3);
+  right: var(--space-3);
   bottom: 6px;
   height: 2px;
   background: var(--color-accent);
@@ -347,12 +359,19 @@ p {
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  flex-shrink: 0;
+  gap: var(--space-3);
+}
+
+.navbar__actions .btn {
+  white-space: nowrap;
 }
 
 .navbar__phone {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
   gap: var(--space-2);
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
