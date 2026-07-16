@@ -50,3 +50,28 @@ test('no inline colour workaround remains on the about section title', async ({ 
   const count = await page.locator('.section--dark .section-title[style*="color"]').count();
   expect(count).toBe(0);
 });
+
+// The navbar on interior pages is .navbar--solid — a DARK navy background.
+// It was grouped in CSS with .is-scrolled (a LIGHT background) and given the
+// same dark text, so the logo and every nav link rendered dark-on-dark and
+// were effectively invisible. Same class of bug as the page headings above.
+for (const path of ['/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/']) {
+  test(`navbar on ${path} is readable against its dark background`, async ({ page }) => {
+    await page.goto(path);
+    const navbar = page.locator('.navbar');
+    await expect(navbar).toHaveClass(/navbar--solid/);
+
+    // .navbar--solid is --color-primary at 85%; over any backdrop it stays
+    // dark, so light text is the only correct answer. Assert the resolved
+    // colour is light rather than computing a ratio against a translucent bg.
+    for (const sel of ['.logo', '.nav-link']) {
+      const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
+      const [r, g, b] = rgb.match(/[\d.]+/g).slice(0, 3).map(Number);
+      // color() syntax reports 0-1, rgb() reports 0-255 — normalise.
+      const max = Math.max(r, g, b) <= 1 ? 1 : 255;
+      const lightness = (r + g + b) / 3 / max;
+      expect(lightness, `${sel} on ${path} is ${rgb} — too dark for a dark navbar`)
+        .toBeGreaterThan(0.6);
+    }
+  });
+}

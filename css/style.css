@@ -239,8 +239,8 @@ p {
   transition: color var(--t-base) var(--ease-out);
 }
 
-.navbar.is-scrolled .logo,
-.navbar--solid .logo {
+/* Same as .nav-link: only the light (scrolled) navbar gets a dark logo. */
+.navbar.is-scrolled .logo {
   color: var(--color-primary);
 }
 
@@ -281,8 +281,7 @@ p {
   margin-top: 4px;
 }
 
-.navbar.is-scrolled .logo__tag,
-.navbar--solid .logo__tag {
+.navbar.is-scrolled .logo__tag {
   color: var(--color-secondary);
 }
 
@@ -313,8 +312,10 @@ p {
   transition: color var(--t-base) var(--ease-out);
 }
 
-.navbar.is-scrolled .nav-link,
-.navbar--solid .nav-link {
+/* Only .is-scrolled gets dark text: its background is white at 72%.
+   .navbar--solid is DARK navy at 85% — grouping it here painted the links
+   dark-on-dark and made them near-invisible on every interior page. */
+.navbar.is-scrolled .nav-link {
   color: var(--color-primary-soft);
 }
 
@@ -322,8 +323,7 @@ p {
   color: var(--color-white);
 }
 
-.navbar.is-scrolled .nav-link:hover,
-.navbar--solid .nav-link:hover {
+.navbar.is-scrolled .nav-link:hover {
   color: var(--color-secondary);
 }
 
