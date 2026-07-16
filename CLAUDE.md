@@ -19,7 +19,8 @@ described below as a known gap is deliberately deferred, not forgotten.
 ```bash
 npm start                     # dev server on http://localhost:8080, rebuilds on change
 npm run build                 # writes static output to _site/
-npm test                      # Playwright: functional + visual regression, 97 tests
+npm test                      # 2 build-output tests + 97 Playwright tests
+npm run test:build            # just the build-output tests (fast, no browser)
 npm run test:update-snapshots # regenerate visual baselines for *intentional* visual changes only
 ```
 
@@ -49,6 +50,25 @@ src/
     testimonials.js        # 4 testimonial slides
   index.njk, about.njk, services.njk, gallery.njk, contact.njk, 404.njk
 ```
+
+### Deploying to a subpath
+
+GitHub Pages serves this repo at `https://<user>.github.io/<repo>/`, not a
+domain root. Two env vars handle that, both set by the deploy workflow from
+`actions/configure-pages`:
+
+- `BASE_PATH` (e.g. `/project1`) — prefixed onto every href by the `url` and
+  `asset` filters.
+- `SITE_ORIGIN` — the scheme+host for `canonical`/`hreflang`/`og:url`.
+
+Unset, both default to the root, so `npm start` and the tests are unaffected.
+
+**Do not add 11ty's `pathPrefix`.** It rewrites permalinks too, and combined
+with the `url` filter it writes `_site/project1/kontakt/` — which Pages then
+serves at `/project1/project1/`. Permalinks use `permalinkFor` (never
+prefixed; Pages already serves `_site/` *at* the subpath), hrefs use `url`
+(always prefixed). [tests/pathprefix.test.mjs](tests/pathprefix.test.mjs)
+asserts both.
 
 Each `.njk` page sets `layout: layouts/base.njk` in its front matter and supplies only its `<main>` content — the navbar, footer, `<head>` meta, and script tags live once in the layout and its partials. Output URLs are unchanged from the pre-migration site: `_site/{index,about,services,gallery,contact,404}.html`.
 
