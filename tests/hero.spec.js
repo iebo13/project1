@@ -60,3 +60,18 @@ test('scroll hint never overlaps the stat chips', async ({ page }) => {
     expect(overlaps, 'scroll hint intersects a stat chip').toBe(false);
   }
 });
+
+test('scroll hint is visible with a real touch target', async ({ page }) => {
+  await page.goto('/');
+  const hint = page.locator('.scroll-indicator');
+  await expect(hint).toBeVisible();
+  const box = await hint.boundingBox();
+  expect(box.height, 'touch target must be at least 44px').toBeGreaterThanOrEqual(44);
+});
+
+test('scroll hint hides on short viewports instead of overlapping content', async ({ page, viewport }) => {
+  test.skip(!viewport || viewport.width < 1280, 'short-viewport rule is checked once, on desktop');
+  await page.setViewportSize({ width: 1280, height: 640 });
+  await page.goto('/');
+  await expect(page.locator('.scroll-indicator')).toBeHidden();
+});

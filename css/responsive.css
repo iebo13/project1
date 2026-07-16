@@ -584,6 +584,13 @@
   }
 }
 
+/* On short viewports the hint overlaps hero content — hide it there. */
+@media (max-height: 700px) {
+  .scroll-indicator {
+    display: none;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -592,7 +599,7 @@
 
   .hero__bg img,
   .blob,
-  .scroll-indicator__mouse::after,
+  .scroll-indicator__chevron,
   .map-embed__pin,
   .error-page__code {
     animation: none !important;
