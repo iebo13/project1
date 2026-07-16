@@ -18,9 +18,9 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
   webServer: {
-    command: 'python3 -m http.server 8080',
+    command: 'npm start',
     url: 'http://localhost:8080/index.html',
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
+    timeout: 60_000,
   },
 });

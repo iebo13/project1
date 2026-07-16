@@ -5,10 +5,13 @@
   "type": "module",
   "description": "BlitzBlank — Premium Reinigung Düsseldorf",
   "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
     "test": "playwright test",
-    "test:update-snapshots": "playwright test --update-snapshots=changed"
+    "test:update-snapshots": "playwright test --update-snapshots"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.6",
     "@axe-core/playwright": "4.12.1",
     "@playwright/test": "1.61.1"
   }
