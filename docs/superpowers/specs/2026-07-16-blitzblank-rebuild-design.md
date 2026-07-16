@@ -212,8 +212,24 @@ CLAUDE.md's claim that "components reference variables so palette changes propag
 
 - **`@layer reset, tokens, base, layout, components, utilities`** — makes the cascade
   contract explicit and enforced instead of implied by file order.
-- **`:where(h1…h6)`** on the heading reset — drops specificity to (0,0,0), fixes dark-on-dark
-  on 4 pages + the CTA banner, and allows deleting the inline hack at `about.html:338`.
+- **Dark-on-dark headings** — fix by making headings in dark contexts `color: inherit`, and
+  delete the inline hack at `about.html:338`.
+
+  **Correction (found during implementation).** This spec originally claimed `:where(h1…h6)`
+  alone fixes it by dropping the reset to specificity (0,0,0) so the parent's white is
+  inherited. **That is wrong, and it was proven wrong three independent ways in a real
+  browser.** Specificity only arbitrates between declarations on the *same element*;
+  inheritance applies only when **no** declaration matches that element at all. A
+  zero-specificity `:where(h1)` still declares a colour directly on the `h1`, so it beats the
+  inherited value regardless. Worse, `.section-title` declares `color: var(--color-primary)`
+  on *itself* at (0,1,0), so even deleting the reset's colour entirely would not fix that
+  case — verified empirically.
+
+  The real fix is an explicit `color: inherit` on headings in dark contexts
+  (`.page-hero h1`, `.promo-banner h2`, `.section--dark .section-title`), which is what
+  shipped. `:where()` is retained for the `@layer` work, but it is not what fixes this.
+  This is targeted rather than systemic — a new dark section with an unpatched heading would
+  regress. Part 2's `@layer` restructure should revisit it with a general rule.
 - **Fix the invisible headline** — `.text-gradient` stops declaring `animation`. Stagger
   moves off `:nth-child` (which counts the `<br>`) onto explicit classes.
 - **Gradient text contrast** — `--gradient-text` is `#2563EB → #06B6D4`, blue-on-blue over

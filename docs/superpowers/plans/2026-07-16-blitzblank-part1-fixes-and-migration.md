@@ -594,7 +594,33 @@ white-to-pale-cyan ramp that reads against it."
 
 **Background:** `css/style.css:96` sets `color: var(--color-primary)` (`#0F172A`) on `h1`–`h6` at specificity (0,0,1). `.page-hero` sets `background: var(--color-primary)` and `color: white` on itself, but the heading rule supplies its own colour, so inheritance loses. The `<h1>` on about/services/gallery/contact renders `#0F172A` on `#0F172A`. Same failure on `.promo-banner h2`. Confirmed by screenshot.
 
-`:where()` drops the reset to specificity (0,0,0) so inherited colour wins naturally. The proof this is the right diagnosis: `about.html:338` already carries `style="color: var(--color-white)"` — someone hit this and patched one element by hand. That hack gets deleted here.
+`about.html:338` already carries `style="color: var(--color-white)"` — someone hit this and
+patched one element by hand. That hack gets deleted here.
+
+**CORRECTED DURING IMPLEMENTATION — read this before you start.**
+
+This task originally instructed: "`:where()` drops the reset to specificity (0,0,0) so
+inherited colour wins naturally." **That is wrong.** It was proven wrong three independent
+ways in a real browser (isolated CSS test, live before/after, and a 96-heading computed-style
+diff): applying only `:where()` left 5 of 6 tests red.
+
+Why: **specificity only arbitrates between declarations on the same element. Inheritance
+applies only when no declaration matches that element at all.** A zero-specificity
+`:where(h1)` still declares a colour directly on the `h1`, so it beats the inherited value
+no matter how low its specificity. Dropping specificity does not hand the element back to
+inheritance.
+
+And deleting the reset's colour outright does not work either: `.section-title` declares
+`color: var(--color-primary)` on *itself* at (0,1,0). Verified empirically — that heading
+still paints dark.
+
+**The actual fix:** keep `:where()` (it is still wanted for Part 2's `@layer` work), and add
+an explicit `color: inherit` to headings in dark contexts — `.page-hero h1`,
+`.promo-banner h2`, and `.section--dark .section-title`. `color: inherit` is a declaration on
+the element, so it wins, and it resolves to whatever the dark ancestor set.
+
+Note this is targeted, not systemic: a new dark section with an unpatched heading regresses.
+Part 2's `@layer` restructure should replace it with a general rule.
 
 - [ ] **Step 1: Write the failing test**
 
