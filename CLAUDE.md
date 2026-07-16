@@ -181,7 +181,7 @@ Four real, user-facing bugs were found and fixed during the migration (see git h
 
 ## Notes
 
-- `assets/` is empty; all imagery is hot-linked from Unsplash. Two of the photo IDs currently used (`photo-1556909114-44e3e9399a2e`, `photo-1567548083313-04c67ac2f4f0`) 404.
+- `assets/` is empty; all imagery is hot-linked from Unsplash.
 - The contact form in [js/contact.js](js/contact.js) is a mock — a `setTimeout` promise stands in for the request. Wiring a backend means replacing that block with `fetch()`.
 - There is no Impressum or Datenschutz (privacy policy) page yet, and the consent checkbox and footer "Privacy" link both point to `href="#"`. See [README.md](README.md) for why this matters before deploying for real.
 - Deploy is [.github/workflows/deploy.yml](.github/workflows/deploy.yml): builds and publishes `_site/` to GitHub Pages on push to `main`. All site links are relative, so Pages' `/<repo>/` subpath works with no `pathPrefix` configured.
