@@ -1,6 +1,7 @@
+{% set d = dict[lang] %}
   <header class="navbar{% if navbarSolid %} navbar--solid{% endif %}" id="navbar">
     <div class="navbar__inner">
-      <a href="index.html" class="logo" aria-label="BlitzBlank — Startseite">
+      <a href="{{ 'home' | url(lang) }}" class="logo" aria-label="{{ site.brand }} — {{ 'nav.home' | t(d) }}">
         <span class="logo__mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M13 2 L4.5 12.5 H11 L9 22 L19.5 10.5 H13 Z" fill="currentColor" stroke="none"/>
@@ -8,21 +9,28 @@
         </span>
         <span class="logo__text">
           <span class="logo__name">{{ site.brand }}</span>
-          <span class="logo__tag" data-i18n="logo.tag">{{ site.tagline }}</span>
+          <span class="logo__tag">{{ 'logo.tag' | t(d) }}</span>
         </span>
       </a>
 
-      <nav class="nav-menu" id="navMenu" aria-label="Main navigation">
+      <nav class="nav-menu" id="navMenu" aria-label="{{ 'nav.home' | t(d) }}">
         {% for item in site.nav %}
-        <a href="{{ item.href }}" class="nav-link"><span data-i18n="{{ item.key }}">{{ item.label }}</span><span class="nav-link__underline"></span></a>
+        <a href="{{ item.page | url(lang) }}{{ item.hash or '' }}" class="nav-link"{% if item.page == pageKey and not item.hash %} aria-current="page"{% endif %}><span>{{ item.key | t(d) }}</span><span class="nav-link__underline"></span></a>
         {% endfor %}
       </nav>
 
       <div class="navbar__actions">
-        <!-- Language Switcher -->
-        <div class="lang-switch" role="group" aria-label="Language">
-          <button class="lang-switch__btn" data-lang="en" aria-pressed="true">EN</button>
-          <button class="lang-switch__btn" data-lang="de" aria-pressed="false">DE</button>
+        {# Real links to this page's counterpart in the other language, not JS
+           buttons. hreflang tells the browser (and crawlers) what they point
+           at; aria-current marks the active one. #}
+        <div class="lang-switch" role="group" aria-label="{{ 'nav.lang' | t(d) }}">
+          {% for code in langs.codes %}
+          <a class="lang-switch__btn{% if code == lang %} is-active{% endif %}"
+             href="{{ pageKey | url(code) }}"
+             hreflang="{{ code }}"
+             lang="{{ code }}"
+             {% if code == lang %}aria-current="true"{% endif %}>{{ code | upper }}</a>
+          {% endfor %}
         </div>
 
         <a href="{{ site.phoneHref }}" class="navbar__phone">
@@ -31,8 +39,8 @@
           </svg>
           {{ site.phone }}
         </a>
-        <a href="contact.html" class="btn btn--primary btn--sm" data-magnetic><span data-i18n="nav.cta">Get a Quote</span></a>
-        <button class="nav-toggle" id="navToggle" data-i18n-aria="nav.menu" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMenu">
+        <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--sm" data-magnetic><span>{{ 'nav.cta' | t(d) }}</span></a>
+        <button class="nav-toggle" id="navToggle" aria-label="{{ 'nav.menu' | t(d) }}" aria-expanded="false" aria-controls="navMenu">
           <span class="nav-toggle__bar"></span>
           <span class="nav-toggle__bar"></span>
           <span class="nav-toggle__bar"></span>

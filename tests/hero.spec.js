@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test('the third hero line is actually visible', async ({ page }) => {
-  await page.goto('/index.html');
+  await page.goto('/');
   const line = page.locator('.hero__title .text-gradient');
-  await expect(line).toHaveText('obsessive care.');
+  await expect(line).toHaveText('liebevoller Sorgfalt.'); // root is German
   await expect(line).toBeVisible();
   await expect(async () => {
     const opacity = await line.evaluate((el) => getComputedStyle(el).opacity);
@@ -12,7 +12,7 @@ test('the third hero line is actually visible', async ({ page }) => {
 });
 
 test('hero lines stagger in reading order', async ({ page }) => {
-  await page.goto('/index.html');
+  await page.goto('/');
   const delays = await page.$$eval('.hero__title .hero-line', (els) =>
     els.map((el) => parseFloat(getComputedStyle(el).animationDelay))
   );
@@ -22,7 +22,7 @@ test('hero lines stagger in reading order', async ({ page }) => {
 });
 
 test('hero gradient text uses the on-dark ramp, not blue-on-blue', async ({ page }) => {
-  await page.goto('/index.html');
+  await page.goto('/');
   const bg = await page.locator('.hero__title .text-gradient')
     .evaluate((el) => getComputedStyle(el).backgroundImage);
   expect(bg).toContain('255, 255, 255');

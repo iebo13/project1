@@ -507,6 +507,15 @@ p {
   display: inline-block;
 }
 
+/* CTA row inside a promo banner: no entrance animation (it isn't the hero).
+   Replaces `style="justify-content:center; opacity:1; animation:none;"`
+   repeated inline on five pages purely to undo the hero rule above. */
+.hero__cta--static {
+  justify-content: center;
+  opacity: 1;
+  animation: none;
+}
+
 .hero__subtitle {
   font-size: var(--fs-xl);
   color: rgba(255, 255, 255, 0.86);

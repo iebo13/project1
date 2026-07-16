@@ -11,12 +11,13 @@ const LANGS = ['en', 'de'];
 // into the mobile drawer and none of this geometry applies.
 const DESKTOP_WIDTHS = [1280, 1440, 1920, 2560];
 
+// Each language is a real URL now (German at the root, English under /en/) —
+// no localStorage, no runtime text swap to wait for. The text assertion stays
+// as a guard that we actually landed on the language we asked for.
 async function loadAt(page, { width, lang }) {
-  await page.addInitScript((l) => localStorage.setItem('blitzblank-lang', l), lang);
   await page.setViewportSize({ width, height: 900 });
-  await page.goto('/index.html');
+  await page.goto(lang === 'de' ? '/' : '/en/');
   await page.locator('.navbar__inner').waitFor();
-  // i18n swaps textContent after load; measuring before it lands reads English.
   await expect(page.locator('.nav-link').first()).toHaveText(lang === 'de' ? 'Start' : 'Home');
 }
 

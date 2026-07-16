@@ -1,10 +1,17 @@
 ---
 layout: layouts/base.njk
-permalink: /gallery.html
-title: 'Galerie — BlitzBlank Düsseldorf'
-description: 'Portfolio aktueller Reinigungsprojekte — Privat, Gewerbe, Industrie, Tiefenreinigung und mehr. Nach Kategorie filtern, in Lightbox anzeigen.'
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'gallery' | url(lang) }}index.html"
+  title: "{{ meta[lang].gallery.title }}"
+  description: "{{ meta[lang].gallery.description }}"
+  pageKey: 'gallery'
 navbarSolid: true
 ---
+{% set d = dict[lang] %}
   <main id="main">
     <section class="page-hero">
       <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
@@ -12,7 +19,7 @@ navbarSolid: true
         <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>Portfolio</span>
         <h1>Spaces we've brought back to life.</h1>
         <p>A curated selection of recent projects. Filter by category, click any image to view full size.</p>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html"><span data-i18n="nav.home">Home</span></a><span class="breadcrumb__sep">/</span><span>Gallery</span></nav>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}"><span>{{ 'nav.home' | t(d) }}</span></a><span class="breadcrumb__sep">/</span><span>Gallery</span></nav>
       </div>
     </section>
 
@@ -177,8 +184,8 @@ navbarSolid: true
             <h2>Your space could be next.</h2>
             <p>Every photo in this gallery started with a conversation. Let's have yours.</p>
             <div class="hero__cta" style="justify-content: center; opacity:1; animation: none;">
-              <a href="contact.html" class="btn btn--primary btn--lg" data-magnetic>Start your project</a>
-              <a href="services.html" class="btn btn--ghost-light btn--lg">Browse services</a>
+              <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>Start your project</a>
+              <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg">Browse services</a>
             </div>
           </div>
         </div>

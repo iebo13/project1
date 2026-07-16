@@ -46,8 +46,6 @@ const Contact = (() => {
 
     const submitBtn = form.querySelector('[type="submit"]');
     const messageBox = form.querySelector('.form-message');
-    const t = (window.I18n && window.I18n.t) ? window.I18n.t.bind(window.I18n) : (k) => k;
-
     // The browser only fires `submit` once every native constraint passes.
     // Invalid attempts are blocked + reported by the UA before this runs.
     form.addEventListener('submit', async (e) => {
@@ -64,10 +62,10 @@ const Contact = (() => {
       form.reset();
 
       if (messageBox) {
-        messageBox.textContent = t('form.successMsg');
+        messageBox.textContent = messageBox.dataset.success || '';
         messageBox.className = 'form-message form-message--success is-visible';
       }
-      showToast(t('form.toast.success'), 'success');
+      showToast(messageBox?.dataset.toastSuccess || '', 'success');
 
       setTimeout(() => {
         if (messageBox) messageBox.classList.remove('is-visible');
@@ -81,11 +79,11 @@ const Contact = (() => {
         e.preventDefault();
         const input = newsletter.querySelector('input');
         if (!EMAIL_RE.test(input.value.trim())) {
-          showToast(t('form.toast.invalid'), 'error');
+          showToast(newsletter.dataset.invalid || '', 'error');
           return;
         }
         input.value = '';
-        showToast(t('form.toast.subscribed'), 'success');
+        showToast(newsletter.dataset.subscribed || '', 'success');
       });
     }
   }

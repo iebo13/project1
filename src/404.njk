@@ -1,34 +1,53 @@
 ---
 layout: layouts/base.njk
 permalink: /404.html
-title: 'Seite nicht gefunden — BlitzBlank'
-description: 'Die gesuchte Seite wurde verschoben oder existiert nicht mehr. Zurück zur Startseite oder zu den Leistungen.'
 robots: 'noindex, follow'
 navbarSolid: true
+pageKey: 'home'
+lang: 'de'
+eleventyComputed:
+  title: 'Seite nicht gefunden — BlitzBlank'
+  description: 'Die gesuchte Seite wurde verschoben oder existiert nicht mehr. Zurück zur Startseite oder zu den Leistungen.'
 ---
+{#
+  Deliberately NOT paginated per language, unlike every other page.
+
+  A static host serves one error document for the whole origin and cannot
+  negotiate a language for it, so /404.html is emitted once in German (the
+  root language) with an English sub-heading and links to both language homes.
+  It stays noindex.
+
+  `pageKey: home` is set only so the layout's canonical/hreflang/lang-switch
+  have something to resolve against — the page itself is noindex, so those
+  tags carry no SEO weight here.
+#}
+{% set d = dict.de %}
+{% set en = dict.en %}
   <main id="main" class="error-page">
     <div class="error-page__content">
-      <div class="error-page__code" aria-hidden="true">404</div>
-      <h1>This page slipped away.</h1>
-      <p>Even our crews can't clean up a missing page. The link you followed may be broken, or the page may have been moved. Let's get you back to a spotless place.</p>
+      <div class="error-page__code" aria-hidden="true">{{ 'error.code' | t(d) }}</div>
+      <h1>{{ 'error.title' | t(d) }}</h1>
+      <p lang="en" class="error-page__alt">{{ 'error.title' | t(en) }}</p>
+      <p>{{ 'error.desc' | t(d) }}</p>
 
       <div class="error-page__actions">
-        <a href="index.html" class="btn btn--primary btn--lg">
+        <a href="{{ 'home' | url('de') }}" class="btn btn--primary btn--lg">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/></svg>
-          Back to home
+          {{ 'error.btn1' | t(d) }}
         </a>
-        <a href="services.html" class="btn btn--outline btn--lg">Browse services</a>
-        <a href="contact.html" class="btn btn--outline btn--lg">Contact us</a>
+        <a href="{{ 'services' | url('de') }}" class="btn btn--outline btn--lg">{{ 'error.btn2' | t(d) }}</a>
+        <a href="{{ 'contact' | url('de') }}" class="btn btn--outline btn--lg">{{ 'error.btn3' | t(d) }}</a>
       </div>
 
-      <div style="margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid var(--color-border); display: flex; flex-direction: column; gap: var(--space-3); align-items: center;">
-        <span style="font-size: var(--fs-sm); color: var(--color-muted); letter-spacing: var(--ls-widest); text-transform: uppercase;">Or try one of these</span>
-        <nav style="display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: center;" aria-label="Popular pages">
-          <a href="about.html" style="color: var(--color-secondary); font-weight: var(--fw-semibold); font-size: var(--fs-sm);">About Us →</a>
-          <a href="gallery.html" style="color: var(--color-secondary); font-weight: var(--fw-semibold); font-size: var(--fs-sm);">Gallery →</a>
-          <a href="index.html#reviews" style="color: var(--color-secondary); font-weight: var(--fw-semibold); font-size: var(--fs-sm);">Reviews →</a>
-          <a href="index.html#faq" style="color: var(--color-secondary); font-weight: var(--fw-semibold); font-size: var(--fs-sm);">FAQ →</a>
+      <div class="error-page__suggest">
+        <span class="error-page__suggest-label">{{ 'error.suggest' | t(d) }}</span>
+        <nav class="error-page__suggest-links" aria-label="{{ 'error.suggest' | t(d) }}">
+          <a href="{{ 'about' | url('de') }}">{{ 'error.suggest.about' | t(d) }} →</a>
+          <a href="{{ 'gallery' | url('de') }}">{{ 'error.suggest.gallery' | t(d) }} →</a>
+          <a href="{{ 'home' | url('de') }}#reviews">{{ 'error.suggest.reviews' | t(d) }} →</a>
+          <a href="{{ 'home' | url('de') }}#faq">{{ 'error.suggest.faq' | t(d) }} →</a>
         </nav>
+        <a class="error-page__lang-hint" href="{{ 'home' | url('en') }}" lang="en" hreflang="en">Looking for the English site? →</a>
       </div>
     </div>
   </main>

@@ -1,10 +1,17 @@
 ---
 layout: layouts/base.njk
-permalink: /about.html
-title: 'Über uns — BlitzBlank Düsseldorf'
-description: 'Lernen Sie das Team hinter BlitzBlank kennen — eine Boutique-Reinigungsmanufaktur aus Düsseldorf, besessen vom Detail seit 2010. Mission, Werte, Chronik, Zertifikate.'
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'about' | url(lang) }}index.html"
+  title: "{{ meta[lang].about.title }}"
+  description: "{{ meta[lang].about.description }}"
+  pageKey: 'about'
 navbarSolid: true
 ---
+{% set d = dict[lang] %}
   <main id="main">
     <!-- PAGE HERO -->
     <section class="page-hero">
@@ -16,7 +23,7 @@ navbarSolid: true
         <h1>People who treat cleaning as a craft.</h1>
         <p>We're a small studio with big standards. Every clean is a chance to earn your trust — one detail at a time.</p>
         <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="index.html"><span data-i18n="nav.home">Home</span></a>
+          <a href="{{ 'home' | url(lang) }}"><span>{{ 'nav.home' | t(d) }}</span></a>
           <span class="breadcrumb__sep">/</span>
           <span>About</span>
         </nav>
@@ -306,8 +313,8 @@ navbarSolid: true
             <h2>Ready to meet your crew?</h2>
             <p>Book a free walkthrough and we'll introduce you to the team, walk your space, and craft a cleaning plan that fits your life — no pressure, no obligation.</p>
             <div class="hero__cta" style="justify-content: center; opacity:1; animation: none;">
-              <a href="contact.html" class="btn btn--primary btn--lg" data-magnetic>Book your walkthrough</a>
-              <a href="services.html" class="btn btn--ghost-light btn--lg">Browse services</a>
+              <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>Book your walkthrough</a>
+              <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg">Browse services</a>
             </div>
           </div>
         </div>

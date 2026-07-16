@@ -26,7 +26,7 @@ function contrast(fg, bg) {
   return (a + 0.05) / (b + 0.05);
 }
 
-const darkHeroPages = ['/about.html', '/services.html', '/gallery.html', '/contact.html'];
+const darkHeroPages = ['/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/'];
 
 for (const path of darkHeroPages) {
   test(`h1 on ${path} is readable against the dark hero`, async ({ page }) => {
@@ -39,14 +39,14 @@ for (const path of darkHeroPages) {
 }
 
 test('CTA banner h2 is readable against its dark background', async ({ page }) => {
-  await page.goto('/index.html');
+  await page.goto('/');
   const fg = await page.locator('.promo-banner h2').evaluate((el) => getComputedStyle(el).color);
   const bg = await page.locator('.promo-banner').evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
 });
 
 test('no inline colour workaround remains on the about section title', async ({ page }) => {
-  await page.goto('/about.html');
+  await page.goto('/ueber-uns/');
   const count = await page.locator('.section--dark .section-title[style*="color"]').count();
   expect(count).toBe(0);
 });

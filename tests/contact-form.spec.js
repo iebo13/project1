@@ -15,14 +15,14 @@ async function fillValidForm(page) {
 }
 
 test('submits successfully with valid input', async ({ page }) => {
-  await page.goto('/contact.html');
+  await page.goto('/kontakt/');
   await fillValidForm(page);
   await page.click('#contact-form [type="submit"]');
   await expect(page.locator('.form-message')).toHaveClass(/form-message--success/, { timeout: 5000 });
 });
 
 test('blocks submission when firstName is too short', async ({ page }) => {
-  await page.goto('/contact.html');
+  await page.goto('/kontakt/');
   await fillValidForm(page);
   await page.fill('#firstName', 'A'); // minlength=2
   await page.click('#contact-form [type="submit"]');
@@ -33,7 +33,7 @@ test('blocks submission when firstName is too short', async ({ page }) => {
 });
 
 test('blocks submission on an invalid email', async ({ page }) => {
-  await page.goto('/contact.html');
+  await page.goto('/kontakt/');
   await fillValidForm(page);
   await page.fill('#email', 'not-an-email');
   await page.click('#contact-form [type="submit"]');
@@ -43,7 +43,7 @@ test('blocks submission on an invalid email', async ({ page }) => {
 });
 
 test('blocks submission when consent is unchecked', async ({ page }) => {
-  await page.goto('/contact.html');
+  await page.goto('/kontakt/');
   await fillValidForm(page);
   await page.uncheck('#consent');
   await page.click('#contact-form [type="submit"]');
@@ -53,7 +53,7 @@ test('blocks submission when consent is unchecked', async ({ page }) => {
 });
 
 test('blocks submission when a required field is empty', async ({ page }) => {
-  await page.goto('/contact.html');
+  await page.goto('/kontakt/');
   // fill everything except the message
   await page.fill('#firstName', 'Anna');
   await page.fill('#lastName', 'Schmidt');

@@ -169,6 +169,7 @@
    it defer to .section--dark's white on dark sections — hence the inline
    style hack this rule replaces. Inherit explicitly instead. */
 .section--dark .section-title {
+  color: inherit;
 }
 
 .section-subtitle {
@@ -615,6 +616,43 @@
   color: var(--color-error, #EF4444);
   margin-top: var(--space-2);
   min-height: 1em;
+}
+
+/* Consent row: checkbox + wrapping label + a full-width error slot beneath.
+   Was six inline style attributes on the markup. */
+.field--consent {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.field--consent .field__input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  accent-color: var(--color-secondary);
+}
+
+.field--consent label {
+  flex: 1;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+  line-height: var(--lh-normal);
+}
+
+.field--consent label a {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+.field--consent .field__error {
+  flex: 0 0 100%;
 }
 
 
@@ -1293,3 +1331,45 @@
   color: var(--color-secondary);
 }
 
+/* 404 suggestions block — was six inline style attributes on the markup. */
+.error-page__alt {
+  font-size: var(--fs-lg);
+  color: var(--color-muted);
+  margin-bottom: var(--space-2);
+}
+
+.error-page__suggest {
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.error-page__suggest-label {
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+}
+
+.error-page__suggest-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+}
+
+.error-page__suggest-links a,
+.error-page__lang-hint {
+  color: var(--color-secondary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+}
+
+.error-page__lang-hint {
+  margin-top: var(--space-2);
+  text-decoration: underline;
+}

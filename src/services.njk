@@ -1,10 +1,17 @@
 ---
 layout: layouts/base.njk
-permalink: /services.html
-title: 'Leistungen — BlitzBlank Düsseldorf'
-description: 'Zehn spezialisierte Reinigungsleistungen für Privatkunden, Büros, Gastronomie, Arztpraxen und Industrie. Büro-, Privat-, Fenster-, Tiefen-, Teppich-, Industrie-, Auszugs-, Gastronomie-, Medizin- und Baureinigung.'
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'services' | url(lang) }}index.html"
+  title: "{{ meta[lang].services.title }}"
+  description: "{{ meta[lang].services.description }}"
+  pageKey: 'services'
 navbarSolid: true
 ---
+{% set d = dict[lang] %}
   <main id="main">
     <section class="page-hero">
       <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
@@ -12,7 +19,7 @@ navbarSolid: true
         <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>What We Do</span>
         <h1>Ten services. One obsession.</h1>
         <p>From boutique offices to sprawling warehouses, every BlitzBlank clean is held to the same uncompromising standard.</p>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html"><span data-i18n="nav.home">Home</span></a><span class="breadcrumb__sep">/</span><span>Services</span></nav>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}"><span>{{ 'nav.home' | t(d) }}</span></a><span class="breadcrumb__sep">/</span><span>Services</span></nav>
       </div>
     </section>
 
@@ -87,7 +94,7 @@ navbarSolid: true
               <div class="service-detail__benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>{{ bullet }}</div>
               {% endfor %}
             </div>
-            <a href="contact.html" class="btn btn--primary">Get a quote <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary">Get a quote <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
           </div>
         </div>
         {% endfor %}
@@ -102,8 +109,8 @@ navbarSolid: true
             <h2>Not sure which service fits?</h2>
             <p>Tell us about your space and we'll recommend the right service, the right crew size, and the right cadence. Free, no obligation, no upsell.</p>
             <div class="hero__cta" style="justify-content: center; opacity:1; animation: none;">
-              <a href="contact.html" class="btn btn--primary btn--lg" data-magnetic>Talk to a specialist</a>
-              <a href="gallery.html" class="btn btn--ghost-light btn--lg">See our work</a>
+              <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>Talk to a specialist</a>
+              <a href="{{ 'gallery' | url(lang) }}" class="btn btn--ghost-light btn--lg">See our work</a>
             </div>
           </div>
         </div>

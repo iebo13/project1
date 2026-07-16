@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 const pages = [
-  ['home', '/index.html'],
-  ['about', '/about.html'],
-  ['services', '/services.html'],
-  ['gallery', '/gallery.html'],
-  ['contact', '/contact.html'],
+  ['home', '/'],
+  ['about', '/ueber-uns/'],
+  ['services', '/leistungen/'],
+  ['gallery', '/galerie/'],
+  ['contact', '/kontakt/'],
   ['notfound', '/404.html'],
 ];
 

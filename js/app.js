@@ -12,11 +12,10 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // Init order matters:
-  // 1) I18n first so all text is in place before any UI that depends on it
-  // 2) Animations (sets up observers)
-  // 3) UI components
-  // 4) Forms / interactions
-  window.I18n && window.I18n.init();
+  // 1) Animations (sets up observers)
+  // 2) UI components
+  // 3) Forms / interactions
+  // Translation is resolved at build time — there is no runtime i18n module.
   window.Animations && window.Animations.init();
   window.Navigation && window.Navigation.init();
   window.Counter && window.Counter.init();

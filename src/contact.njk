@@ -1,18 +1,25 @@
 ---
 layout: layouts/base.njk
-permalink: /contact.html
-title: 'Kontakt — BlitzBlank Düsseldorf'
-description: 'Kontaktieren Sie BlitzBlank für ein kostenloses, unverbindliches Reinigungsangebot. Telefon, E-Mail oder Formular — Antwort innerhalb eines Werktages.'
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'contact' | url(lang) }}index.html"
+  title: "{{ meta[lang].contact.title }}"
+  description: "{{ meta[lang].contact.description }}"
+  pageKey: 'contact'
 navbarSolid: true
 ---
+{% set d = dict[lang] %}
   <main id="main">
     <section class="page-hero">
       <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
       <div class="container page-hero__content">
-        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>Say Hello</span>
-        <h1>Let's make your space immaculate.</h1>
-        <p>Tell us what you need. We'll send a personalised quote within one business day — no pushy salespeople, no obligation.</p>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html"><span data-i18n="nav.home">Home</span></a><span class="breadcrumb__sep">/</span><span>Contact</span></nav>
+        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>{{ 'page.contact.eyebrow' | t(d) }}</span>
+        <h1>{{ 'page.contact.title' | t(d) }}</h1>
+        <p>{{ 'page.contact.subtitle' | t(d) }}</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'nav.contact' | t(d) }}</span></nav>
       </div>
     </section>
 
@@ -21,9 +28,9 @@ navbarSolid: true
         <div class="contact-cta">
           <!-- LEFT: Info -->
           <div class="contact-cta__info" data-reveal="left">
-            <span class="eyebrow"><span class="eyebrow__dot"></span>Contact Details</span>
-            <h2 style="margin-top: var(--space-4)">Real people, real fast responses.</h2>
-            <p>Prefer to talk first? Call us, email us, or stop by the Königsallee-Zentrale. We answer every message ourselves — no chatbots, no offshore call centres.</p>
+            <span class="eyebrow"><span class="eyebrow__dot"></span>{{ 'contact.details.eyebrow' | t(d) }}</span>
+            <h2 style="margin-top: var(--space-4)">{{ 'contact.details.title' | t(d) }}</h2>
+            <p>{{ 'contact.details.desc' | t(d) }}</p>
 
             <div class="contact-list">
               <div class="contact-list__item">
@@ -31,8 +38,8 @@ navbarSolid: true
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 </span>
                 <div>
-                  <div class="contact-list__label">Phone</div>
-                  <a class="contact-list__value" href="tel:+4921193456789">+49 211 934 567 89</a>
+                  <div class="contact-list__label">{{ 'contact.phone.label' | t(d) }}</div>
+                  <a class="contact-list__value" href="{{ site.phoneHref }}">{{ site.phone }}</a>
                 </div>
               </div>
               <div class="contact-list__item">
@@ -40,8 +47,8 @@ navbarSolid: true
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </span>
                 <div>
-                  <div class="contact-list__label">Email</div>
-                  <a class="contact-list__value" href="mailto:hallo@blitzblank.de">hallo@blitzblank.de</a>
+                  <div class="contact-list__label">{{ 'contact.email.label' | t(d) }}</div>
+                  <a class="contact-list__value" href="mailto:{{ site.email }}">{{ site.email }}</a>
                 </div>
               </div>
               <div class="contact-list__item">
@@ -49,7 +56,7 @@ navbarSolid: true
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </span>
                 <div>
-                  <div class="contact-list__label">Studio HQ</div>
+                  <div class="contact-list__label">{{ 'contact.address.label' | t(d) }}</div>
                   <div class="contact-list__value">Königsallee 42<br/>40212 Düsseldorf</div>
                 </div>
               </div>
@@ -58,8 +65,8 @@ navbarSolid: true
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </span>
                 <div>
-                  <div class="contact-list__label">Business Hours</div>
-                  <div class="contact-list__value">Mon–Sat: 7:00 AM – 8:00 PM<br/>Sunday: Closed (emergencies only)</div>
+                  <div class="contact-list__label">{{ 'contact.hours.label' | t(d) }}</div>
+                  <div class="contact-list__value">{{ 'contact.hours.value' | t(d) }}<br/>{{ 'contact.hours.value2' | t(d) }}</div>
                 </div>
               </div>
             </div>
@@ -74,18 +81,18 @@ navbarSolid: true
 
           <!-- RIGHT: Form -->
           <div class="contact-form-card" data-reveal="right">
-            <h3 style="margin-bottom: var(--space-2)">Request your free quote</h3>
-            <p style="color: var(--color-muted); margin-bottom: var(--space-6); font-size: var(--fs-sm);">Fields marked with * are required. We respond within one business day.</p>
+            <h3 style="margin-bottom: var(--space-2)">{{ 'contact.form.title' | t(d) }}</h3>
+            <p style="color: var(--color-muted); margin-bottom: var(--space-6); font-size: var(--fs-sm);">{{ 'contact.form.desc' | t(d) }}</p>
 
             <form id="contact-form">
               <div class="form-row">
                 <div class="field">
-                  <label class="field__label" for="firstName">First name *</label>
+                  <label class="field__label" for="firstName">{{ 'contact.form.firstName' | t(d) }} *</label>
                   <input class="field__input" type="text" id="firstName" name="firstName" autocomplete="given-name" minlength="2" required />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
                 <div class="field">
-                  <label class="field__label" for="lastName">Last name *</label>
+                  <label class="field__label" for="lastName">{{ 'contact.form.lastName' | t(d) }} *</label>
                   <input class="field__input" type="text" id="lastName" name="lastName" autocomplete="family-name" minlength="2" required />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
@@ -93,12 +100,12 @@ navbarSolid: true
 
               <div class="form-row">
                 <div class="field">
-                  <label class="field__label" for="email">Email *</label>
+                  <label class="field__label" for="email">{{ 'contact.form.email' | t(d) }} *</label>
                   <input class="field__input" type="email" id="email" name="email" autocomplete="email" required />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
                 <div class="field">
-                  <label class="field__label" for="phone">Phone</label>
+                  <label class="field__label" for="phone">{{ 'contact.form.phone' | t(d) }}</label>
                   <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel" pattern="[+0-9()\.\- ]{7,}" inputmode="tel" />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
@@ -106,20 +113,13 @@ navbarSolid: true
 
               <div class="form-row form-row--single">
                 <div class="field">
-                  <label class="field__label" for="service">Service needed *</label>
+                  <label class="field__label" for="service">{{ 'contact.form.service' | t(d) }} *</label>
                   <select class="field__select" id="service" name="service" required>
-                    <option value="">Please choose…</option>
-                    <option value="office">Office Cleaning</option>
-                    <option value="house">House Cleaning</option>
-                    <option value="window">Window Cleaning</option>
-                    <option value="industrial">Industrial Cleaning</option>
-                    <option value="deep">Deep Cleaning</option>
-                    <option value="moveout">Move-out Cleaning</option>
-                    <option value="carpet">Carpet Cleaning</option>
-                    <option value="restaurant">Restaurant Cleaning</option>
-                    <option value="medical">Medical Cleaning</option>
-                    <option value="construction">Construction Cleaning</option>
-                    <option value="other">Other / Not sure</option>
+                    <option value="">{{ 'contact.form.service.choose' | t(d) }}</option>
+                    {% for service in services %}
+                    <option value="{{ service.id }}">{{ ('srv.' + service.id + '.title') | t(d) }}</option>
+                    {% endfor %}
+                    <option value="other">{{ 'contact.form.service.other' | t(d) }}</option>
                   </select>
                   <span class="field__error" aria-live="polite"></span>
                 </div>
@@ -127,28 +127,30 @@ navbarSolid: true
 
               <div class="form-row form-row--single">
                 <div class="field">
-                  <label class="field__label" for="message">Tell us about your space *</label>
-                  <textarea class="field__textarea" id="message" name="message" placeholder="Square footage, frequency, any specific concerns…" minlength="10" required></textarea>
+                  <label class="field__label" for="message">{{ 'contact.form.message' | t(d) }} *</label>
+                  <textarea class="field__textarea" id="message" name="message" placeholder="{{ 'contact.form.message.ph' | t(d) }}" minlength="10" required></textarea>
                   <span class="field__error" aria-live="polite"></span>
                 </div>
               </div>
 
               <div class="form-row form-row--single">
-                <div class="field" style="display:flex; align-items:flex-start; gap: var(--space-3); background: var(--color-bg); padding: var(--space-4); border-radius: var(--radius-md); flex-wrap: wrap;">
-                  <input class="field__input" type="checkbox" id="consent" name="consent" style="margin-top:4px; width:18px; height:18px; flex: 0 0 auto; accent-color: var(--color-secondary);" required />
-                  <label for="consent" style="font-size: var(--fs-sm); color: var(--color-muted); margin: 0; line-height: var(--lh-normal); flex: 1;">
-                    I agree to be contacted about my request and accept the <a href="#" style="color: var(--color-secondary); text-decoration: underline;">privacy policy</a>. We never share your data.
+                <div class="field field--consent">
+                  <input class="field__input" type="checkbox" id="consent" name="consent" required />
+                  <label for="consent">
+                    {{ 'contact.form.consent' | t(d) }} <a href="#">{{ 'contact.form.consent.privacy' | t(d) }}</a>. {{ 'contact.form.consent.cont' | t(d) }}
                   </label>
-                  <span class="field__error" aria-live="polite" style="flex: 0 0 100%;"></span>
+                  <span class="field__error" aria-live="polite"></span>
                 </div>
               </div>
 
               <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top: var(--space-4);">
-                Send my request
+                {{ 'contact.form.submit' | t(d) }}
                 <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
 
-              <div class="form-message" role="status" aria-live="polite"></div>
+              <div class="form-message" role="status" aria-live="polite"
+                   data-success="{{ 'form.successMsg' | t(d) }}"
+                   data-toast-success="{{ 'form.toast.success' | t(d) }}"></div>
             </form>
           </div>
         </div>
@@ -159,12 +161,12 @@ navbarSolid: true
     <section class="section section--tight section--tinted">
       <div class="container">
         <div class="section-head" data-reveal>
-          <span class="eyebrow"><span class="eyebrow__dot"></span>Find Us</span>
-          <h2 class="section-title">Our Königsallee-Zentrale</h2>
-          <p class="section-subtitle">Drop by for a coffee, or schedule a tour of the studio where every clean begins.</p>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>{{ 'contact.map.eyebrow' | t(d) }}</span>
+          <h2 class="section-title">{{ 'contact.map.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'contact.map.subtitle' | t(d) }}</p>
         </div>
 
-        <div class="map-embed" data-reveal aria-label="Karte: BlitzBlank Zentrale an der Königsallee 42, Düsseldorf">
+        <div class="map-embed" data-reveal aria-label="{{ 'contact.map.title' | t(d) }} — Königsallee 42, Düsseldorf">
           <div class="map-embed__grid" aria-hidden="true"></div>
           <div class="map-embed__pin" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -172,7 +174,7 @@ navbarSolid: true
           <div class="map-embed__placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <h4>Königsallee 42</h4>
-            <p>40212 Düsseldorf · Parkplätze in der Nähe</p>
+            <p>40212 Düsseldorf · {{ 'contact.map.parking' | t(d) }}</p>
           </div>
         </div>
       </div>
@@ -183,11 +185,11 @@ navbarSolid: true
       <div class="container">
         <div class="promo-banner" data-reveal>
           <div class="promo-banner__content">
-            <h2>Have a quick question first?</h2>
-            <p>Browse our most-asked questions — we cover products, scheduling, guarantees, and more.</p>
-            <div class="hero__cta" style="justify-content: center; opacity:1; animation: none;">
-              <a href="index.html#faq" class="btn btn--primary btn--lg">Visit FAQ</a>
-              <a href="services.html" class="btn btn--ghost-light btn--lg">View services</a>
+            <h2>{{ 'contact.faq.title' | t(d) }}</h2>
+            <p>{{ 'contact.faq.desc' | t(d) }}</p>
+            <div class="hero__cta hero__cta--static">
+              <a href="{{ 'home' | url(lang) }}#faq" class="btn btn--primary btn--lg">{{ 'contact.faq.btn1' | t(d) }}</a>
+              <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg">{{ 'contact.faq.btn2' | t(d) }}</a>
             </div>
           </div>
         </div>
