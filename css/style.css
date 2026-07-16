@@ -1358,6 +1358,12 @@ p {
   line-height: var(--lh-relaxed);
 }
 
+/* On the merged contact page the values grid follows the mission/vision grid
+   inside one section. */
+.mv-grid + .values-grid {
+  margin-top: var(--space-12);
+}
+
 /* ---------- Service detail (services page) ---------- */
 .service-detail {
   display: grid;

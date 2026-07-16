@@ -48,7 +48,7 @@ src/
     services.js            # the 10 services (see below)
     faq.js                 # 6 FAQ entries
     testimonials.js        # 4 testimonial slides
-  index.njk, about.njk, services.njk, gallery.njk, contact.njk, 404.njk
+  index.njk, services.njk, gallery.njk, contact.njk, 404.njk
 ```
 
 ### Deploying to a subpath
@@ -143,7 +143,6 @@ config):
 | key | de | en |
 |---|---|---|
 | home | `/` | `/en/` |
-| about | `/ueber-uns/` | `/en/about/` |
 | services | `/leistungen/` | `/en/services/` |
 | gallery | `/galerie/` | `/en/gallery/` |
 | contact | `/kontakt/` | `/en/contact/` |

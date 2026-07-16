@@ -14,11 +14,6 @@ export default {
       description:
         'BlitzBlank ist Ihre Premium-Reinigungsfirma in Düsseldorf. Büroreinigung, Haushaltsreinigung, Fensterreinigung und mehr. Kostenloses Angebot in 24h.',
     },
-    about: {
-      title: 'Über uns — BlitzBlank Düsseldorf',
-      description:
-        'Seit 2010 ein Boutique-Reinigungsstudio in Düsseldorf. Lernen Sie das Team, unsere Werte und unsere Geschichte kennen.',
-    },
     services: {
       title: 'Leistungen — BlitzBlank Düsseldorf',
       description:
@@ -40,11 +35,6 @@ export default {
       title: 'BlitzBlank — Premium Cleaning Düsseldorf | Office and Home Cleaning',
       description:
         'BlitzBlank is a premium cleaning studio in Düsseldorf. Office, home, and window cleaning and more. Free quote within 24 hours.',
-    },
-    about: {
-      title: 'About — BlitzBlank Düsseldorf',
-      description:
-        'A boutique cleaning studio in Düsseldorf since 2010. Meet the team, our values, and the story behind the standard.',
     },
     services: {
       title: 'Services — BlitzBlank Düsseldorf',
