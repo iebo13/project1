@@ -1,9 +1,12 @@
 import { test, expect } from '@playwright/test';
 
+// #service carries data-rules="required" and its first option is value="" —
+// omitting it makes every "valid" submission fail on that field instead.
 async function fillValidForm(page) {
   await page.fill('#firstName', 'Anna');
   await page.fill('#lastName', 'Schmidt');
   await page.fill('#email', 'anna.schmidt@example.de');
+  await page.selectOption('#service', 'office');
   await page.fill('#message', 'I would like a quote for a weekly office clean, roughly 200sqm.');
   await page.check('#consent');
 }
