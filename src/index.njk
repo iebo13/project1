@@ -342,19 +342,19 @@ navbarSolid: false
 
         <div class="faq-wrap" data-reveal>
           {% for item in faq %}
-          <div class="faq-item">
-            <button class="faq-question" type="button">
+          <details class="faq-item" name="faq"{% if loop.first %} open{% endif %}>
+            <summary class="faq-question">
               <span data-i18n="faq.{{ loop.index }}.q">{{ item.q }}</span>
               <span class="faq-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </span>
-            </button>
+            </summary>
             <div class="faq-answer">
               <div class="faq-answer__inner" data-i18n="faq.{{ loop.index }}.a">
                 {{ item.a }}
               </div>
             </div>
-          </div>
+          </details>
           {% endfor %}
         </div>
       </div>

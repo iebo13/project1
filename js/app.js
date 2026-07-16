@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.Animations && window.Animations.init();
   window.Navigation && window.Navigation.init();
   window.Counter && window.Counter.init();
-  window.FAQ && window.FAQ.init();
   window.Slider && window.Slider.init();
   window.Gallery && window.Gallery.init();
   window.Contact && window.Contact.init();

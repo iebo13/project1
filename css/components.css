@@ -452,11 +452,14 @@
   margin-top: var(--space-3);
 }
 
-.faq-item.is-open {
+.faq-item[open] {
   box-shadow: var(--shadow-md);
   border-color: rgba(37, 99, 235, 0.25);
 }
 
+/* <summary> resets: drop the native disclosure triangle and the list-item
+   default so the question lays out as a flex row like the button it
+   replaced. */
 .faq-question {
   width: 100%;
   display: flex;
@@ -472,7 +475,14 @@
   color: var(--color-primary);
   text-align: left;
   cursor: pointer;
+  list-style: none;
   transition: color var(--t-base) var(--ease-out);
+}
+
+.faq-question::-webkit-details-marker,
+.faq-question::marker {
+  display: none;
+  content: '';
 }
 
 .faq-question:hover {
@@ -504,22 +514,31 @@
   transition: transform var(--t-base) var(--ease-out);
 }
 
-.faq-item.is-open .faq-icon {
+.faq-item[open] .faq-icon {
   background: var(--gradient-primary);
   color: var(--color-white);
 }
 
-.faq-item.is-open .faq-icon svg {
+.faq-item[open] .faq-icon svg {
   transform: rotate(45deg);
 }
 
+/* Height animation via grid-template-rows (Baseline Widely available).
+   The old max-height approach snapped on close because `max-height: none`
+   is not animatable; the grid track animates cleanly both ways. */
 .faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 500ms var(--ease-out);
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms var(--ease-out);
+}
+
+.faq-item[open] .faq-answer {
+  grid-template-rows: 1fr;
 }
 
 .faq-answer__inner {
+  overflow: hidden;
+  min-height: 0;
   padding: 0 var(--space-8) var(--space-6);
   color: var(--color-muted);
   line-height: var(--lh-relaxed);
