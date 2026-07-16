@@ -1033,6 +1033,7 @@
 /* ---------- Slider ---------- */
 .slider {
   position: relative;
+  overflow: hidden;
 }
 
 .slider__track {

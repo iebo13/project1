@@ -6,7 +6,7 @@
   "description": "BlitzBlank — Premium Reinigung Düsseldorf",
   "scripts": {
     "test": "playwright test",
-    "test:update-snapshots": "playwright test --update-snapshots"
+    "test:update-snapshots": "playwright test --update-snapshots=changed"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.12.1",
