@@ -43,7 +43,7 @@ src/
   _data/
     site.js                # brand, origin, contact details, nav structure
     langs.js               # language codes + per-language slugs
-    dict.js                # the 274-key EN/DE translation table
+    dict.js                # the 287-key EN/DE translation table
     meta.js                # per-page <title>/<meta description>, per language
     services.js            # the 10 services (see below)
     faq.js                 # 6 FAQ entries
@@ -98,7 +98,7 @@ variables.css → animations.css → components.css → style.css → responsive
 
 Later files rely on cascade position, not specificity, to override earlier ones. Reordering these links changes rendering. If you add a new stylesheet, decide deliberately where in this chain it belongs.
 
-**Do not** trust the older claim that "components reference variables, so palette changes only need to happen in `variables.css`." That is currently false: `css/*.css` contains 128 hand-written `rgba()` literals (about 45 of them the literal navy `rgba(15, 23, 42, …)`, i.e. `--color-primary` spelled out by hand). Roughly 31 box-shadows are pinned to that hardcoded hue. Changing `--color-primary` today will *not* repaint those shadows — they'll silently stay the old color. This is fixed in Part 2 via `color-mix()`; until then, treat `variables.css` as the source of truth for new code but don't assume existing code obeys it.
+The palette is real: `variables.css`'s alpha variants, overlays, glass tiers, and gradients are all derived from the base color tokens via `color-mix()` rather than spelled out as hand-written `rgba()` literals. Changing `--color-primary` propagates through every overlay, shadow, and glass surface that references it. `variables.css` remains the source of truth — don't add a new hand-written `rgba()`/hex literal when a token or a `color-mix()` derived from one already exists.
 
 Glassmorphism is a deliberate 3-tier system (see
 docs/superpowers/specs/2026-07-16-visual-refresh-design.md): `.glass-strong`
@@ -112,7 +112,7 @@ scrolled, no per-page variants.
 
 ### Script order encodes init order — preserve it
 
-`base.njk` loads nine `<script defer>` tags in this exact order, with `app.js` last:
+`base.njk` loads seven `<script defer>` tags in this exact order, with `app.js` last:
 
 ```
 animations.js → navigation.js → counter.js → slider.js → gallery.js → contact.js → app.js
@@ -183,7 +183,7 @@ Playwright ([playwright.config.js](playwright.config.js)) is both the test runne
 
 **The visual baselines are the migration's proof of correctness — never update them just to make a failure go away.** `npm run test:update-snapshots` exists for *intentional* visual changes only; running it to silence an unexplained diff destroys the thing it exists to catch. If a visual test fails, find out why the render changed before touching the baseline.
 
-CI (`.github/workflows/deploy.yml`) deliberately runs only the functional tests (`smoke`, `hero`, `headings`, `contact-form`) with `--ignore-snapshots`, skipping the visual suite — a GitHub Actions runner's font stack and GPU differ enough from a dev machine that every visual test would fail for reasons unrelated to the change. The visual suite is a local/dev-machine safety net, not a deploy gate.
+CI (`.github/workflows/deploy.yml`) deliberately runs only the functional tests (`smoke`, `hero`, `headings`, `contact-form`, `i18n`, `navbar`) with `--ignore-snapshots`, skipping the visual suite — a GitHub Actions runner's font stack and GPU differ enough from a dev machine that every visual test would fail for reasons unrelated to the change. The visual suite is a local/dev-machine safety net, not a deploy gate.
 
 ## Fixed bugs worth knowing about
 

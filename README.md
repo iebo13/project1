@@ -11,7 +11,7 @@ A multi-page marketing website for a fictional boutique cleaning company based i
 - **Bilingual EN/DE, resolved at build time** — every page is rendered twice with localized URLs (German at the root, English under `/en/`), correct `lang`/`canonical`/`hreflang`, and per-language `<title>`/`<meta description>`. No translation JavaScript ships to the browser.
 - **Enhanced glassmorphism** — frosted glass navbar, cards, buttons, hero stats panel, with strong `backdrop-filter` blur throughout
 - **Awwwards-grade design** — soft shadows, large whitespace, fluid typography via `clamp()`
-- **6 pages, 1 layout** — Home, About, Services, Gallery, Contact, 404, all rendered from `src/_includes/layouts/base.njk`
+- **5 pages, 1 layout** — Home, Services, Gallery, Contact, 404, all rendered from `src/_includes/layouts/base.njk`
 - **10 services, data-driven** — each with its own dedicated detail section; adding one is a single entry in `src/_data/services.js`
 - **Premium interactions** — scroll reveal, parallax hero, magnetic buttons, ripple effect, tilt cards, animated counters, testimonial slider, lightbox, accordion FAQ
 - **Fully responsive** — fluid layout from 320px to 4K via CSS Grid + Flexbox
@@ -27,7 +27,6 @@ A multi-page marketing website for a fictional boutique cleaning company based i
 project1/
 ├── src/                          # Eleventy source — never edit _site/, it's generated
 │   ├── index.njk                 # Home page
-│   ├── about.njk                 # Mission, vision, values, timeline, team, certificates
 │   ├── services.njk              # All 10 services + detail sections + process
 │   ├── gallery.njk                # Filterable grid + lightbox
 │   ├── contact.njk               # Contact form with validation + map placeholder
@@ -166,7 +165,7 @@ What's actually true today:
 - **Reduced motion** — `@media (prefers-reduced-motion: reduce)` disables animations
 - **High contrast** — `@media (prefers-contrast: high)` strengthens borders and muted text
 - **Form validation** — `aria-live="polite"` on every field error and the form status message; focus moves to the first invalid field on submit
-- **Dark-hero heading contrast** — `<h1>`/`<h2>` on the four dark-hero pages (about, services, gallery, contact) and the CTA banner were fixed to clear 4.5:1 contrast and are covered by an automated test (`tests/headings.spec.js`)
+- **Dark-hero heading contrast** — `<h1>`/`<h2>` on the three dark-hero pages (services, gallery, contact) and the CTA banner were fixed to clear 4.5:1 contrast and are covered by an automated test (`tests/headings.spec.js`)
 
 What's **not** true yet, despite earlier claims — both deferred to Part 2:
 
