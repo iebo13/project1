@@ -145,10 +145,13 @@ Create `tests/contact-form.spec.js`:
 ```js
 import { test, expect } from '@playwright/test';
 
+// #service carries data-rules="required" and its first option is value="" —
+// omitting it makes every "valid" submission fail on that field instead.
 async function fillValidForm(page) {
   await page.fill('#firstName', 'Anna');
   await page.fill('#lastName', 'Schmidt');
   await page.fill('#email', 'anna.schmidt@example.de');
+  await page.selectOption('#service', 'office');
   await page.fill('#message', 'I would like a quote for a weekly office clean, roughly 200sqm.');
   await page.check('#consent');
 }
@@ -747,6 +750,21 @@ Baselines are captured **after** the Phase 0 fixes, so they encode correct rende
 
 - [ ] **Step 2: Create `tests/visual.spec.js`**
 
+**Read this before writing the file — two non-obvious hazards, both verified in a real browser:**
+
+1. **Scroll reveals.** The site animates content in with `data-reveal` + IntersectionObserver.
+   Below-fold elements only get `.is-visible` once scrolled into view. A `fullPage` screenshot
+   does NOT reliably trigger those observers, so a naive capture records most of each page at
+   `opacity: 0`. The baselines would be near-blank and the migration comparison worthless.
+2. **JS counters.** The stat counters animate over ~2.2s via `requestAnimationFrame`.
+   Playwright's `animations: 'disabled'` freezes CSS animations only — **not** JS-driven ones.
+   Verified counter distribution: `index.html` has 7 (3 in the hero above the fold, 4 in
+   `#stats` below it), `about.html` has 4 (below the fold), the other four pages have none.
+   Verified final values: `500+`, `15+`, `100%`, `12,500+`. No counter uses decimals, so
+   stripping non-digits is a safe comparison.
+
+Both mean the page must be **walked top to bottom** before capture.
+
 ```js
 import { test, expect } from '@playwright/test';
 
@@ -759,12 +777,48 @@ const pages = [
   ['notfound', '/404.html'],
 ];
 
+/**
+ * Walk the page so every IntersectionObserver fires — scroll reveals and the
+ * stat counters both depend on it — then return to the top and let everything
+ * settle. Without this, a fullPage capture records below-fold content at
+ * opacity 0 and counters mid-count, and the baseline is non-deterministic.
+ */
+async function settle(page) {
+  await page.evaluate(async () => {
+    const step = Math.floor(window.innerHeight * 0.8);
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 150));
+    }
+    window.scrollTo(0, 0);
+  });
+
+  // Every counter must have reached its target. Pages with no counters pass
+  // instantly ([].every() === true).
+  await page
+    .waitForFunction(
+      () =>
+        [...document.querySelectorAll('[data-counter]')].every(
+          (el) => el.textContent.replace(/\D/g, '') === String(el.dataset.counter)
+        ),
+      { timeout: 15_000 }
+    )
+    .catch(() => {
+      throw new Error(
+        'Counters never reached their targets. Investigate — do NOT weaken this ' +
+          'wait to get a green baseline; a mid-count capture makes the baseline flaky.'
+      );
+    });
+
+  // Hero entrance chain: 520ms delay + 900ms duration, plus parallax reset.
+  await page.waitForTimeout(1500);
+}
+
 for (const [name, path] of pages) {
   test(`${name} renders identically`, async ({ page }) => {
     await page.goto(path);
-    // Settle entrance animations and let lazy images resolve before capture.
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await settle(page);
     await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true });
   });
 }
@@ -775,10 +829,28 @@ for (const [name, path] of pages) {
 Run: `npm run test:update-snapshots -- tests/visual.spec.js`
 Expected: 12 snapshots written (6 pages × 2 projects) under `tests/visual.spec.js-snapshots/`.
 
-- [ ] **Step 4: Verify they are stable**
+- [ ] **Step 4: Verify they are stable — run three times**
 
-Run: `npm test -- tests/visual.spec.js`
-Expected: 12 passed. If any page flaps, the cause is almost certainly a hot-linked Unsplash image resolving at a different time — raise that page's `waitForTimeout` to 4000 rather than loosening `maxDiffPixelRatio`. Note which pages flap; Part 2 self-hosts or pins the images.
+A baseline that passes once proves nothing; these captures have several nondeterminism
+sources. Run the suite three times in a row:
+
+```bash
+npm test -- tests/visual.spec.js && \
+npm test -- tests/visual.spec.js && \
+npm test -- tests/visual.spec.js
+```
+Expected: 12 passed, three times.
+
+If a page flaps, diagnose before touching any tolerance. Likely causes, in order:
+1. A hot-linked Unsplash image resolving at a different time → raise that page's settle
+   timeout.
+2. A counter captured mid-count → the `waitForFunction` in `settle()` is not covering it.
+3. A CSS animation Playwright did not freeze.
+
+**Do NOT loosen `maxDiffPixelRatio` or lower a timeout to get green.** These baselines are the
+only thing standing between the migration and silent visual regressions; a tolerance wide
+enough to hide flake is wide enough to hide a real break. Record any page that needed a
+longer wait, and why, in your report.
 
 - [ ] **Step 5: Commit**
 
