@@ -1,0 +1,19 @@
+{
+  "name": "blitzblank",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BlitzBlank — Premium Reinigung Düsseldorf",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
+    "test": "node --test tests/*.test.mjs && playwright test",
+    "test:update-snapshots": "playwright test --update-snapshots=changed",
+    "test:build": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.6",
+    "@axe-core/playwright": "4.12.1",
+    "@playwright/test": "1.61.1"
+  }
+}

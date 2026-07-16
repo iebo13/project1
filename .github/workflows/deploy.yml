@@ -1,0 +1,78 @@
+name: Build & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow GITHUB_TOKEN to publish to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; don't cancel a run that's mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium for tests
+        run: npx playwright install --with-deps chromium
+
+      # Asserts the subpath build is correct — the one failure mode the browser
+      # tests cannot see, because locally the site is served from the root.
+      - name: Verify the Pages subpath build
+        run: npm run test:build
+
+      # Functional tests only — deliberately NOT the visual ones.
+      #
+      # The baselines in tests/visual.spec.js-snapshots/ were rendered on a
+      # developer machine. A CI runner has a different font stack and GPU, so
+      # text rasterises a pixel or two differently and every visual test fails
+      # for reasons that have nothing to do with the change. Those baselines
+      # exist to verify local refactors, not to gate deploys.
+      - name: Run functional tests
+        run: npx playwright test --ignore-snapshots tests/smoke.spec.js tests/hero.spec.js tests/headings.spec.js tests/contact-form.spec.js tests/i18n.spec.js tests/navbar.spec.js
+
+      # MUST run before the build: it exposes the real base_path and origin,
+      # which the build needs baked into every href and canonical.
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      # A GitHub Pages PROJECT site is served at https://<user>.github.io/<repo>/,
+      # so every absolute path needs that prefix or it resolves to the domain
+      # root and 404s. Taking both values from configure-pages rather than
+      # hardcoding them keeps this correct if the repo is renamed or later gets
+      # a custom domain.
+      - name: Build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          SITE_ORIGIN: ${{ steps.pages.outputs.origin }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

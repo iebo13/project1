@@ -4,7 +4,6 @@
    ========================================================= */
 
 const Animations = (() => {
-  const reveals = [];
   let observer = null;
 
   /* ---------- Scroll reveal via IntersectionObserver ---------- */
@@ -31,7 +30,6 @@ const Animations = (() => {
     );
 
     els.forEach((el) => {
-      reveals.push(el);
       observer.observe(el);
     });
   }
@@ -118,32 +116,7 @@ const Animations = (() => {
     });
   }
 
-  /* ---------- Animated progress bars (reviews page) ---------- */
-  function initProgressBars() {
-    const bars = document.querySelectorAll('.review-bar__fill');
-    if (!bars.length) return;
-
-    if (!('IntersectionObserver' in window)) {
-      bars.forEach((b) => b.classList.add('is-animated'));
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-animated');
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    bars.forEach((b) => obs.observe(b));
-  }
-
-  /* ---------- Tilt effect for premium cards ---------- */
+    /* ---------- Tilt effect for premium cards ---------- */
   function initTilt() {
     const tilts = document.querySelectorAll('[data-tilt]');
     if (!tilts.length) return;
@@ -189,7 +162,7 @@ const Animations = (() => {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-link').forEach((link) => {
       const href = link.getAttribute('href');
-      if (href === path || (path === '' && href === 'index.html')) {
+      if (href === path) {
         link.classList.add('is-active');
       }
     });
@@ -201,7 +174,6 @@ const Animations = (() => {
     initParallax();
     initRipple();
     initMagnetic();
-    initProgressBars();
     initTilt();
     initSmoothAnchors();
     initActiveNav();

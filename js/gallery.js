@@ -1,16 +1,16 @@
 /* =========================================================
    GALLERY.JS
-   Filtering + lightbox + lazy loading
+   Filtering + lightbox (native <dialog>)
    ========================================================= */
 
 const Gallery = (() => {
   let items = [];
   let filters = [];
-  let lightbox = null;
-  let lightboxImg = null;
-  let lightboxCaption = null;
+  let dialog = null;
+  let dialogImg = null;
+  let dialogCaption = null;
+  let currentList = [];
   let currentIndex = 0;
-  let visibleIndices = [];
 
   /* ---------- Filtering ---------- */
   function initFilters() {
@@ -22,14 +22,16 @@ const Gallery = (() => {
 
     filters.forEach((btn) => {
       btn.addEventListener('click', () => {
-        filters.forEach((b) => b.classList.remove('is-active'));
+        filters.forEach((b) => {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('is-active');
-        const filter = btn.dataset.filter;
-        applyFilter(filter);
+        btn.setAttribute('aria-pressed', 'true');
+        applyFilter(btn.dataset.filter);
       });
     });
 
-    // Build initial visible list
     refreshVisible();
   }
 
@@ -37,145 +39,116 @@ const Gallery = (() => {
     items.forEach((item) => {
       const cat = item.dataset.category || '';
       const match = filter === 'all' || cat === filter;
+      item.classList.toggle('is-hidden', !match);
       if (match) {
-        item.classList.remove('is-hidden');
-        // Re-trigger fade-in animation
-        item.style.animation = 'none';
+        // Re-trigger the fade-in without a forced reflow per card: toggle a
+        // class that the animation is keyed to.
+        item.classList.remove('is-fresh');
         // eslint-disable-next-line no-unused-expressions
-        item.offsetHeight;
-        item.style.animation = 'scaleIn 500ms var(--ease-out)';
-      } else {
-        item.classList.add('is-hidden');
+        item.offsetHeight; // single read is unavoidable to restart a CSS animation
+        item.classList.add('is-fresh');
       }
     });
     refreshVisible();
   }
 
   function refreshVisible() {
-    visibleIndices = items
-      .map((item, i) => (item.classList.contains('is-hidden') ? -1 : i))
-      .filter((i) => i !== -1);
+    // Kept for any future consumer; filtering toggles classes directly.
+    return items.filter((item) => !item.classList.contains('is-hidden'));
   }
 
   /* ---------- Lightbox ---------- */
   function initLightbox() {
-    lightbox = document.querySelector('.lightbox');
-    if (!lightbox) return;
+    dialog = document.querySelector('dialog.lightbox');
+    if (!dialog) return;
 
-    lightboxImg = lightbox.querySelector('.lightbox__img');
-    lightboxCaption = lightbox.querySelector('.lightbox__caption');
-    const closeBtn = lightbox.querySelector('.lightbox__close');
-    const prevBtn = lightbox.querySelector('.lightbox__nav--prev');
-    const nextBtn = lightbox.querySelector('.lightbox__nav--next');
+    dialogImg = dialog.querySelector('.lightbox__img');
+    dialogCaption = dialog.querySelector('.lightbox__caption');
 
-    // Delegate clicks on gallery cards
+    // Make every openable card keyboard-operable in one pass. Added at runtime
+    // so the markup stays clean; role/tabindex don't affect rendering.
+    document.querySelectorAll('.gallery-card, .masonry__item').forEach((card) => {
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+    });
+
+    const openAt = (card) => {
+      currentList = Array.from(
+        document.querySelectorAll('.gallery-card, .masonry__item')
+      ).filter((c) => !c.classList.contains('is-hidden'));
+      currentIndex = currentList.indexOf(card);
+      if (currentIndex === -1) return;
+      showCard(card);
+      dialog.showModal();
+    };
+
+    // Delegated click (mouse) + Enter/Space (keyboard).
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.gallery-card, .masonry__item');
-      if (!card) return;
-      // Build the list of currently visible images
-      const allCards = Array.from(document.querySelectorAll('.gallery-card, .masonry__item'))
-        .filter((c) => !c.classList.contains('is-hidden'));
-      const idx = allCards.indexOf(card);
-      if (idx === -1) return;
-      currentIndex = idx;
-      visibleLightboxList = allCards;
-      openLightbox();
+      if (card) openAt(card);
     });
-
-    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-    if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navLightbox(-1); });
-    if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navLightbox(1); });
-
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-
     document.addEventListener('keydown', (e) => {
-      if (!lightbox.classList.contains('is-open')) return;
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') navLightbox(-1);
-      if (e.key === 'ArrowRight') navLightbox(1);
+      const card = e.target.closest && e.target.closest('.gallery-card, .masonry__item');
+      if (card && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        openAt(card);
+      }
+    });
+
+    dialog.querySelector('.lightbox__close').addEventListener('click', () => dialog.close());
+    dialog.querySelector('.lightbox__nav--prev').addEventListener('click', (e) => {
+      e.stopPropagation();
+      nav(-1);
+    });
+    dialog.querySelector('.lightbox__nav--next').addEventListener('click', (e) => {
+      e.stopPropagation();
+      nav(1);
+    });
+
+    // Click on the dialog itself (the area around the image) closes — same as
+    // clicking the backdrop of a modal.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    // Escape is native to <dialog>; arrows still need wiring.
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') nav(-1);
+      if (e.key === 'ArrowRight') nav(1);
+    });
+
+    // Clear the image when the dialog closes (by Escape, backdrop, or button)
+    // so it doesn't flash the previous photo on the next open.
+    dialog.addEventListener('close', () => {
+      dialogImg.src = '';
+      dialogImg.alt = '';
+      if (dialogCaption) dialogCaption.textContent = '';
     });
   }
 
-  let visibleLightboxList = [];
-
-  function getImgSrc(card) {
+  function showCard(card) {
     const img = card.querySelector('img');
-    if (!img) return '';
-    // Use data-full if present (higher-res version), else src
-    return img.dataset.full || img.src;
-  }
+    const titleEl = card.querySelector('.gallery-card__title, .masonry__title');
+    const catEl = card.querySelector('.gallery-card__cat, .masonry__cat');
 
-  function getCaption(card) {
-    const title = card.querySelector('.gallery-card__title, .masonry__title');
-    const cat = card.querySelector('.gallery-card__cat, .masonry__cat');
-    const parts = [];
-    if (cat) parts.push(cat.textContent);
-    if (title) parts.push(title.textContent);
-    return parts.join(' · ');
-  }
-
-  function openLightbox() {
-    if (!visibleLightboxList.length) return;
-    const card = visibleLightboxList[currentIndex];
-    lightboxImg.src = getImgSrc(card);
-    lightboxImg.alt = (card.querySelector('.gallery-card__title, .masonry__title') || {}).textContent || '';
-    if (lightboxCaption) lightboxCaption.textContent = getCaption(card);
-    lightbox.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    lightbox.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  function navLightbox(dir) {
-    currentIndex = (currentIndex + dir + visibleLightboxList.length) % visibleLightboxList.length;
-    const card = visibleLightboxList[currentIndex];
-    // Brief fade transition
-    lightboxImg.style.opacity = '0';
-    setTimeout(() => {
-      lightboxImg.src = getImgSrc(card);
-      lightboxImg.alt = (card.querySelector('.gallery-card__title, .masonry__title') || {}).textContent || '';
-      if (lightboxCaption) lightboxCaption.textContent = getCaption(card);
-      lightboxImg.style.opacity = '';
-    }, 200);
-  }
-
-  /* ---------- Lazy loading ---------- */
-  function initLazy() {
-    const imgs = document.querySelectorAll('img[loading="lazy"][data-src]');
-    if (!imgs.length) return;
-
-    if ('IntersectionObserver' in window) {
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              img.src = img.dataset.src;
-              img.removeAttribute('data-src');
-              obs.unobserve(img);
-            }
-          });
-        },
-        { rootMargin: '200px 0px' }
-      );
-      imgs.forEach((img) => obs.observe(img));
-    } else {
-      imgs.forEach((img) => {
-        img.src = img.dataset.src;
-        img.removeAttribute('data-src');
-      });
+    dialogImg.src = (img && (img.dataset.full || img.src)) || '';
+    dialogImg.alt = (titleEl && titleEl.textContent) || (img && img.alt) || '';
+    if (dialogCaption) {
+      dialogCaption.textContent = [catEl && catEl.textContent, titleEl && titleEl.textContent]
+        .filter(Boolean)
+        .join(' · ');
     }
+  }
+
+  function nav(dir) {
+    if (!currentList.length) return;
+    currentIndex = (currentIndex + dir + currentList.length) % currentList.length;
+    showCard(currentList[currentIndex]);
   }
 
   function init() {
     initFilters();
     initLightbox();
-    initLazy();
   }
 
   return { init };

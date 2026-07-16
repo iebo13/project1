@@ -4,6 +4,10 @@
    ========================================================= */
 
 const Navigation = (() => {
+  // Widest viewport that still shows the drawer instead of the desktop nav row.
+  // Mirrors the `max-width: 1279px` nav block in css/responsive.css.
+  const NAV_DRAWER_MAX = 1279;
+
   let navbar = null;
   let navMenu = null;
   let navToggle = null;
@@ -76,9 +80,11 @@ const Navigation = (() => {
       }
     });
 
-    // Reset on resize to desktop
+    // Reset on resize to desktop. Must match the drawer breakpoint in
+    // responsive.css — if this is the larger of the two, the drawer stays open
+    // over a nav that CSS has already put back into its desktop row.
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 1024 && navMenu.classList.contains('is-open')) {
+      if (window.innerWidth > NAV_DRAWER_MAX && navMenu.classList.contains('is-open')) {
         close();
       }
     });

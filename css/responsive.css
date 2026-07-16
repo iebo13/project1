@@ -20,12 +20,14 @@
   }
 }
 
-/* ---------- Tablet landscape (<= 1024px) ---------- */
-@media (max-width: 1024px) {
-  :root {
-    --section-pad-y: clamp(3.5rem, 2rem + 5vw, 6rem);
-  }
-
+/* ---------- Desktop nav -> drawer (<= 1279px) ----------
+   The nav collapses at 1280, not at the 1024 used by the rest of the layout
+   below. The German nav row needs ~1250px of viewport to render unwrapped
+   (~1150px of content plus --container-pad either side); between 1025 and
+   1279 it was still being shown and could not fit, which is what wrapped
+   "Über uns" and clipped the CTA. This breakpoint is measured, not chosen —
+   see tests/navbar.spec.js. Keep in sync with NAV_DRAWER_MAX in js/navigation.js. */
+@media (max-width: 1279px) {
   /* Hide desktop nav, show mobile toggle */
   .nav-menu {
     position: fixed;
@@ -34,7 +36,7 @@
     height: 100vh;
     height: 100dvh;
     width: min(360px, 86vw);
-    background: rgba(15, 23, 42, 0.98);
+    background: color-mix(in srgb, var(--color-primary) 98%, transparent);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     flex-direction: column;
@@ -45,7 +47,7 @@
     transform: translateX(100%);
     transition: transform var(--t-slow) var(--ease-out);
     z-index: var(--z-dropdown);
-    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.4);
+    box-shadow: -20px 0 60px color-mix(in srgb, var(--color-black) 40%, transparent);
   }
 
   .nav-menu.is-open {
@@ -61,7 +63,7 @@
   }
 
   .nav-link:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: color-mix(in srgb, var(--color-white) 8%, transparent);
   }
 
   .nav-link__underline {
@@ -72,15 +74,11 @@
     display: block;
   }
 
-  .navbar__phone {
-    display: none;
-  }
-
   /* Mobile nav backdrop */
   .nav-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.6);
+    background: color-mix(in srgb, var(--color-primary) 60%, transparent);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     opacity: 0;
@@ -93,6 +91,24 @@
   .nav-backdrop.is-visible {
     opacity: 1;
     visibility: visible;
+  }
+}
+
+/* ---------- Header phone number (<= 1499px) ----------
+   The phone is the navbar's lowest-priority item — the "Get a Quote" button is
+   the primary action — so it is the first thing dropped when the row runs out of
+   width. Showing it costs ~180px, which the German row only has room for from
+   ~1450px up; below that it used to wrap the number onto three lines. */
+@media (max-width: 1499px) {
+  .navbar__phone {
+    display: none;
+  }
+}
+
+/* ---------- Tablet landscape (<= 1024px) ---------- */
+@media (max-width: 1024px) {
+  :root {
+    --section-pad-y: clamp(3.5rem, 2rem + 5vw, 6rem);
   }
 
   /* Hero adjustments */
@@ -143,17 +159,7 @@
   }
 
   /* Reviews summary */
-  .reviews-summary {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    text-align: center;
-  }
 
-  .reviews-summary__bars {
-    max-width: 480px;
-    margin-inline: auto;
-    width: 100%;
-  }
 
   /* Mission/Vision */
   .mv-grid {

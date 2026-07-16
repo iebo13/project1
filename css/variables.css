@@ -9,6 +9,7 @@
   --color-secondary: #2563EB;
   --color-accent: #06B6D4;
   --color-success: #10B981;
+  --color-error: #EF4444;
   --color-bg: #F8FAFC;
   --color-card: #FFFFFF;
   --color-text: #0F172A;
@@ -24,26 +25,34 @@
   --color-success-soft: #34D399;
   --color-white: #FFFFFF;
   --color-black: #000000;
-  --color-overlay: rgba(15, 23, 42, 0.55);
-  --color-overlay-strong: rgba(15, 23, 42, 0.85);
 
-  /* Glassmorphism tokens (stronger) */
-  --color-glass: rgba(255, 255, 255, 0.10);
-  --color-glass-strong: rgba(255, 255, 255, 0.16);
-  --color-glass-dark: rgba(15, 23, 42, 0.32);
-  --color-glass-border: rgba(255, 255, 255, 0.22);
-  --color-glass-border-strong: rgba(255, 255, 255, 0.35);
+  /* ---------- Alpha variants ----------
+     Derived from the palette above with color-mix() rather than written out
+     as rgba() literals. This is what makes the palette real: change
+     --color-primary and every overlay, shadow and glass surface below
+     follows. Previously ~63 rgba() literals spelled these hues by hand, so
+     changing a token silently left them at the old colour. */
+  --color-overlay: color-mix(in srgb, var(--color-primary) 55%, transparent);
+  --color-overlay-strong: color-mix(in srgb, var(--color-primary) 85%, transparent);
+
+  /* Glassmorphism */
+  --color-glass: color-mix(in srgb, var(--color-white) 10%, transparent);
+  --color-glass-strong: color-mix(in srgb, var(--color-white) 16%, transparent);
+  --color-glass-dark: color-mix(in srgb, var(--color-primary) 32%, transparent);
+  --color-glass-border: color-mix(in srgb, var(--color-white) 22%, transparent);
+  --color-glass-border-strong: color-mix(in srgb, var(--color-white) 35%, transparent);
   --glass-blur: 22px;
   --glass-blur-strong: 32px;
   --glass-saturate: 180%;
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
-  --gradient-primary-soft: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(6, 182, 212, 0.12) 100%);
-  --gradient-dark: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.85) 100%);
-  --gradient-hero: linear-gradient(120deg, rgba(15, 23, 42, 0.92) 0%, rgba(37, 99, 235, 0.55) 50%, rgba(6, 182, 212, 0.35) 100%);
+  --gradient-primary-soft: linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 12%, transparent) 0%, color-mix(in srgb, var(--color-accent) 12%, transparent) 100%);
+  --gradient-dark: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 0%, transparent) 0%, color-mix(in srgb, var(--color-primary) 85%, transparent) 100%);
+  --gradient-hero: linear-gradient(120deg, color-mix(in srgb, var(--color-primary) 92%, transparent) 0%, color-mix(in srgb, var(--color-secondary) 55%, transparent) 50%, color-mix(in srgb, var(--color-accent) 35%, transparent) 100%);
   --gradient-text: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
-  --gradient-card-hover: linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0%, rgba(6, 182, 212, 0.04) 100%);
+  --gradient-text-on-dark: linear-gradient(135deg, #FFFFFF 0%, #A5F3FC 100%);
+  --gradient-card-hover: linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 4%, transparent) 0%, color-mix(in srgb, var(--color-accent) 4%, transparent) 100%);
 
   /* ---------- Typography ---------- */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -101,9 +110,11 @@
 
   /* ---------- Layout ---------- */
   --container-max: 1280px;
-  --container-wide: 1440px;
-  --container-narrow: 768px;
   --container-pad: clamp(1.25rem, 0.5rem + 3.5vw, 4rem);
+  /* The navbar packs logo + 7 links + lang switch + phone + CTA into one row,
+     which needs ~1330px in German — more than --container-max can give. It gets
+     its own wider band so it never has to shrink its own contents to fit. */
+  --navbar-max: 1600px;
   --section-pad-y: clamp(4rem, 2rem + 8vw, 9rem);
   --section-gap: clamp(3rem, 1.5rem + 6vw, 6rem);
 
@@ -117,15 +128,15 @@
   --radius-full: 50%;
 
   /* ---------- Shadows ---------- */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.12);
-  --shadow-xl: 0 32px 80px rgba(15, 23, 42, 0.16);
-  --shadow-2xl: 0 50px 120px rgba(15, 23, 42, 0.22);
-  --shadow-glow: 0 12px 40px rgba(37, 99, 235, 0.32);
-  --shadow-glow-accent: 0 12px 40px rgba(6, 182, 212, 0.32);
-  --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-xs: 0 1px 2px color-mix(in srgb, var(--color-primary) 4%, transparent);
+  --shadow-sm: 0 2px 8px color-mix(in srgb, var(--color-primary) 6%, transparent);
+  --shadow-md: 0 8px 24px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --shadow-lg: 0 18px 48px color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --shadow-xl: 0 32px 80px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --shadow-2xl: 0 50px 120px color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --shadow-glow: 0 12px 40px color-mix(in srgb, var(--color-secondary) 32%, transparent);
+  --shadow-glow-accent: 0 12px 40px color-mix(in srgb, var(--color-accent) 32%, transparent);
+  --shadow-inner: inset 0 1px 0 color-mix(in srgb, var(--color-white) 10%, transparent);
 
   /* ---------- Transitions ---------- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

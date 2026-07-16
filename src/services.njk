@@ -1,0 +1,119 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'services' | permalinkFor(lang) }}index.html"
+  title: "{{ meta[lang].services.title }}"
+  description: "{{ meta[lang].services.description }}"
+  pageKey: 'services'
+navbarSolid: true
+---
+{% set d = dict[lang] %}
+  <main id="main">
+    <section class="page-hero">
+      <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
+      <div class="container page-hero__content">
+        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>What We Do</span>
+        <h1>Ten services. One obsession.</h1>
+        <p>From boutique offices to sprawling warehouses, every BlitzBlank clean is held to the same uncompromising standard.</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}"><span>{{ 'nav.home' | t(d) }}</span></a><span class="breadcrumb__sep">/</span><span>Services</span></nav>
+      </div>
+    </section>
+
+    <!-- All services grid -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>Service Catalogue</span>
+          <h2 class="section-title">Pick the cleaning your space needs</h2>
+          <p class="section-subtitle">Ten specialised services, each delivered by trained crews using the right tools, the right products, and the right amount of obsession.</p>
+        </div>
+
+        <div class="services-grid" data-stagger="90" id="all-services">
+          {% set variant = 'all' %}
+          {% for service in services %}
+          {% include "partials/service-card.njk" %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Process -->
+    <section class="section section--tinted">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>How It Works</span>
+          <h2 class="section-title">From quote to spotless in four steps</h2>
+        </div>
+        <div class="process-grid" data-stagger="150">
+          <div class="process-step">
+            <div class="process-step__num">1</div>
+            <h4>Request a quote</h4>
+            <p>Fill out our 60-second form. You'll get a flat-rate quote in writing — no phone tag, no upsells.</p>
+          </div>
+          <div class="process-step">
+            <div class="process-step__num">2</div>
+            <h4>Schedule your clean</h4>
+            <p>Pick a date and time that works. Recurring clients get priority windows and locked-in rates.</p>
+          </div>
+          <div class="process-step">
+            <div class="process-step__num">3</div>
+            <h4>We do the work</h4>
+            <p>Your uniformed crew arrives on time, equipped, and trained. You get a checklist on completion.</p>
+          </div>
+          <div class="process-step">
+            <div class="process-step__num">4</div>
+            <h4>Enjoy & relax</h4>
+            <p>Walk into a spotless space. Anything off? We return within 24 hours, free. That's our guarantee.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Service details -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>Service Details</span>
+          <h2 class="section-title">A closer look at each service</h2>
+          <p class="section-subtitle">What's included, what you can expect, and why our crews are different.</p>
+        </div>
+
+        {% for service in services %}
+        <div class="service-detail" id="{{ service.detailId }}" data-reveal>
+          <div class="service-detail__media"><img src="{{ service.detail.image }}" alt="{{ service.detail.alt }}" loading="lazy" /></div>
+          <div>
+            <span class="service-detail__num">{% if loop.index < 10 %}0{% endif %}{{ loop.index }}</span>
+            <h3 class="service-detail__title">{{ service.detail.heading }}</h3>
+            <p class="service-detail__desc">{{ service.detail.body }}</p>
+            <div class="service-detail__benefits">
+              {% for bullet in service.detail.bullets %}
+              <div class="service-detail__benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>{{ bullet }}</div>
+              {% endfor %}
+            </div>
+            <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary">Get a quote <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--tinted">
+      <div class="container">
+        <div class="promo-banner" data-reveal>
+          <div class="promo-banner__content">
+            <h2>Not sure which service fits?</h2>
+            <p>Tell us about your space and we'll recommend the right service, the right crew size, and the right cadence. Free, no obligation, no upsell.</p>
+            <div class="hero__cta" style="justify-content: center; opacity:1; animation: none;">
+              <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>Talk to a specialist</a>
+              <a href="{{ 'gallery' | url(lang) }}" class="btn btn--ghost-light btn--lg">See our work</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>

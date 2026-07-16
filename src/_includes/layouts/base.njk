@@ -1,0 +1,114 @@
+{% set d = dict[lang] %}
+{% set canonical = site.origin + (pageKey | url(lang)) %}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0F172A" />
+
+  {# Title and description come from meta.js, per page AND per language. The
+     retired runtime switcher shipped German meta under lang="en" on every
+     page — a textContent swap can't rewrite <head> before a crawler reads it. #}
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}" />
+  <meta name="author" content="{{ site.brand }}" />
+  {% if robots %}<meta name="robots" content="{{ robots }}" />{% endif %}
+
+  {# Self-referencing canonical + one alternate per language, plus x-default.
+     This is what makes the German content indexable as German. #}
+  <link rel="canonical" href="{{ canonical }}" />
+  {% for code in langs.codes %}
+  <link rel="alternate" hreflang="{{ code }}" href="{{ site.origin }}{{ pageKey | url(code) }}" />
+  {% endfor %}
+  <link rel="alternate" hreflang="x-default" href="{{ site.origin }}{{ pageKey | url(langs.default) }}" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="{{ 'de_DE' if lang == 'de' else 'en_GB' }}" />
+  <meta property="og:site_name" content="{{ site.brand }}" />
+  <meta property="og:url" content="{{ canonical }}" />
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="{{ description }}" />
+  <meta property="og:image" content="{{ site.ogImage }}" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ title }}" />
+  <meta name="twitter:description" content="{{ description }}" />
+  <meta name="twitter:image" content="{{ site.ogImage }}" />
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563EB'/%3E%3Cpath d='M50 18 L62 50 L78 50 L48 82 L58 56 L42 56 Z' fill='white'/%3E%3C/svg%3E" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  {# Order encodes the cascade: later files override earlier ones by position,
+     not specificity. Do not reorder. Paths are root-relative because pages now
+     live at varying depths (/kontakt/, /en/contact/). #}
+  <link rel="stylesheet" href="{{ '/css/variables.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/animations.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/components.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/responsive.css' | asset }}" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {% raw %}{{% endraw %}
+    "@context": "https://schema.org",
+    "@type": "CleaningService",
+    "name": "{{ site.brand }}",
+    "url": "{{ canonical }}",
+    "image": "{{ site.ogImage }}",
+    "description": {{ description | dump | safe }},
+    "telephone": "+49-211-934-567-89",
+    "email": "{{ site.email }}",
+    "address": {% raw %}{{% endraw %}
+      "@type": "PostalAddress",
+      "streetAddress": "Königsallee 42",
+      "addressLocality": "Düsseldorf",
+      "addressRegion": "NRW",
+      "postalCode": "40212",
+      "addressCountry": "DE"
+    {% raw %}}{% endraw %},
+    "openingHours": "Mo-Sa 07:00-20:00",
+    "priceRange": "€€€"
+  {% raw %}}{% endraw %}
+  </script>
+</head>
+<body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
+  <a href="#main" class="skip-link">{{ 'nav.skip' | t(d) }}</a>
+
+  <!-- Preloader -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__ring"></div>
+    <div class="preloader__brand">{{ site.brand }}</div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+{% include "partials/navbar.njk" %}
+
+  {{ content | safe }}
+
+  <!-- ===== FOOTER ===== -->
+{% include "partials/footer.njk" %}
+
+  <!-- Back to top -->
+  <button class="back-to-top" aria-label="{{ 'footer.backToTop' | t(d) }}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+  </button>
+
+  {# Order encodes init order: app.js runs each module's init() and must load
+     last. Paths are root-relative — pages live at varying depths. #}
+  <script src="{{ '/js/animations.js' | asset }}" defer></script>
+  <script src="{{ '/js/navigation.js' | asset }}" defer></script>
+  <script src="{{ '/js/counter.js' | asset }}" defer></script>
+  <script src="{{ '/js/slider.js' | asset }}" defer></script>
+  <script src="{{ '/js/gallery.js' | asset }}" defer></script>
+  <script src="{{ '/js/contact.js' | asset }}" defer></script>
+  <script src="{{ '/js/app.js' | asset }}" defer></script>
+</body>
+</html>

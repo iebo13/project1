@@ -1,0 +1,198 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'contact' | permalinkFor(lang) }}index.html"
+  title: "{{ meta[lang].contact.title }}"
+  description: "{{ meta[lang].contact.description }}"
+  pageKey: 'contact'
+navbarSolid: true
+---
+{% set d = dict[lang] %}
+  <main id="main">
+    <section class="page-hero">
+      <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
+      <div class="container page-hero__content">
+        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>{{ 'page.contact.eyebrow' | t(d) }}</span>
+        <h1>{{ 'page.contact.title' | t(d) }}</h1>
+        <p>{{ 'page.contact.subtitle' | t(d) }}</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'nav.contact' | t(d) }}</span></nav>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="contact-cta">
+          <!-- LEFT: Info -->
+          <div class="contact-cta__info" data-reveal="left">
+            <span class="eyebrow"><span class="eyebrow__dot"></span>{{ 'contact.details.eyebrow' | t(d) }}</span>
+            <h2 style="margin-top: var(--space-4)">{{ 'contact.details.title' | t(d) }}</h2>
+            <p>{{ 'contact.details.desc' | t(d) }}</p>
+
+            <div class="contact-list">
+              <div class="contact-list__item">
+                <span class="contact-list__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                <div>
+                  <div class="contact-list__label">{{ 'contact.phone.label' | t(d) }}</div>
+                  <a class="contact-list__value" href="{{ site.phoneHref }}">{{ site.phone }}</a>
+                </div>
+              </div>
+              <div class="contact-list__item">
+                <span class="contact-list__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                <div>
+                  <div class="contact-list__label">{{ 'contact.email.label' | t(d) }}</div>
+                  <a class="contact-list__value" href="mailto:{{ site.email }}">{{ site.email }}</a>
+                </div>
+              </div>
+              <div class="contact-list__item">
+                <span class="contact-list__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                <div>
+                  <div class="contact-list__label">{{ 'contact.address.label' | t(d) }}</div>
+                  <div class="contact-list__value">Königsallee 42<br/>40212 Düsseldorf</div>
+                </div>
+              </div>
+              <div class="contact-list__item">
+                <span class="contact-list__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </span>
+                <div>
+                  <div class="contact-list__label">{{ 'contact.hours.label' | t(d) }}</div>
+                  <div class="contact-list__value">{{ 'contact.hours.value' | t(d) }}<br/>{{ 'contact.hours.value2' | t(d) }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-socials">
+              <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+              <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+              <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21.5l-7.5 8.572L22.5 22h-6.928l-5.42-7.09L3.8 22H.543l8.022-9.17L1 2h7.1l4.9 6.49L18.244 2z"/></svg></a>
+              <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+            </div>
+          </div>
+
+          <!-- RIGHT: Form -->
+          <div class="contact-form-card" data-reveal="right">
+            <h3 style="margin-bottom: var(--space-2)">{{ 'contact.form.title' | t(d) }}</h3>
+            <p style="color: var(--color-muted); margin-bottom: var(--space-6); font-size: var(--fs-sm);">{{ 'contact.form.desc' | t(d) }}</p>
+
+            <form id="contact-form">
+              <div class="form-row">
+                <div class="field">
+                  <label class="field__label" for="firstName">{{ 'contact.form.firstName' | t(d) }} *</label>
+                  <input class="field__input" type="text" id="firstName" name="firstName" autocomplete="given-name" minlength="2" required />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="lastName">{{ 'contact.form.lastName' | t(d) }} *</label>
+                  <input class="field__input" type="text" id="lastName" name="lastName" autocomplete="family-name" minlength="2" required />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="field">
+                  <label class="field__label" for="email">{{ 'contact.form.email' | t(d) }} *</label>
+                  <input class="field__input" type="email" id="email" name="email" autocomplete="email" required />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="phone">{{ 'contact.form.phone' | t(d) }}</label>
+                  <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel" pattern="[+0-9()\.\- ]{7,}" inputmode="tel" />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-row form-row--single">
+                <div class="field">
+                  <label class="field__label" for="service">{{ 'contact.form.service' | t(d) }} *</label>
+                  <select class="field__select" id="service" name="service" required>
+                    <option value="">{{ 'contact.form.service.choose' | t(d) }}</option>
+                    {% for service in services %}
+                    <option value="{{ service.id }}">{{ ('srv.' + service.id + '.title') | t(d) }}</option>
+                    {% endfor %}
+                    <option value="other">{{ 'contact.form.service.other' | t(d) }}</option>
+                  </select>
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-row form-row--single">
+                <div class="field">
+                  <label class="field__label" for="message">{{ 'contact.form.message' | t(d) }} *</label>
+                  <textarea class="field__textarea" id="message" name="message" placeholder="{{ 'contact.form.message.ph' | t(d) }}" minlength="10" required></textarea>
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-row form-row--single">
+                <div class="field field--consent">
+                  <input class="field__input" type="checkbox" id="consent" name="consent" required />
+                  <label for="consent">
+                    {{ 'contact.form.consent' | t(d) }} <a href="#">{{ 'contact.form.consent.privacy' | t(d) }}</a>. {{ 'contact.form.consent.cont' | t(d) }}
+                  </label>
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top: var(--space-4);">
+                {{ 'contact.form.submit' | t(d) }}
+                <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+
+              <div class="form-message" role="status" aria-live="polite"
+                   data-success="{{ 'form.successMsg' | t(d) }}"
+                   data-toast-success="{{ 'form.toast.success' | t(d) }}"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map -->
+    <section class="section section--tight section--tinted">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>{{ 'contact.map.eyebrow' | t(d) }}</span>
+          <h2 class="section-title">{{ 'contact.map.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'contact.map.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="map-embed" data-reveal aria-label="{{ 'contact.map.title' | t(d) }} — Königsallee 42, Düsseldorf">
+          <div class="map-embed__grid" aria-hidden="true"></div>
+          <div class="map-embed__pin" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="map-embed__placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <h4>Königsallee 42</h4>
+            <p>40212 Düsseldorf · {{ 'contact.map.parking' | t(d) }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ teaser -->
+    <section class="section">
+      <div class="container">
+        <div class="promo-banner" data-reveal>
+          <div class="promo-banner__content">
+            <h2>{{ 'contact.faq.title' | t(d) }}</h2>
+            <p>{{ 'contact.faq.desc' | t(d) }}</p>
+            <div class="hero__cta hero__cta--static">
+              <a href="{{ 'home' | url(lang) }}#faq" class="btn btn--primary btn--lg">{{ 'contact.faq.btn1' | t(d) }}</a>
+              <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg">{{ 'contact.faq.btn2' | t(d) }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>

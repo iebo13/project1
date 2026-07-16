@@ -62,7 +62,7 @@ ol {
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.18);
+  background: color-mix(in srgb, var(--color-secondary) 18%, transparent);
   color: var(--color-primary);
 }
 
@@ -92,7 +92,13 @@ ol {
 }
 
 /* ---------- Typography ---------- */
-h1, h2, h3, h4, h5, h6 {
+/* Specificity only arbitrates between competing declarations on the same
+   element; inheritance only applies when no declaration matches at all. A
+   zero-specificity :where() selector still declares `color` directly on
+   the heading, so it beats inheritance regardless — :where() never fixed
+   the dark-on-dark bug (the explicit color:inherit rules in components.css
+   did). Kept at (0,0,0) anyway so Part 2's @layer work can reset from zero. */
+:where(h1, h2, h3, h4, h5, h6) {
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
@@ -118,8 +124,6 @@ p {
   padding-inline: var(--container-pad);
 }
 
-.container--wide  { max-width: var(--container-wide); }
-.container--narrow { max-width: var(--container-narrow); }
 
 .section {
   padding-block: var(--section-pad-y);
@@ -132,7 +136,7 @@ p {
 
 .section--dark {
   background: var(--color-primary);
-  color: rgba(255, 255, 255, 0.86);
+  color: color-mix(in srgb, var(--color-white) 86%, transparent);
 }
 
 .section--tinted {
@@ -180,52 +184,53 @@ p {
               border-color var(--t-base) var(--ease-out);
   border-bottom: 1px solid transparent;
   /* Glass by default */
-  background: rgba(255, 255, 255, 0.10);
+  background: color-mix(in srgb, var(--color-white) 10%, transparent);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: rgba(255, 255, 255, 0.10);
+  border-bottom-color: color-mix(in srgb, var(--color-white) 10%, transparent);
 }
 
 .navbar.is-scrolled {
   height: var(--navbar-height-scrolled);
-  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--color-white) 72%, transparent);
   backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   border-bottom-color: var(--color-border);
-  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--color-primary) 4%, transparent);
 }
 
 /* When navbar is over hero (not scrolled) — glass over image */
 .navbar:not(.is-scrolled):not(.navbar--solid) {
-  background: rgba(15, 23, 42, 0.18);
+  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: color-mix(in srgb, var(--color-white) 12%, transparent);
 }
 
 /* Solid navbar variant (interior pages without hero image behind) */
 .navbar--solid {
-  background: rgba(15, 23, 42, 0.85);
+  background: color-mix(in srgb, var(--color-primary) 85%, transparent);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: color-mix(in srgb, var(--color-white) 8%, transparent);
 }
 
 .navbar__inner {
   width: 100%;
-  max-width: var(--container-max);
+  max-width: var(--navbar-max);
   margin-inline: auto;
   padding-inline: var(--container-pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 /* Logo */
 .logo {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: var(--space-3);
   font-weight: var(--fw-extrabold);
   font-size: var(--fs-lg);
@@ -285,16 +290,25 @@ p {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  flex-shrink: 0;
+  gap: var(--space-1);
 }
 
+/* Nothing in the navbar row may shrink below its text: a flex item that gives up
+   width here does not get smaller, it wraps mid-label ("Über uns" over two
+   lines) or clips ("Angebot anfordern" -> "ngebot anfordern"). Holding every
+   item at its natural width means a too-narrow viewport overflows the row
+   instead — which the breakpoints below prevent, and tests/navbar.spec.js
+   guards. */
 .nav-link {
   position: relative;
-  padding: var(--space-2) var(--space-4);
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: var(--space-2) var(--space-3);
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-wide);
-  color: rgba(255, 255, 255, 0.85);
+  color: color-mix(in srgb, var(--color-white) 85%, transparent);
   border-radius: var(--radius-pill);
   transition: color var(--t-base) var(--ease-out);
 }
@@ -315,8 +329,10 @@ p {
 
 .nav-link__underline {
   position: absolute;
-  left: var(--space-4);
-  right: var(--space-4);
+  /* Inset to match .nav-link's horizontal padding so the rule sits under the
+     label, not under the padding. */
+  left: var(--space-3);
+  right: var(--space-3);
   bottom: 6px;
   height: 2px;
   background: var(--color-accent);
@@ -341,16 +357,23 @@ p {
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  flex-shrink: 0;
+  gap: var(--space-3);
+}
+
+.navbar__actions .btn {
+  white-space: nowrap;
 }
 
 .navbar__phone {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
   gap: var(--space-2);
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
-  color: rgba(255, 255, 255, 0.9);
+  color: color-mix(in srgb, var(--color-white) 90%, transparent);
   transition: color var(--t-base) var(--ease-out);
 }
 
@@ -448,9 +471,9 @@ p {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.42) 0%, transparent 55%),
-    radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.38) 0%, transparent 55%),
-    linear-gradient(135deg, rgba(15, 23, 42, 0.78) 0%, rgba(37, 99, 235, 0.40) 50%, rgba(6, 182, 212, 0.30) 100%);
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-secondary) 42%, transparent) 0%, transparent 55%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--color-accent) 38%, transparent) 0%, transparent 55%),
+    linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 78%, transparent) 0%, color-mix(in srgb, var(--color-secondary) 40%, transparent) 50%, color-mix(in srgb, var(--color-accent) 30%, transparent) 100%);
   z-index: 1;
 }
 
@@ -484,9 +507,18 @@ p {
   display: inline-block;
 }
 
+/* CTA row inside a promo banner: no entrance animation (it isn't the hero).
+   Replaces `style="justify-content:center; opacity:1; animation:none;"`
+   repeated inline on five pages purely to undo the hero rule above. */
+.hero__cta--static {
+  justify-content: center;
+  opacity: 1;
+  animation: none;
+}
+
 .hero__subtitle {
   font-size: var(--fs-xl);
-  color: rgba(255, 255, 255, 0.86);
+  color: color-mix(in srgb, var(--color-white) 86%, transparent);
   line-height: var(--lh-relaxed);
   max-width: 620px;
   margin-bottom: var(--space-10);
@@ -515,7 +547,7 @@ p {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border: 1px solid var(--color-glass-border);
   border-radius: var(--radius-xl);
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.32);
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--color-primary) 32%, transparent);
   opacity: 0;
   animation: fadeInUp 800ms var(--ease-out) 1100ms forwards;
 }
@@ -545,7 +577,7 @@ p {
 
 .hero__stat-label {
   font-size: var(--fs-sm);
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   margin-top: var(--space-2);
@@ -598,7 +630,7 @@ p {
   bottom: 24px;
   left: 24px;
   right: 24px;
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--color-white) 92%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: var(--radius-lg);
@@ -707,7 +739,7 @@ p {
 .masonry__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(15, 23, 42, 0.85) 100%);
+  background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--color-primary) 85%, transparent) 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -820,7 +852,11 @@ p {
   display: grid;
   place-items: center;
   color: var(--color-muted);
-  transition: all var(--t-base) var(--ease-out);
+  transition: background var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-out);
 }
 
 .contact-socials a:hover {
@@ -882,15 +918,15 @@ p {
 }
 
 .form-message--success {
-  background: rgba(16, 185, 129, 0.1);
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
   color: var(--color-success);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  border: 1px solid color-mix(in srgb, var(--color-success) 25%, transparent);
 }
 
 .form-message--error {
-  background: rgba(239, 68, 68, 0.08);
-  color: #EF4444;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: color-mix(in srgb, var(--color-error) 8%, transparent);
+  color: var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 20%, transparent);
 }
 
 /* ---------- Map ---------- */
@@ -903,7 +939,7 @@ p {
   background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
   display: grid;
   place-items: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: color-mix(in srgb, var(--color-white) 80%, transparent);
   border: 1px solid var(--color-border);
 }
 
@@ -927,15 +963,15 @@ p {
 
 .map-embed__placeholder p {
   font-size: var(--fs-sm);
-  color: rgba(255, 255, 255, 0.65);
+  color: color-mix(in srgb, var(--color-white) 65%, transparent);
 }
 
 .map-embed__grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(37, 99, 235, 0.08) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--color-secondary) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-secondary) 8%, transparent) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
 }
@@ -961,7 +997,7 @@ p {
    ========================================================= */
 .footer {
   background: var(--color-primary);
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
   padding-top: var(--space-24);
   position: relative;
   overflow: hidden;
@@ -974,7 +1010,7 @@ p {
   right: -100px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-secondary) 25%, transparent) 0%, transparent 70%);
   filter: blur(80px);
   pointer-events: none;
 }
@@ -986,7 +1022,7 @@ p {
   left: -100px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 18%, transparent) 0%, transparent 70%);
   filter: blur(80px);
   pointer-events: none;
 }
@@ -1001,7 +1037,7 @@ p {
   grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
   gap: var(--space-12);
   padding-bottom: var(--space-16);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-white) 8%, transparent);
 }
 
 .footer__brand .logo {
@@ -1024,12 +1060,15 @@ p {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--color-white) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-white) 10%, transparent);
   display: grid;
   place-items: center;
-  color: rgba(255, 255, 255, 0.8);
-  transition: all var(--t-base) var(--ease-out);
+  color: color-mix(in srgb, var(--color-white) 80%, transparent);
+  transition: background var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-out);
 }
 
 .footer__socials a:hover {
@@ -1060,7 +1099,7 @@ p {
 
 .footer__links a {
   font-size: var(--fs-sm);
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
   transition: color var(--t-base) var(--ease-out),
               padding-left var(--t-base) var(--ease-out);
 }
@@ -1079,8 +1118,8 @@ p {
 .newsletter-form {
   display: flex;
   gap: var(--space-2);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--color-white) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-white) 10%, transparent);
   border-radius: var(--radius-pill);
   padding: var(--space-2);
   transition: border-color var(--t-base) var(--ease-out);
@@ -1101,7 +1140,7 @@ p {
 }
 
 .newsletter-form input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: color-mix(in srgb, var(--color-white) 50%, transparent);
 }
 
 .newsletter-form input:focus {
@@ -1142,7 +1181,7 @@ p {
 }
 
 .footer__bottom a {
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
   transition: color var(--t-base) var(--ease-out);
 }
 
@@ -1165,8 +1204,8 @@ p {
   text-align: center;
   padding: var(--space-20) var(--container-pad);
   background:
-    radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-secondary) 15%, transparent) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--color-accent) 15%, transparent) 0%, transparent 50%),
     var(--color-bg);
   position: relative;
   overflow: hidden;
@@ -1213,7 +1252,7 @@ p {
 /* ---------- Marquee strip ---------- */
 .strip {
   background: var(--color-primary);
-  color: rgba(255, 255, 255, 0.85);
+  color: color-mix(in srgb, var(--color-white) 85%, transparent);
   padding: var(--space-5) 0;
   overflow: hidden;
   position: relative;
@@ -1451,7 +1490,11 @@ p {
   color: var(--color-secondary);
   position: relative;
   z-index: 1;
-  transition: all var(--t-base) var(--ease-out);
+  transition: background var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-out);
 }
 
 .process-step:hover .process-step__num {
@@ -1497,6 +1540,19 @@ p {
   display: none;
 }
 
+/* Cards are keyboard-operable (tabindex + role via gallery.js); give them a
+   visible focus ring and re-trigger the fade-in on filter without the old
+   per-card inline-style + forced-reflow dance. */
+.gallery-card:focus-visible,
+.masonry__item:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.gallery-card.is-fresh {
+  animation: scaleIn 500ms var(--ease-out);
+}
+
 .gallery-card img {
   width: 100%;
   height: 100%;
@@ -1516,7 +1572,7 @@ p {
 .gallery-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(15, 23, 42, 0.92) 100%);
+  background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, var(--color-primary) 92%, transparent) 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1552,7 +1608,7 @@ p {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.18);
+  background: color-mix(in srgb, var(--color-white) 18%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: var(--color-white);
@@ -1582,102 +1638,19 @@ p {
   margin-bottom: var(--space-12);
 }
 
-/* ---------- Reviews page extra ---------- */
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: var(--space-6);
-}
 
-.reviews-summary {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-12);
-  align-items: center;
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-12);
-  margin-bottom: var(--space-16);
-  box-shadow: var(--shadow-md);
-}
 
-.reviews-summary__score {
-  text-align: center;
-}
 
-.reviews-summary__num {
-  font-size: var(--fs-6xl);
-  font-weight: var(--fw-extrabold);
-  background: var(--gradient-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
 
-.reviews-summary__stars {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  margin-top: var(--space-3);
-  color: #F59E0B;
-}
 
-.reviews-summary__stars svg {
-  width: 24px;
-  height: 24px;
-}
 
-.reviews-summary__count {
-  margin-top: var(--space-2);
-  color: var(--color-muted);
-  font-size: var(--fs-sm);
-}
 
-.reviews-summary__bars {
-  display: grid;
-  gap: var(--space-3);
-}
 
-.review-bar {
-  display: grid;
-  grid-template-columns: 60px 1fr 50px;
-  align-items: center;
-  gap: var(--space-4);
-}
 
-.review-bar__label {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--color-primary-soft);
-}
 
-.review-bar__track {
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--color-bg);
-  overflow: hidden;
-}
 
-.review-bar__fill {
-  height: 100%;
-  background: var(--gradient-primary);
-  border-radius: var(--radius-pill);
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 1.2s var(--ease-out);
-}
 
-.review-bar__fill.is-animated {
-  transform: scaleX(var(--fill, 1));
-}
 
-.review-bar__count {
-  font-size: var(--fs-sm);
-  color: var(--color-muted);
-  text-align: right;
-}
 
 /* ---------- Brands marquee ---------- */
 .brands {

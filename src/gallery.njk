@@ -1,0 +1,203 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'gallery' | permalinkFor(lang) }}index.html"
+  title: "{{ meta[lang].gallery.title }}"
+  description: "{{ meta[lang].gallery.description }}"
+  pageKey: 'gallery'
+navbarSolid: true
+---
+{% set d = dict[lang] %}
+  <main id="main">
+    <section class="page-hero">
+      <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
+      <div class="container page-hero__content">
+        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>Portfolio</span>
+        <h1>Spaces we've brought back to life.</h1>
+        <p>A curated selection of recent projects. Filter by category, click any image to view full size.</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}"><span>{{ 'nav.home' | t(d) }}</span></a><span class="breadcrumb__sep">/</span><span>Gallery</span></nav>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <!-- Filters -->
+        <div class="gallery-filters" data-reveal role="tablist" aria-label="Filter gallery">
+          <button class="filter-btn is-active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="residential">Residential</button>
+          <button class="filter-btn" data-filter="commercial">Commercial</button>
+          <button class="filter-btn" data-filter="industrial">Industrial</button>
+          <button class="filter-btn" data-filter="deep">Deep Clean</button>
+          <button class="filter-btn" data-filter="hospitality">Hospitality</button>
+          <button class="filter-btn" data-filter="medical">Medical</button>
+        </div>
+
+        <!-- Gallery grid -->
+        <div class="gallery-grid" data-stagger="60">
+          <div class="gallery-card" data-category="residential">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=85" alt="Spotless modern kitchen after deep cleaning" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Residential</span>
+              <span class="gallery-card__title">Modern Kitchen Reset</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="commercial">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=85" alt="Bright open-plan office space" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Commercial</span>
+              <span class="gallery-card__title">Open-Plan Office</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="residential">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1600&q=85" alt="Minimalist living room with natural light" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Residential</span>
+              <span class="gallery-card__title">Sunlit Living Room</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="commercial">
+            <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1600&q=85" alt="Clean corporate workspace" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Commercial</span>
+              <span class="gallery-card__title">Corporate Suite</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="deep">
+            <img src="https://images.unsplash.com/photo-1567548083313-04c67ac2f4f0?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1567548083313-04c67ac2f4f0?auto=format&fit=crop&w=1600&q=85" alt="Sparkling bathroom with chrome fixtures" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Deep Clean</span>
+              <span class="gallery-card__title">Spa-Grade Bathroom</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="commercial">
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=85" alt="Modern conference room" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Commercial</span>
+              <span class="gallery-card__title">Boardroom Refresh</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="residential">
+            <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=1600&q=85" alt="Polished hardwood floors" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Residential</span>
+              <span class="gallery-card__title">Hardwood Revival</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="hospitality">
+            <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1600&q=85" alt="Modern restaurant dining area" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Hospitality</span>
+              <span class="gallery-card__title">Restaurant Dining</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="industrial">
+            <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=85" alt="Industrial warehouse floor" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Industrial</span>
+              <span class="gallery-card__title">Warehouse Floor</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="medical">
+            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1600&q=85" alt="Medical clinic exam room" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Medical</span>
+              <span class="gallery-card__title">Clinic Terminal Clean</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="deep">
+            <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1600&q=85" alt="Cleaning supplies ready for deep clean" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Deep Clean</span>
+              <span class="gallery-card__title">Move-In Reset</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="residential">
+            <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=1600&q=85" alt="Clean modern bedroom" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Residential</span>
+              <span class="gallery-card__title">Serene Bedroom</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="commercial">
+            <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=1600&q=85" alt="Modern office reception area" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Commercial</span>
+              <span class="gallery-card__title">Reception Lounge</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="hospitality">
+            <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1600&q=85" alt="Hotel lobby after cleaning" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Hospitality</span>
+              <span class="gallery-card__title">Hotel Lobby</span>
+            </div>
+          </div>
+
+          <div class="gallery-card" data-category="industrial">
+            <img src="https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=700&q=80" data-full="https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=1600&q=85" alt="Factory production floor" loading="lazy" />
+            <span class="gallery-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            <div class="gallery-card__overlay">
+              <span class="gallery-card__cat">Industrial</span>
+              <span class="gallery-card__title">Production Floor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--tinted">
+      <div class="container">
+        <div class="promo-banner" data-reveal>
+          <div class="promo-banner__content">
+            <h2>Your space could be next.</h2>
+            <p>Every photo in this gallery started with a conversation. Let's have yours.</p>
+            <div class="hero__cta" style="justify-content: center; opacity:1; animation: none;">
+              <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>Start your project</a>
+              <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg">Browse services</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <dialog class="lightbox" aria-label="Image viewer">
+    <button class="lightbox__close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="lightbox__nav lightbox__nav--prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <img class="lightbox__img" src="" alt="" />
+    <button class="lightbox__nav lightbox__nav--next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div class="lightbox__caption"></div>
+  </dialog>

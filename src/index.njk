@@ -1,0 +1,390 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'home' | permalinkFor(lang) }}index.html"
+  title: "{{ meta[lang].home.title }}"
+  description: "{{ meta[lang].home.description }}"
+  pageKey: 'home'
+robots: 'index, follow'
+navbarSolid: false
+---
+{% set d = dict[lang] %}
+  <main id="main">
+    <!-- ===== HERO ===== -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero__bg" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
+             alt=""
+             loading="eager"
+             fetchpriority="high" />
+      </div>
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <!-- Decorative floating blobs for richer glass effect -->
+      <div class="blob blob--blue" style="width: 480px; height: 480px; top: -120px; left: -120px;" aria-hidden="true"></div>
+      <div class="blob blob--cyan" style="width: 400px; height: 400px; bottom: -80px; right: -80px;" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <span class="eyebrow eyebrow--light hero__eyebrow">
+          <span class="eyebrow__dot"></span>
+          <span>{{ 'hero.eyebrow' | t(d) }}</span>
+        </span>
+
+        <h1 class="hero__title">
+          <span class="hero-line hero-line--1">{{ 'hero.title1' | t(d) }}</span><br />
+          <span class="hero-line hero-line--2">{{ 'hero.title2' | t(d) }}</span>
+          <span class="hero-line hero-line--3 text-gradient">{{ 'hero.title3' | t(d) }}</span>
+        </h1>
+
+        <p class="hero__subtitle">{{ 'hero.subtitle' | t(d) }}</p>
+
+        <div class="hero__cta">
+          <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>
+            <span>{{ 'hero.cta1' | t(d) }}</span>
+            <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg"><span>{{ 'hero.cta2' | t(d) }}</span></a>
+        </div>
+
+        <div class="hero__stats">
+          <div class="hero__stat">
+            <div class="hero__stat-num"><span data-counter="500" data-suffix="+">0</span></div>
+            <div class="hero__stat-label">{{ 'hero.stat1.label' | t(d) }}</div>
+          </div>
+          <div class="hero__stat">
+            <div class="hero__stat-num"><span data-counter="15" data-suffix="+">0</span></div>
+            <div class="hero__stat-label">{{ 'hero.stat2.label' | t(d) }}</div>
+          </div>
+          <div class="hero__stat">
+            <div class="hero__stat-num"><span data-counter="100" data-suffix="%">0</span></div>
+            <div class="hero__stat-label">{{ 'hero.stat3.label' | t(d) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#stats" class="scroll-indicator" aria-label="Scroll down">
+        <span>{{ 'hero.scroll' | t(d) }}</span>
+        <span class="scroll-indicator__mouse" aria-hidden="true"></span>
+      </a>
+    </section>
+
+    <!-- ===== STRIP / Marquee ===== -->
+    <div class="strip" aria-hidden="true">
+      <div class="marquee">
+        <div class="marquee__track">
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.1' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.2' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.3' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.4' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.5' | t(d) }}</span></span>
+        </div>
+        <div class="marquee__track" aria-hidden="true">
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.1' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.2' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.3' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.4' | t(d) }}</span></span>
+          <span class="strip__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>{{ 'strip.5' | t(d) }}</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <section class="section section--gradient" id="stats" aria-label="Our impact in numbers">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'stats.eyebrow' | t(d) }}</span></span>
+          <h2 class="section-title">{{ 'stats.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'stats.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="stats-grid" data-stagger="120">
+          <div class="stat-card">
+            <span class="stat-card__num"><span data-counter="500" data-suffix="+">0</span></span>
+            <span class="stat-card__label">{{ 'stats.1.label' | t(d) }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__num"><span data-counter="12500" data-suffix="+">0</span></span>
+            <span class="stat-card__label">{{ 'stats.2.label' | t(d) }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__num"><span data-counter="15" data-suffix="+">0</span></span>
+            <span class="stat-card__label">{{ 'stats.3.label' | t(d) }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__num"><span data-counter="100" data-suffix="%">0</span></span>
+            <span class="stat-card__label">{{ 'stats.4.label' | t(d) }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section class="section" id="services" aria-label="Our services">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'services.eyebrow' | t(d) }}</span></span>
+          <h2 class="section-title">{{ 'services.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'services.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="services-grid" data-stagger="100">
+          {% set variant = 'home' %}
+          {% for service in services | selectattr('onHome') | sort(attribute='homeOrder') %}
+          {% include "partials/service-card.njk" %}
+          {% endfor %}
+        </div>
+
+        <div style="text-align:center; margin-top: var(--space-12);" data-reveal>
+          <a href="{{ 'services' | url(lang) }}" class="btn btn--outline btn--lg"><span>{{ 'services.viewAll' | t(d) }}</span>
+            <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT PREVIEW ===== -->
+    <section class="section section--tinted" id="about-preview" aria-label="About BlitzBlank">
+      <div class="container">
+        <div class="about-preview">
+          <div class="about-preview__media" data-reveal="left">
+            <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=900&q=80"
+                 alt="BlitzBlank team member in uniform preparing cleaning supplies"
+                 loading="lazy" />
+            <div class="about-preview__badge">
+              <span class="about-preview__badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 17 L6 21 L7 14 L2 9 L9 8 Z" fill="currentColor" stroke="none"/></svg>
+              </span>
+              <div>
+                <div class="about-preview__badge-num">4.9 / 5.0</div>
+                <div class="about-preview__badge-text">{{ 'about.badge' | t(d) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-preview__content" data-reveal="right">
+            <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'about.eyebrow' | t(d) }}</span></span>
+            <h2 style="margin-top: var(--space-4)">{{ 'about.title' | t(d) }}</h2>
+            <p>{{ 'about.desc' | t(d) }}</p>
+
+            <div class="about-preview__grid">
+              <div class="about-preview__item">
+                <h4>{{ 'about.f1.title' | t(d) }}</h4>
+                <p>{{ 'about.f1.desc' | t(d) }}</p>
+              </div>
+              <div class="about-preview__item">
+                <h4>{{ 'about.f2.title' | t(d) }}</h4>
+                <p>{{ 'about.f2.desc' | t(d) }}</p>
+              </div>
+              <div class="about-preview__item">
+                <h4>{{ 'about.f3.title' | t(d) }}</h4>
+                <p>{{ 'about.f3.desc' | t(d) }}</p>
+              </div>
+              <div class="about-preview__item">
+                <h4>{{ 'about.f4.title' | t(d) }}</h4>
+                <p>{{ 'about.f4.desc' | t(d) }}</p>
+              </div>
+            </div>
+
+            <a href="{{ 'about' | url(lang) }}" class="btn btn--dark"><span>{{ 'about.cta' | t(d) }}</span>
+              <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GALLERY PREVIEW ===== -->
+    <section class="section" id="gallery-preview" aria-label="Gallery preview">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'gallery.eyebrow' | t(d) }}</span></span>
+          <h2 class="section-title">{{ 'gallery.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'gallery.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="masonry" data-stagger="80">
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80" alt="Spotless modern kitchen after deep cleaning" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat1' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title1' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80" alt="Bright open-plan office space freshly cleaned" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat2' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title2' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80" alt="Minimalist living room with natural light" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat1' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title3' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=600&q=80" alt="Clean corporate workspace" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat2' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title4' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1567548083313-04c67ac2f4f0?auto=format&fit=crop&w=600&q=80" alt="Sparkling bathroom with chrome fixtures" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat3' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title5' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=600&q=80" alt="Modern conference room" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat2' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title6' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=600&q=80" alt="Polished hardwood floors" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat4' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title7' | t(d) }}</span>
+            </div>
+          </div>
+          <div class="masonry__item">
+            <img class="masonry__img" src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=600&q=80" alt="Modern dining area" loading="lazy" />
+            <div class="masonry__overlay">
+              <span class="masonry__cat">{{ 'gallery.cat5' | t(d) }}</span>
+              <span class="masonry__title">{{ 'gallery.title8' | t(d) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top: var(--space-12);" data-reveal>
+          <a href="{{ 'gallery' | url(lang) }}" class="btn btn--outline btn--lg"><span>{{ 'gallery.cta' | t(d) }}</span>
+            <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="section section--dark" id="reviews" aria-label="Customer reviews">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow eyebrow--light"><span class="eyebrow__dot"></span> <span>{{ 'testimonials.eyebrow' | t(d) }}</span></span>
+          <h2 class="section-title" style="color: var(--color-white)">{{ 'testimonials.title' | t(d) }}</h2>
+          <p class="section-subtitle" style="color: rgba(255,255,255,0.7)">{{ 'testimonials.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="slider" data-autoplay="true" data-interval="6000" data-reveal>
+          <div class="slider__track">
+            {% for testimonial in testimonials %}
+            <div class="slider__slide">
+              <div class="testimonial">
+                <div class="testimonial__rating" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 17 L6 21 L7 14 L2 9 L9 8 Z"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 17 L6 21 L7 14 L2 9 L9 8 Z"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 17 L6 21 L7 14 L2 9 L9 8 Z"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 17 L6 21 L7 14 L2 9 L9 8 Z"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 17 L6 21 L7 14 L2 9 L9 8 Z"/></svg>
+                </div>
+                <p class="testimonial__text">{{ ('review.' + loop.index + '.text') | t(d) }}</p>
+                <div class="testimonial__author">
+                  <img class="testimonial__avatar" src="{{ testimonial.avatar }}" alt="Portrait of {{ testimonial.name }}" loading="lazy" />
+                  <div>
+                    <div class="testimonial__name">{{ ('review.' + loop.index + '.name') | t(d) }}</div>
+                    <div class="testimonial__role">{{ ('review.' + loop.index + '.role') | t(d) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="slider__controls">
+            <button class="slider__btn slider__btn--prev" aria-label="Previous testimonial">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </button>
+            <div class="slider__dots" role="tablist" aria-label="Choose testimonial">
+              <button class="slider__dot" role="tab" aria-label="Testimonial 1"></button>
+              <button class="slider__dot" role="tab" aria-label="Testimonial 2"></button>
+              <button class="slider__dot" role="tab" aria-label="Testimonial 3"></button>
+              <button class="slider__dot" role="tab" aria-label="Testimonial 4"></button>
+            </div>
+            <button class="slider__btn slider__btn--next" aria-label="Next testimonial">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Brand logos -->
+        <div class="brands" data-reveal style="justify-content: center; flex-wrap: wrap; margin-top: var(--space-16)">
+          <span class="brands__item">Northwind</span>
+          <span class="brands__item">Maison Verde</span>
+          <span class="brands__item">Rheinland</span>
+          <span class="brands__item">Atlas Lofts</span>
+          <span class="brands__item">Veritas Co.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="section section--tinted" id="faq" aria-label="Frequently asked questions">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'faq.eyebrow' | t(d) }}</span></span>
+          <h2 class="section-title">{{ 'faq.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'faq.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="faq-wrap" data-reveal>
+          {% for item in faq %}
+          <details class="faq-item" name="faq"{% if loop.first %} open{% endif %}>
+            <summary class="faq-question">
+              <span>{{ ('faq.' + loop.index + '.q') | t(d) }}</span>
+              <span class="faq-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <div class="faq-answer__inner">
+                {{ ('faq.' + loop.index + '.a') | t(d) }}
+              </div>
+            </div>
+          </details>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT CTA ===== -->
+    <section class="section" id="contact-cta" aria-label="Get in touch">
+      <div class="container">
+        <div class="promo-banner" data-reveal>
+          <div class="promo-banner__content">
+            <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span> <span>{{ 'cta.eyebrow' | t(d) }}</span></span>
+            <h2>{{ 'cta.title' | t(d) }}</h2>
+            <p>{{ 'cta.desc' | t(d) }}</p>
+            <div class="hero__cta" style="justify-content: center; opacity: 1; animation: none;">
+              <a href="{{ 'contact' | url(lang) }}" class="btn btn--primary btn--lg" data-magnetic>
+                <span>{{ 'cta.btn1' | t(d) }}</span>
+                <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+              <a href="tel:+4921193456789" class="btn btn--ghost-light btn--lg">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <span>{{ 'cta.btn2' | t(d) }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
