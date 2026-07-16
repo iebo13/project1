@@ -397,6 +397,12 @@
     max-width: none;
   }
 
+  /* Page hero */
+  /* Full-width text below 768px — no clear side to preserve, tint uniformly. */
+  .page-hero__bg::after {
+    background: color-mix(in srgb, var(--color-primary) 88%, transparent);
+  }
+
   /* Error page */
   .error-page__code {
     font-size: clamp(6rem, 3rem + 12vw, 10rem);
@@ -489,11 +495,6 @@
 
   .page-hero p {
     font-size: var(--fs-base);
-  }
-
-  /* Full-width text on phones — no clear side to preserve, tint uniformly. */
-  .page-hero__bg::after {
-    background: color-mix(in srgb, var(--color-primary) 88%, transparent);
   }
 
   /* Testimonial padding tighter */
