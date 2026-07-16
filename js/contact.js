@@ -11,7 +11,7 @@ const Contact = (() => {
     required: (v) => v.trim().length > 0,
     email: (v) => EMAIL_RE.test(v.trim()),
     phone: (v) => !v || PHONE_RE.test(v.trim()),
-    minLength: (v, n) => v.trim().length >= n,
+    minLength: (v, _el, n) => v.trim().length >= n,
     checked: (_, el) => el.checked,
   };
 
@@ -29,7 +29,7 @@ const Contact = (() => {
       if (!ok) {
         field.classList.add('field--error');
         const errEl = field.querySelector('.field__error');
-        if (errEl) errEl.textContent = getErrorMessage(name, input);
+        if (errEl) errEl.textContent = getErrorMessage(name, arg);
         return false;
       }
     }
@@ -38,16 +38,16 @@ const Contact = (() => {
     return true;
   }
 
-  function getErrorMessage(name, input) {
+  function getErrorMessage(name, arg) {
     const t = (window.I18n && window.I18n.t) ? window.I18n.t.bind(window.I18n) : (k) => k;
     const messages = {
       required: t('form.required'),
       email: t('form.email'),
       phone: t('form.phone'),
-      minLength: t('form.minLength'),
+      minLength: t('form.minLength').replace('{n}', arg),
       checked: t('form.checked'),
     };
-    return messages[name] || 'Invalid input.';
+    return messages[name] || t('form.required');
   }
 
   function showToast(message, type = 'success') {
