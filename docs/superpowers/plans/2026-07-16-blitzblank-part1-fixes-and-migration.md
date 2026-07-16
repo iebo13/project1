@@ -33,11 +33,18 @@
 
 - [ ] **Step 1: Create `package.json`**
 
+`"type": "module"` is required: `playwright.config.js`, `.eleventy.js`, and every
+`src/_data/*.js` file use `export default`. Node 22 would otherwise reparse each of them as
+ESM after failing to parse as CommonJS, emitting a `MODULE_TYPELESS_PACKAGE_JSON` warning on
+every build. It does not affect `js/*.js` — those are browser scripts loaded via `<script>`,
+never imported by Node.
+
 ```json
 {
   "name": "blitzblank",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "BlitzBlank — Premium Reinigung Düsseldorf",
   "scripts": {
     "test": "playwright test",
