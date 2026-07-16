@@ -1520,6 +1520,19 @@ p {
   display: none;
 }
 
+/* Cards are keyboard-operable (tabindex + role via gallery.js); give them a
+   visible focus ring and re-trigger the fade-in on filter without the old
+   per-card inline-style + forced-reflow dance. */
+.gallery-card:focus-visible,
+.masonry__item:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.gallery-card.is-fresh {
+  animation: scaleIn 500ms var(--ease-out);
+}
+
 .gallery-card img {
   width: 100%;
   height: 100%;
