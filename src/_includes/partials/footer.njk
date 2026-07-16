@@ -1,0 +1,73 @@
+  <footer class="footer" aria-label="Footer">
+    <div class="container footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" class="logo">
+            <span class="logo__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 L4.5 12.5 H11 L9 22 L19.5 10.5 H13 Z" fill="currentColor" stroke="none"/></svg>
+            </span>
+            <span class="logo__text">
+              <span class="logo__name" style="color: var(--color-white)">{{ site.brand }}</span>
+              <span class="logo__tag" data-i18n="logo.tag">{{ site.tagline }}</span>
+            </span>
+          </a>
+          <p class="footer__about" data-i18n="footer.about">Boutique cleaning studio serving Düsseldorf and the Rhine-Ruhr region since 2010. Obsessive attention to detail, eco-friendly products, real people who care.</p>
+          <div class="footer__socials">
+            <a href="#" aria-label="Follow us on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="#" aria-label="Follow us on Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" aria-label="Follow us on Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21.5l-7.5 8.572L22.5 22h-6.928l-5.42-7.09L3.8 22H.543l8.022-9.17L1 2h7.1l4.9 6.49L18.244 2z"/></svg></a>
+            <a href="#" aria-label="Follow us on LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          </div>
+        </div>
+
+        <div class="footer__col">
+          <h5 data-i18n="footer.quickLinks">Quick Links</h5>
+          <nav class="footer__links">
+            <a href="index.html"><span data-i18n="nav.home">Home</span></a>
+            <a href="about.html"><span data-i18n="nav.about">About</span></a>
+            <a href="services.html"><span data-i18n="nav.services">Services</span></a>
+            <a href="gallery.html"><span data-i18n="nav.gallery">Gallery</span></a>
+            <a href="contact.html"><span data-i18n="nav.contact">Contact</span></a>
+            <a href="index.html#faq"><span data-i18n="nav.faq">FAQ</span></a>
+          </nav>
+        </div>
+
+        <div class="footer__col">
+          <h5 data-i18n="footer.services">Services</h5>
+          <nav class="footer__links">
+            <a href="services.html#office"><span data-i18n="srv.office.title">Office Cleaning</span></a>
+            <a href="services.html#house"><span data-i18n="srv.house.title">House Cleaning</span></a>
+            <a href="services.html#window"><span data-i18n="srv.window.title">Window Cleaning</span></a>
+            <a href="services.html#deep"><span data-i18n="srv.deep.title">Deep Cleaning</span></a>
+            <a href="services.html#carpet"><span data-i18n="srv.carpet.title">Carpet Cleaning</span></a>
+            <a href="services.html#industrial"><span data-i18n="srv.industrial.title">Industrial Cleaning</span></a>
+          </nav>
+        </div>
+
+        <div class="footer__col footer__newsletter">
+          <h5 data-i18n="footer.newsletter">Stay in touch</h5>
+          <p data-i18n="footer.newsletterDesc">Subscribe for seasonal cleaning tips, exclusive offers, and the occasional dose of inspiration. No spam, ever.</p>
+          <form class="newsletter-form" aria-label="Newsletter signup">
+            <input type="email" name="email" data-i18n-placeholder="footer.placeholder" placeholder="Your email address" aria-label="Your email address" required />
+            <button type="submit" data-i18n-aria="footer.subscribe" aria-label="Subscribe">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </form>
+          <div style="margin-top: var(--space-5); font-size: var(--fs-sm);">
+            <div style="margin-bottom: 4px;">Tel: {{ site.phone }}</div>
+            <div style="margin-bottom: 4px;">E-Mail: {{ site.email }}</div>
+            <div>{{ site.address }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <div>&copy; <span data-year>2025</span> <span data-i18n="footer.rights">BlitzBlank. All rights reserved.</span></div>
+        <div class="footer__legal">
+          <a href="#" data-i18n="footer.privacy">Privacy</a>
+          <a href="#" data-i18n="footer.terms">Terms</a>
+          <a href="#" data-i18n="footer.cookies">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
