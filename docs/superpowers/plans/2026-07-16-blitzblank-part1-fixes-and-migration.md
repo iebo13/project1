@@ -976,14 +976,17 @@ permalink: /index.html
 
 - [ ] **Step 5: Update npm scripts**
 
-In `package.json`, replace the `"scripts"` block:
+In `package.json`, replace the `"scripts"` block. Note `--update-snapshots=changed`: the bare
+`--update-snapshots` breaks on Playwright 1.61.1 when given a file argument (npm's `--`
+forwarding collides with the flag's optional value). Do not drop the `=changed`.
+
 
 ```json
   "scripts": {
     "start": "eleventy --serve",
     "build": "eleventy",
     "test": "playwright test",
-    "test:update-snapshots": "playwright test --update-snapshots"
+    "test:update-snapshots": "playwright test --update-snapshots=changed"
   },
 ```
 
