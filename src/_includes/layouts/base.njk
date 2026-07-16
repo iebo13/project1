@@ -49,11 +49,11 @@
   {# Order encodes the cascade: later files override earlier ones by position,
      not specificity. Do not reorder. Paths are root-relative because pages now
      live at varying depths (/kontakt/, /en/contact/). #}
-  <link rel="stylesheet" href="/css/variables.css" />
-  <link rel="stylesheet" href="/css/animations.css" />
-  <link rel="stylesheet" href="/css/components.css" />
-  <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="/css/responsive.css" />
+  <link rel="stylesheet" href="{{ '/css/variables.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/animations.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/components.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | asset }}" />
+  <link rel="stylesheet" href="{{ '/css/responsive.css' | asset }}" />
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -103,12 +103,12 @@
 
   {# Order encodes init order: app.js runs each module's init() and must load
      last. Paths are root-relative — pages live at varying depths. #}
-  <script src="/js/animations.js" defer></script>
-  <script src="/js/navigation.js" defer></script>
-  <script src="/js/counter.js" defer></script>
-  <script src="/js/slider.js" defer></script>
-  <script src="/js/gallery.js" defer></script>
-  <script src="/js/contact.js" defer></script>
-  <script src="/js/app.js" defer></script>
+  <script src="{{ '/js/animations.js' | asset }}" defer></script>
+  <script src="{{ '/js/navigation.js' | asset }}" defer></script>
+  <script src="{{ '/js/counter.js' | asset }}" defer></script>
+  <script src="{{ '/js/slider.js' | asset }}" defer></script>
+  <script src="{{ '/js/gallery.js' | asset }}" defer></script>
+  <script src="{{ '/js/contact.js' | asset }}" defer></script>
+  <script src="{{ '/js/app.js' | asset }}" defer></script>
 </body>
 </html>

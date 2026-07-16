@@ -1,15 +1,42 @@
 import langs from './src/_data/langs.js';
 
 /**
- * Build the URL for a page key in a given language.
- * German is at the root ('/', '/leistungen/'); English is prefixed ('/en/',
- * '/en/services/'). Returns a root-relative URL.
+ * Where the site is served from.
+ *
+ * A GitHub Pages *project* site lives at https://<user>.github.io/<repo>/, so
+ * every absolute path needs that prefix or it resolves to the domain root and
+ * 404s. A user site, or a real domain, is served from '/'.
+ *
+ * Set BASE_PATH at build time (the deploy workflow does this); it defaults to
+ * '' so `npm start` and the test suite keep working at the root.
+ *
+ * Always ends without a trailing slash: '' or '/project1'.
+ */
+const BASE_PATH = (process.env.BASE_PATH || '').replace(/\/$/, '');
+
+/**
+ * The site-relative path for a page key in a given language, WITHOUT the base
+ * path. German is at the root ('/', '/leistungen/'); English is prefixed
+ * ('/en/', '/en/services/').
+ *
+ * This is what permalinks use. GitHub Pages serves the CONTENTS of _site/ at
+ * /<repo>/, so the output tree must NOT contain the repo name — writing
+ * _site/project1/kontakt/ would serve at /project1/project1/kontakt/.
+ */
+function localePath(key, lang) {
+  const slug = langs.slugs[key]?.[lang];
+  if (slug === undefined) throw new Error(`localePath: unknown page key "${key}"`);
+  const langPrefix = lang === langs.default ? '' : `/${lang}`;
+  return slug === '' ? `${langPrefix}/` : `${langPrefix}/${slug}/`;
+}
+
+/**
+ * The href for a page key — the same path, WITH the base path. This is what
+ * links in the markup use, because the browser resolves them against the
+ * served origin, where /project1 IS part of the URL.
  */
 function localeUrl(key, lang) {
-  const slug = langs.slugs[key]?.[lang];
-  if (slug === undefined) throw new Error(`localeUrl: unknown page key "${key}"`);
-  const prefix = lang === langs.default ? '' : `/${lang}`;
-  return slug === '' ? `${prefix}/` : `${prefix}/${slug}/`;
+  return `${BASE_PATH}${localePath(key, lang)}`;
 }
 
 export default function (eleventyConfig) {
@@ -18,8 +45,15 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy('js');
   eleventyConfig.addPassthroughCopy('assets');
 
-  // {{ 'services' | url(lang) }} -> '/leistungen/' or '/en/services/'
+  // For hrefs: {{ 'services' | url(lang) }} -> '/leistungen/', or
+  // '/project1/leistungen/' when BASE_PATH is set.
   eleventyConfig.addFilter('url', localeUrl);
+
+  // For permalinks ONLY: never carries BASE_PATH. See localePath().
+  eleventyConfig.addFilter('permalinkFor', localePath);
+
+  // {{ '/css/style.css' | asset }} -> '/css/style.css' or '/project1/css/style.css'
+  eleventyConfig.addFilter('asset', (path) => `${BASE_PATH}${path}`);
 
   // {{ 'hero.title1' | t(dict[lang]) }} — look a key up in a language table.
   // Throws on a missing key at BUILD time rather than rendering the raw key
@@ -34,6 +68,10 @@ export default function (eleventyConfig) {
   eleventyConfig.setServerOptions({ port: 8080, showAllHosts: false });
 
   return {
+    // Deliberately NO pathPrefix. Our own `url`/`asset` filters already carry
+    // BASE_PATH, and 11ty's pathPrefix ALSO rewrites permalinks — with both,
+    // /project1/kontakt/ gets written to _site/project1/project1/kontakt/.
+    // BASE_PATH is the single source of truth for the subpath.
     dir: { input: 'src', includes: '_includes', data: '_data', output: '_site' },
     htmlTemplateEngine: 'njk',
     markdownTemplateEngine: 'njk',

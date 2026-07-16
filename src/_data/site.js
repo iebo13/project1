@@ -9,10 +9,14 @@
 // sections of the homepage, not pages of their own).
 
 export default {
-  // Absolute origin, used for canonical + hreflang + og:url. Change this to
-  // the real host before launch; a GitHub Pages project site is served from
-  // https://<user>.github.io/<repo>/ and would need that full prefix.
-  origin: 'https://blitzblank.de',
+  // Absolute origin for canonical + hreflang + og:url — the scheme and host
+  // ONLY; the path prefix is added by the `url` filter, so do not repeat it
+  // here. Set SITE_ORIGIN at build time (the deploy workflow points it at the
+  // Pages URL). The default is the intended production domain.
+  //
+  // This must match where the site is actually served: a canonical pointing at
+  // a domain you do not control tells Google to index that one instead.
+  origin: process.env.SITE_ORIGIN || 'https://blitzblank.de',
   ogImage:
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
   brand: 'BlitzBlank',

@@ -5,7 +5,7 @@ pagination:
   size: 1
   alias: lang
 eleventyComputed:
-  permalink: "{{ 'gallery' | url(lang) }}index.html"
+  permalink: "{{ 'gallery' | permalinkFor(lang) }}index.html"
   title: "{{ meta[lang].gallery.title }}"
   description: "{{ meta[lang].gallery.description }}"
   pageKey: 'gallery'

@@ -5,7 +5,7 @@ pagination:
   size: 1
   alias: lang
 eleventyComputed:
-  permalink: "{{ 'services' | url(lang) }}index.html"
+  permalink: "{{ 'services' | permalinkFor(lang) }}index.html"
   title: "{{ meta[lang].services.title }}"
   description: "{{ meta[lang].services.description }}"
   pageKey: 'services'

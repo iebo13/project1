@@ -7,8 +7,9 @@
   "scripts": {
     "start": "eleventy --serve",
     "build": "eleventy",
-    "test": "playwright test",
-    "test:update-snapshots": "playwright test --update-snapshots=changed"
+    "test": "node --test tests/*.test.mjs && playwright test",
+    "test:update-snapshots": "playwright test --update-snapshots=changed",
+    "test:build": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.6",
