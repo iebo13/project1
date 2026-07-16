@@ -49,3 +49,14 @@ test('hero stats are individual glass chips', async ({ page }) => {
   await expect(stats).toHaveCount(3);
   expect(await stats.first().getAttribute('class')).toContain('glass-strong');
 });
+
+test('scroll hint never overlaps the stat chips', async ({ page }) => {
+  await page.goto('/');
+  const hint = await page.locator('.scroll-indicator').boundingBox();
+  for (const stat of await page.locator('.hero__stat').all()) {
+    const box = await stat.boundingBox();
+    const overlaps = hint.x < box.x + box.width && box.x < hint.x + hint.width &&
+                     hint.y < box.y + box.height && box.y < hint.y + hint.height;
+    expect(overlaps, 'scroll hint intersects a stat chip').toBe(false);
+  }
+});

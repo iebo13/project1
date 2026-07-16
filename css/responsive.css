@@ -110,10 +110,6 @@
   }
 
   /* Hero adjustments */
-  .hero__title {
-    font-size: var(--fs-5xl);
-  }
-
   .hero__stats {
     position: static;
     flex-direction: row;
@@ -121,6 +117,17 @@
     max-width: var(--container-max);
     margin: var(--space-10) auto 0;
     padding-inline: var(--container-pad);
+  }
+
+  /* In the stacked/centered column layouts the hero's bottom edge is the stat
+     chips themselves — an absolutely-anchored hint lands on top of them, so it
+     joins the flow after them instead. */
+  .scroll-indicator {
+    position: static;
+    order: 4;
+    align-self: center;
+    margin: var(--space-8) auto 0;
+    transform: none;
   }
 
   .hero {

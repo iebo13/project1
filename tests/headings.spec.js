@@ -74,18 +74,28 @@ for (const path of allPages) {
     await page.goto(path);
     const navbar = page.locator('.navbar');
     await expect(navbar).not.toHaveClass(/is-scrolled/);
-    for (const sel of ['.navbar .logo', '.navbar .nav-link']) {
-      const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
-      expect(lightness01(rgb), `${sel} on ${path} is ${rgb} — too dark for the navy bar`)
-        .toBeGreaterThan(0.6);
-    }
+    // Page-load animations/transitions can still be interpolating .nav-link /
+    // .logo color when this first read happens — poll past it rather than
+    // reading mid-transition.
+    await expect(async () => {
+      for (const sel of ['.navbar .logo', '.navbar .nav-link']) {
+        const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
+        expect(lightness01(rgb), `${sel} on ${path} is ${rgb} — too dark for the navy bar`)
+          .toBeGreaterThan(0.6);
+      }
+    }).toPass({ timeout: 5000 });
 
     await page.evaluate(() => window.scrollTo(0, 300));
     await expect(navbar).toHaveClass(/is-scrolled/);
-    for (const sel of ['.navbar .logo', '.navbar .nav-link']) {
-      const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
-      expect(lightness01(rgb), `${sel} on ${path} is ${rgb} — too light for the white bar`)
-        .toBeLessThan(0.4);
-    }
+    // .nav-link/.logo colors transition over var(--t-base) on the is-scrolled
+    // toggle, so the class landing doesn't guarantee the color has finished
+    // interpolating yet — poll until it settles instead of reading once.
+    await expect(async () => {
+      for (const sel of ['.navbar .logo', '.navbar .nav-link']) {
+        const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
+        expect(lightness01(rgb), `${sel} on ${path} is ${rgb} — too light for the white bar`)
+          .toBeLessThan(0.4);
+      }
+    }).toPass({ timeout: 5000 });
   });
 }
