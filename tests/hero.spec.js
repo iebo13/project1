@@ -31,16 +31,21 @@ test('hero gradient text uses the on-dark ramp, not blue-on-blue', async ({ page
 
 test('hero copy never sits on the photo (desktop split)', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 1280, 'the split is a desktop layout');
-  await page.goto('/');
-  // The solid navy panel covers the left 46% and stays ≥82% tint to 58%;
-  // holding every headline line inside 60% of the viewport guarantees
-  // contrast regardless of which photo Unsplash serves. Measure the inline
-  // .hero-line spans, not the h1 — a block box spans the full column width
-  // whether or not there are glyphs in it.
-  const edges = await page.$$eval('.hero__title .hero-line', (els) =>
-    els.map((el) => el.getBoundingClientRect().right)
-  );
-  expect(Math.max(...edges)).toBeLessThanOrEqual(viewport.width * 0.6);
+  // Both locales share the same hero markup/CSS but render different copy —
+  // check DE (root) and EN (/en/) so the geometry guarantee isn't only
+  // proven for one language.
+  for (const path of ['/', '/en/']) {
+    await page.goto(path);
+    // The solid navy panel covers the left 46% and stays ≥82% tint to 58%;
+    // holding every headline line inside 60% of the viewport guarantees
+    // contrast regardless of which photo Unsplash serves. Measure the inline
+    // .hero-line spans, not the h1 — a block box spans the full column width
+    // whether or not there are glyphs in it.
+    const edges = await page.$$eval('.hero__title .hero-line', (els) =>
+      els.map((el) => el.getBoundingClientRect().right)
+    );
+    expect(Math.max(...edges)).toBeLessThanOrEqual(viewport.width * 0.6);
+  }
 });
 
 test('hero stats are individual glass chips', async ({ page }) => {

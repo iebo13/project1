@@ -201,18 +201,15 @@
   padding: var(--space-8);
 }
 
-@supports not (backdrop-filter: blur(1px)) {
-  .glass-strong { background: color-mix(in srgb, var(--color-primary) 92%, transparent); }
-  .glass-backdrop { background: color-mix(in srgb, var(--color-white) 92%, transparent); }
-}
-
-/* The prefers-reduced-transparency fallback block lives at the end of this
-   section (after .promo-banner__content) rather than here. Every consumer
-   it targets (.card, .service-card, .section--dark .testimonial,
-   .promo-banner__content) declares its glass background later in this file
-   at equal specificity to the fallback selector; a same-specificity fallback
-   must come after what it overrides to win the cascade tie, so the block
-   moved below the last consumer instead of sitting above the first one. */
+/* The no-backdrop-filter fallback (@supports not) and the
+   prefers-reduced-transparency fallback both live at the end of this section
+   (after .promo-banner__content) rather than here. Every consumer either
+   targets (.card, .service-card, .section--dark .testimonial,
+   .promo-banner__content, plus .glass-strong/.glass-backdrop themselves)
+   declares its glass background later in this file at equal specificity to
+   the fallback selector; a same-specificity fallback must come after what it
+   overrides to win the cascade tie, so both blocks moved below the last
+   consumer instead of sitting above the first one. */
 
 /* ---------- Cards ---------- */
 .card {
@@ -982,6 +979,36 @@
   padding: clamp(2rem, 1.25rem + 3vw, 3.5rem);
 }
 
+/* No-backdrop-filter fallback for every glass consumer declared in this
+   file, plus the scroll hint (the one glass surface outside the 3-tier
+   system, styled in animations.css but overridden here — components.css
+   loads after animations.css, so equal specificity is enough to win).
+   Positioned after all of them (not beside .glass-strong / .glass-backdrop
+   near the top of the glass-tiers section) so each fallback rule sits later
+   in the cascade than the same-specificity rule it must beat: .glass-strong/
+   .glass-backdrop above, .card/.service-card in the Cards section, and
+   .section--dark .testimonial/.promo-banner__content just above. Earlier
+   placement would lose every one of those ties. Same solid values as the
+   prefers-reduced-transparency fallback below — the spec: "the solid
+   fallback doubles as the no-backdrop-filter fallback". */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-strong,
+  .section--dark .testimonial,
+  .promo-banner__content {
+    background: var(--color-primary-soft);
+  }
+  .glass-backdrop {
+    background: var(--color-white);
+  }
+  .card,
+  .service-card {
+    background: var(--color-white);
+  }
+  .scroll-indicator {
+    background: color-mix(in srgb, var(--color-primary) 92%, transparent);
+  }
+}
+
 /* prefers-reduced-transparency fallback for every glass consumer declared
    in this file. Positioned after all of them (not beside .glass-strong /
    .glass-backdrop near the top of the glass-tiers section) so each fallback
@@ -1011,6 +1038,9 @@
     background: var(--color-primary-soft);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+  .scroll-indicator {
+    background: color-mix(in srgb, var(--color-primary) 92%, transparent);
   }
 }
 

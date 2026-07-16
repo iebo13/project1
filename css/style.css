@@ -159,6 +159,12 @@ p {
   background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
 }
 
+/* Anchor navigation (`/kontakt/#about`, `/#reviews`, `/#faq`, `/#stats`) must
+   not land content under the fixed navbar. Scroll offset only — never paints. */
+section[id] {
+  scroll-margin-top: calc(var(--navbar-height) + var(--space-4));
+}
+
 /* ---------- Skip link ---------- */
 .skip-link {
   position: absolute;
@@ -1387,6 +1393,18 @@ p {
   backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
   border: 1px solid color-mix(in srgb, var(--color-white) 55%, transparent);
+}
+
+/* No-backdrop-filter fallback for the pair above — same solid value as the
+   reduced-transparency fallback below (the spec: "the solid fallback
+   doubles as the no-backdrop-filter fallback"). Kept in this file, after
+   the override it must beat: equal specificity, so the fallback must sit
+   after the override to win the cascade tie. */
+@supports not (backdrop-filter: blur(1px)) {
+  .mv-card,
+  .value-card {
+    background: var(--color-white);
+  }
 }
 
 /* Reduced-transparency fallback for the pair above. Kept in this file, after
