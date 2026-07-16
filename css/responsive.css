@@ -36,9 +36,7 @@
     height: 100vh;
     height: 100dvh;
     width: min(360px, 86vw);
-    background: color-mix(in srgb, var(--color-primary) 98%, transparent);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--color-primary);
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;

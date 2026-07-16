@@ -51,27 +51,41 @@ test('no inline colour workaround remains on the about section title', async ({ 
   expect(count).toBe(0);
 });
 
-// The navbar on interior pages is .navbar--solid — a DARK navy background.
-// It was grouped in CSS with .is-scrolled (a LIGHT background) and given the
-// same dark text, so the logo and every nav link rendered dark-on-dark and
-// were effectively invisible. Same class of bug as the page headings above.
-for (const path of ['/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/']) {
-  test(`navbar on ${path} is readable against its dark background`, async ({ page }) => {
+// The navbar is state-driven, not page-driven: solid navy (light text) at the
+// top of EVERY page, solid white (dark text) once scrolled. The old per-page
+// .navbar--solid variant caused a whole class of dark-on-dark bugs (invisible
+// logo/links, and a phone number that was still dark-on-navy when it was
+// visible) — deleting the variant deletes the bug class.
+const allPages = ['/', '/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/'];
+
+function lightness01(rgb) {
+  const [r, g, b] = rgb.match(/[\d.]+/g).slice(0, 3).map(Number);
+  // color() syntax reports 0-1, rgb() reports 0-255 — normalise.
+  const max = Math.max(r, g, b) <= 1 ? 1 : 255;
+  return (r + g + b) / 3 / max;
+}
+
+for (const path of allPages) {
+  test(`navbar on ${path} is light-on-navy at top, dark-on-white when scrolled`, async ({ page, viewport }) => {
+    // Below the drawer breakpoint .nav-link is forced white for the navy
+    // drawer panel, so the scrolled dark-text half only holds on desktop.
+    test.skip(!viewport || viewport.width < 1280, 'drawer styles own the link colors on mobile');
+
     await page.goto(path);
     const navbar = page.locator('.navbar');
-    await expect(navbar).toHaveClass(/navbar--solid/);
-
-    // .navbar--solid is --color-primary at 85%; over any backdrop it stays
-    // dark, so light text is the only correct answer. Assert the resolved
-    // colour is light rather than computing a ratio against a translucent bg.
-    for (const sel of ['.logo', '.nav-link']) {
+    await expect(navbar).not.toHaveClass(/is-scrolled/);
+    for (const sel of ['.navbar .logo', '.navbar .nav-link']) {
       const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
-      const [r, g, b] = rgb.match(/[\d.]+/g).slice(0, 3).map(Number);
-      // color() syntax reports 0-1, rgb() reports 0-255 — normalise.
-      const max = Math.max(r, g, b) <= 1 ? 1 : 255;
-      const lightness = (r + g + b) / 3 / max;
-      expect(lightness, `${sel} on ${path} is ${rgb} — too dark for a dark navbar`)
+      expect(lightness01(rgb), `${sel} on ${path} is ${rgb} — too dark for the navy bar`)
         .toBeGreaterThan(0.6);
+    }
+
+    await page.evaluate(() => window.scrollTo(0, 300));
+    await expect(navbar).toHaveClass(/is-scrolled/);
+    for (const sel of ['.navbar .logo', '.navbar .nav-link']) {
+      const rgb = await page.locator(sel).first().evaluate((el) => getComputedStyle(el).color);
+      expect(lightness01(rgb), `${sel} on ${path} is ${rgb} — too light for the white bar`)
+        .toBeLessThan(0.4);
     }
   });
 }

@@ -179,40 +179,20 @@ p {
   align-items: center;
   transition: height var(--t-base) var(--ease-out),
               background var(--t-base) var(--ease-out),
-              backdrop-filter var(--t-base),
               box-shadow var(--t-base) var(--ease-out),
               border-color var(--t-base) var(--ease-out);
-  border-bottom: 1px solid transparent;
-  /* Glass by default */
-  background: color-mix(in srgb, var(--color-white) 10%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: color-mix(in srgb, var(--color-white) 10%, transparent);
+  /* Two states only, both fully opaque: navy at the top of every page, white
+     once scrolled. No blur — glass lives in the page sections now, and an
+     opaque bar cannot produce photo-dependent (il)legibility. */
+  background: var(--color-primary);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-white) 8%, transparent);
 }
 
 .navbar.is-scrolled {
   height: var(--navbar-height-scrolled);
-  background: color-mix(in srgb, var(--color-white) 72%, transparent);
-  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  background: var(--color-white);
   border-bottom-color: var(--color-border);
-  box-shadow: 0 6px 24px color-mix(in srgb, var(--color-primary) 4%, transparent);
-}
-
-/* When navbar is over hero (not scrolled) — glass over image */
-.navbar:not(.is-scrolled):not(.navbar--solid) {
-  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: color-mix(in srgb, var(--color-white) 12%, transparent);
-}
-
-/* Solid navbar variant (interior pages without hero image behind) */
-.navbar--solid {
-  background: color-mix(in srgb, var(--color-primary) 85%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: color-mix(in srgb, var(--color-white) 8%, transparent);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .navbar__inner {
@@ -312,9 +292,8 @@ p {
   transition: color var(--t-base) var(--ease-out);
 }
 
-/* Only .is-scrolled gets dark text: its background is white at 72%.
-   .navbar--solid is DARK navy at 85% — grouping it here painted the links
-   dark-on-dark and made them near-invisible on every interior page. */
+/* Only .is-scrolled gets dark text: the default state is solid navy, so
+   light text is the only correct answer there. */
 .navbar.is-scrolled .nav-link {
   color: var(--color-primary-soft);
 }
@@ -339,8 +318,7 @@ p {
   border-radius: var(--radius-pill);
 }
 
-.navbar.is-scrolled .nav-link__underline,
-.navbar--solid .nav-link__underline {
+.navbar.is-scrolled .nav-link__underline {
   background: var(--color-secondary);
 }
 
@@ -348,8 +326,7 @@ p {
   color: var(--color-white);
 }
 
-.navbar.is-scrolled .nav-link.is-active,
-.navbar--solid .nav-link.is-active {
+.navbar.is-scrolled .nav-link.is-active {
   color: var(--color-secondary);
 }
 
@@ -377,8 +354,7 @@ p {
   transition: color var(--t-base) var(--ease-out);
 }
 
-.navbar.is-scrolled .navbar__phone,
-.navbar--solid .navbar__phone {
+.navbar.is-scrolled .navbar__phone {
   color: var(--color-primary-soft);
 }
 
@@ -388,8 +364,7 @@ p {
   color: var(--color-accent);
 }
 
-.navbar.is-scrolled .navbar__phone svg,
-.navbar--solid .navbar__phone svg {
+.navbar.is-scrolled .navbar__phone svg {
   color: var(--color-secondary);
 }
 
@@ -407,8 +382,7 @@ p {
   flex-shrink: 0;
 }
 
-.navbar.is-scrolled .nav-toggle,
-.navbar--solid .nav-toggle {
+.navbar.is-scrolled .nav-toggle {
   background: var(--color-bg);
   border-color: var(--color-border);
   color: var(--color-primary);
