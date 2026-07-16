@@ -8,8 +8,21 @@ function luminance(rgb) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
+// Composites `fg` over `bg` per-channel (result = fg*alpha + bg*(1-alpha))
+// when `fg` carries an alpha < 1, e.g. rgba(255,255,255,0.86). Without this,
+// a translucent foreground is scored as if it were fully opaque, inflating
+// its computed contrast against the background it's actually painted on.
+function composite(fg, bg) {
+  const fgParts = fg.match(/[\d.]+/g).map(Number);
+  const alpha = fgParts.length > 3 ? fgParts[3] : 1;
+  if (alpha >= 1) return fg;
+  const bgParts = bg.match(/[\d.]+/g).map(Number);
+  const [r, g, b] = fgParts.slice(0, 3).map((c, i) => Math.round(c * alpha + bgParts[i] * (1 - alpha)));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 function contrast(fg, bg) {
-  const [a, b] = [luminance(fg), luminance(bg)].sort((x, y) => y - x);
+  const [a, b] = [luminance(composite(fg, bg)), luminance(bg)].sort((x, y) => y - x);
   return (a + 0.05) / (b + 0.05);
 }
 
