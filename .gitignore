@@ -38,6 +38,10 @@ coverage/
 playwright-report/
 test-results/
 
+# Playwright snapshots ARE committed — they are the migration's proof of
+# visual neutrality. Only transient run artifacts are ignored.
+!tests/**/*-snapshots/
+
 # Editors
 .vscode/*
 !.vscode/extensions.json
@@ -46,6 +50,8 @@ test-results/
 *.swp
 *.swo
 *~
+
+.superpowers/
 
 # OS
 .DS_Store
