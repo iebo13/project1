@@ -1157,7 +1157,7 @@
 /* ---------- Page hero (interior pages) ---------- */
 .page-hero {
   position: relative;
-  padding: calc(var(--navbar-height) + var(--space-20)) 0 var(--space-20);
+  padding: calc(var(--navbar-height) + var(--space-16)) 0 var(--space-16);
   background: var(--color-primary);
   color: var(--color-white);
   overflow: hidden;
@@ -1173,22 +1173,25 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.35;
+  opacity: 1;
 }
 
 .page-hero__bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 70%, transparent) 0%, color-mix(in srgb, var(--color-primary) 90%, transparent) 100%);
+  /* ≥88% navy where the text sits, clearing rightward so the photo reads.
+     Contrast comes from this wash, never from the photo. */
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--color-primary) 88%, transparent) 0%,
+    color-mix(in srgb, var(--color-primary) 62%, transparent) 55%,
+    color-mix(in srgb, var(--color-primary) 35%, transparent) 100%);
 }
 
 .page-hero__content {
   position: relative;
   z-index: 1;
-  text-align: center;
-  max-width: 820px;
-  margin: 0 auto;
+  text-align: left;
 }
 
 .page-hero h1 {
@@ -1208,13 +1211,14 @@
   font-size: var(--fs-xl);
   color: color-mix(in srgb, var(--color-white) 78%, transparent);
   line-height: var(--lh-relaxed);
+  max-width: 60ch;
 }
 
 .breadcrumb {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-2);
-  margin-top: var(--space-8);
+  margin: 0 0 var(--space-4);
   color: color-mix(in srgb, var(--color-white) 60%, transparent);
   font-size: var(--fs-sm);
 }

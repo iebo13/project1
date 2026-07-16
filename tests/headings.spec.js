@@ -110,3 +110,11 @@ for (const path of allPages) {
     }).toPass({ timeout: 5000 });
   });
 }
+
+test('interior heroes lead with the breadcrumb, left-aligned', async ({ page }) => {
+  await page.goto('/kontakt/');
+  const first = page.locator('.page-hero__content > *').first();
+  expect(await first.getAttribute('class')).toContain('breadcrumb');
+  const align = await page.locator('.page-hero__content').evaluate((el) => getComputedStyle(el).textAlign);
+  expect(align).toBe('left');
+});

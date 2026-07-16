@@ -491,6 +491,11 @@
     font-size: var(--fs-base);
   }
 
+  /* Full-width text on phones — no clear side to preserve, tint uniformly. */
+  .page-hero__bg::after {
+    background: color-mix(in srgb, var(--color-primary) 88%, transparent);
+  }
+
   /* Testimonial padding tighter */
   .testimonial {
     padding: var(--space-6);

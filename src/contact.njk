@@ -15,10 +15,9 @@ eleventyComputed:
     <section class="page-hero">
       <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
       <div class="container page-hero__content">
-        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>{{ 'page.contact.eyebrow' | t(d) }}</span>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'nav.contact' | t(d) }}</span></nav>
         <h1>{{ 'page.contact.title' | t(d) }}</h1>
         <p>{{ 'page.contact.subtitle' | t(d) }}</p>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'nav.contact' | t(d) }}</span></nav>
       </div>
     </section>
 
