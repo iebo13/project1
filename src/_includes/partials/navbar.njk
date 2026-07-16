@@ -14,7 +14,7 @@
       </a>
 
       <nav class="nav-menu" id="navMenu" aria-label="{{ 'nav.home' | t(d) }}">
-        {% for item in site.nav %}
+        {% for item in site.nav | selectattr('inHeader') %}
         <a href="{{ item.page | url(lang) }}{{ item.hash or '' }}" class="nav-link"{% if item.page == pageKey and not item.hash %} aria-current="page"{% endif %}><span>{{ item.key | t(d) }}</span><span class="nav-link__underline"></span></a>
         {% endfor %}
       </nav>
