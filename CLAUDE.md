@@ -51,6 +51,11 @@ src/
   index.njk, services.njk, gallery.njk, contact.njk, 404.njk
 ```
 
+The former `about.njk` was merged into the contact page in July 2026: the About
+content (mission, vision, the five values) now renders as the `#about` section
+on `/kontakt/` (and `/en/contact/#about`). There is no standalone About page or
+route.
+
 ### Deploying to a subpath
 
 GitHub Pages serves this repo at `https://<user>.github.io/<repo>/`, not a
@@ -70,7 +75,7 @@ prefixed; Pages already serves `_site/` *at* the subpath), hrefs use `url`
 (always prefixed). [tests/pathprefix.test.mjs](tests/pathprefix.test.mjs)
 asserts both.
 
-Each `.njk` page sets `layout: layouts/base.njk` in its front matter and supplies only its `<main>` content — the navbar, footer, `<head>` meta, and script tags live once in the layout and its partials. Output URLs are unchanged from the pre-migration site: `_site/{index,about,services,gallery,contact,404}.html`.
+Each `.njk` page sets `layout: layouts/base.njk` in its front matter and supplies only its `<main>` content — the navbar, footer, `<head>` meta, and script tags live once in the layout and its partials. Output lands at localized paths — German at the root, English under `/en/`: `_site/index.html`, `_site/leistungen/`, `_site/galerie/`, `_site/kontakt/` and their `_site/en/{index.html,services,gallery,contact}/` counterparts, plus a single `_site/404.html`.
 
 `css/` and `js/` are passed through unmodified by `.eleventy.js` (`addPassthroughCopy`) — they are not part of the `src/` template tree and Eleventy does not process them.
 
@@ -94,6 +99,16 @@ variables.css → animations.css → components.css → style.css → responsive
 Later files rely on cascade position, not specificity, to override earlier ones. Reordering these links changes rendering. If you add a new stylesheet, decide deliberately where in this chain it belongs.
 
 **Do not** trust the older claim that "components reference variables, so palette changes only need to happen in `variables.css`." That is currently false: `css/*.css` contains 128 hand-written `rgba()` literals (about 45 of them the literal navy `rgba(15, 23, 42, …)`, i.e. `--color-primary` spelled out by hand). Roughly 31 box-shadows are pinned to that hardcoded hue. Changing `--color-primary` today will *not* repaint those shadows — they'll silently stay the old color. This is fixed in Part 2 via `color-mix()`; until then, treat `variables.css` as the source of truth for new code but don't assume existing code obeys it.
+
+Glassmorphism is a deliberate 3-tier system (see
+docs/superpowers/specs/2026-07-16-visual-refresh-design.md): `.glass-strong`
+(navy tint over photos/dark bands, carries its own white text + shadow),
+soft-tier card surfaces (`.card`, `.service-card`, `.mv-card`, `.value-card`
+over `.section--blobs` backgrounds), and `.glass-backdrop` (max one large
+frosted container per page). All tiers collapse to solid surfaces under
+`prefers-reduced-transparency` and when `backdrop-filter` is unsupported. The
+navbar is deliberately NOT glass — solid navy at top, solid white when
+scrolled, no per-page variants.
 
 ### Script order encodes init order — preserve it
 
@@ -177,7 +192,7 @@ Four real, user-facing bugs were found and fixed during the migration (see git h
 - The contact form could never be submitted — a validator signature bug in `js/contact.js` (`minLength`) rejected every submission regardless of input.
 - The consent checkbox was never actually validated before submission.
 - The hero headline's third line ("obsessive care.") had `opacity: 0` from a CSS cascade collision and had never been visible to any visitor.
-- Headings rendered dark navy on dark navy across four page heroes (about, services, gallery, contact) and the CTA banner.
+- Headings rendered dark navy on dark navy across four page heroes (about, services, gallery, contact) and the CTA banner. The per-page `navbarSolid`/`.navbar--solid` variant that enabled this bug class was later removed entirely — navbar styling is scroll-state-driven only.
 
 ## Notes
 
