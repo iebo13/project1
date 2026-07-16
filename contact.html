@@ -182,11 +182,12 @@
               </div>
 
               <div class="form-row form-row--single">
-                <div class="field" style="display:flex; align-items:flex-start; gap: var(--space-3); background: var(--color-bg); padding: var(--space-4); border-radius: var(--radius-md);">
-                  <input type="checkbox" id="consent" name="consent" data-rules="checked" style="margin-top:4px; width:18px; height:18px; accent-color: var(--color-secondary);" required />
-                  <label for="consent" style="font-size: var(--fs-sm); color: var(--color-muted); margin: 0; line-height: var(--lh-normal);">
+                <div class="field" style="display:flex; align-items:flex-start; gap: var(--space-3); background: var(--color-bg); padding: var(--space-4); border-radius: var(--radius-md); flex-wrap: wrap;">
+                  <input class="field__input" type="checkbox" id="consent" name="consent" data-rules="checked" style="margin-top:4px; width:18px; height:18px; flex: 0 0 auto; accent-color: var(--color-secondary);" required />
+                  <label for="consent" style="font-size: var(--fs-sm); color: var(--color-muted); margin: 0; line-height: var(--lh-normal); flex: 1;">
                     I agree to be contacted about my request and accept the <a href="#" style="color: var(--color-secondary); text-decoration: underline;">privacy policy</a>. We never share your data.
                   </label>
+                  <span class="field__error" aria-live="polite" style="flex: 0 0 100%;"></span>
                 </div>
               </div>
 

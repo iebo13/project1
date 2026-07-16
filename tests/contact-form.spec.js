@@ -35,3 +35,23 @@ test('error message states the real minimum, not a hardcoded 3', async ({ page }
   expect(msg).toContain('2');
   expect(msg).not.toContain('3');
 });
+
+test('blocks submission when consent is unchecked', async ({ page }) => {
+  await page.goto('/contact.html');
+  await page.fill('#firstName', 'Anna');
+  await page.fill('#lastName', 'Schmidt');
+  await page.fill('#email', 'anna.schmidt@example.de');
+  await page.fill('#message', 'I would like a quote for a weekly office clean, roughly 200sqm.');
+  // deliberately do NOT check #consent
+  await page.click('#contact-form [type="submit"]');
+
+  await expect(page.locator('.form-message')).not.toHaveClass(/form-message--success/);
+  await expect(page.locator('#consent').locator('xpath=ancestor::div[contains(@class,"field")][1]'))
+    .toHaveClass(/field--error/);
+});
+
+test('consent field renders an error message', async ({ page }) => {
+  await page.goto('/contact.html');
+  await page.click('#contact-form [type="submit"]');
+  await expect(page.locator('#consent ~ .field__error')).not.toBeEmpty();
+});
