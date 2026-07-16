@@ -8,7 +8,7 @@ A multi-page marketing website for a fictional boutique cleaning company based i
 
 ## ✨ Highlights
 
-- **Bilingual EN/DE** — full translation system with language switcher, persisted in `localStorage`, auto-detected from browser language (still driven by `js/i18n.js`; scheduled to be replaced by build-time i18n in Part 2)
+- **Bilingual EN/DE, resolved at build time** — every page is rendered twice with localized URLs (German at the root, English under `/en/`), correct `lang`/`canonical`/`hreflang`, and per-language `<title>`/`<meta description>`. No translation JavaScript ships to the browser.
 - **Enhanced glassmorphism** — frosted glass navbar, cards, buttons, hero stats panel, with strong `backdrop-filter` blur throughout
 - **Awwwards-grade design** — soft shadows, large whitespace, fluid typography via `clamp()`
 - **6 pages, 1 layout** — Home, About, Services, Gallery, Contact, 404, all rendered from `src/_includes/layouts/base.njk`
@@ -54,7 +54,6 @@ project1/
 │
 ├── js/                            # Passed through unmodified — browser scripts, NOT Node modules
 │   ├── app.js                    # Entry point — orchestrates all modules, loaded last
-│   ├── i18n.js                   # Bilingual EN/DE translation system (slated for deletion in Part 2)
 │   ├── animations.js             # Scroll reveal, parallax, ripple, magnetic, tilt
 │   ├── navigation.js              # Sticky navbar, mobile menu, preloader, back-to-top
 │   ├── counter.js                # Animated stat counters (IntersectionObserver + rAF)
@@ -109,7 +108,7 @@ project1/
 npm install         # installs Eleventy, Playwright, axe-core (dev dependencies only)
 npm start            # dev server at http://localhost:8080, rebuilds on change
 npm run build         # writes static output to _site/
-npm test             # Playwright: 42 tests — functional checks + visual regression
+npm test             # Playwright: 97 tests — functional checks + visual regression
 ```
 
 Playwright's config auto-starts `npm start` for you when you run `npm test`, so you don't need to run the dev server separately first. There is no `file://`-based workflow anymore — Eleventy needs its dev server (or a build) to resolve templates and passthrough assets correctly.
@@ -134,7 +133,22 @@ Add a new `.gallery-card` to the grid in `src/gallery.njk` (there's no data file
 `site.phone`, `site.phoneHref`, `site.email`, and `site.address` in `src/_data/site.js` drive the footer and navbar. `src/contact.njk`, however, still hardcodes the same phone/email/address as literals in its contact-info list and map section — update those by hand too, or they'll drift from `site.js`.
 
 ### Add or edit translations
-Open `js/i18n.js`. Two top-level objects (`en` and `de`) hold all translated strings, keyed by `data-i18n` attribute values. Add a new key to both objects, then add `data-i18n="your.new.key"` to any HTML element to make it translatable. Use `data-i18n-placeholder` for input placeholders and `data-i18n-aria` for ARIA labels. Note: this file is scheduled for deletion in Part 2 in favor of build-time bilingual generation — treat new investment here as short-lived.
+Open `src/_data/dict.js` and add the key to **both** `en` and `de`. Then use it
+in a template:
+
+```njk
+{% set d = dict[lang] %}
+<h1>{{ 'your.new.key' | t(d) }}</h1>
+```
+
+Forgetting one language **breaks the build** — `t` throws on a missing key
+rather than silently rendering the raw key string into the page.
+
+For links, never hardcode an href — `{{ 'services' | url(lang) }}` resolves to
+`/leistungen/` or `/en/services/` depending on the page's language.
+
+Per-page `<title>` and `<meta description>` live in `src/_data/meta.js`, not the
+dictionary.
 
 ### Wire the contact form to a backend
 Open `js/contact.js` and replace the mock `await new Promise(...)` block in the submit handler with a real `fetch()` call to your endpoint.
