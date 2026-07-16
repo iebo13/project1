@@ -776,20 +776,31 @@ Baselines are captured **after** the Phase 0 fixes, so they encode correct rende
 
 - [ ] **Step 2: Create `tests/visual.spec.js`**
 
-**Read this before writing the file — two non-obvious hazards, both verified in a real browser:**
+**Read this before writing the file — FOUR non-obvious hazards, all verified in a real
+browser. An earlier attempt at this task shipped green tests over blank baselines because
+the first two were not handled. Do not skip this.**
 
-1. **Scroll reveals.** The site animates content in with `data-reveal` + IntersectionObserver.
-   Below-fold elements only get `.is-visible` once scrolled into view. A `fullPage` screenshot
-   does NOT reliably trigger those observers, so a naive capture records most of each page at
-   `opacity: 0`. The baselines would be near-blank and the migration comparison worthless.
-2. **JS counters.** The stat counters animate over ~2.2s via `requestAnimationFrame`.
-   Playwright's `animations: 'disabled'` freezes CSS animations only — **not** JS-driven ones.
-   Verified counter distribution: `index.html` has 7 (3 in the hero above the fold, 4 in
-   `#stats` below it), `about.html` has 4 (below the fold), the other four pages have none.
-   Verified final values: `500+`, `15+`, `100%`, `12,500+`. No counter uses decimals, so
-   stripping non-digits is a safe comparison.
-
-Both mean the page must be **walked top to bottom** before capture.
+1. **`scroll-behavior: smooth` breaks scripted scrolling.** `css/style.css:16` sets it
+   globally. `window.scrollTo(0, y)` therefore *animates* rather than jumping, and a loop
+   outruns it — real `scrollY` tops out at a nondeterministic ceiling (1947-4289px observed)
+   before the final `scrollTo(0,0)` reverses it. Content below that ceiling never fires its
+   IntersectionObserver and stays frozen at `opacity: 0`.
+   **This fails silently and dangerously:** a frozen page is trivially identical between
+   Playwright's two comparison shots, so the test passes green over a blank baseline.
+   **Fix: `window.scrollTo({ top: y, behavior: 'instant' })`** — `behavior: 'instant'`
+   overrides the CSS declaration per call.
+2. **The testimonial slider autoplays** on a 6s interval and races the capture on
+   `index.html`. `js/slider.js` exports its live instances as `window.Slider.instances`, and
+   the class has `stop()` plus `goTo(index, animate = true)`. Stop each instance and pin it
+   to slide 0 with `goTo(0, false)` — using the module's own API, not timer hacks.
+3. **Scroll reveals.** `data-reveal` + IntersectionObserver means below-fold elements only
+   become visible once scrolled into view. This is why the page must be walked at all.
+4. **JS counters.** They animate ~2.2s via `requestAnimationFrame`. Playwright's
+   `animations: 'disabled'` freezes CSS animations only — **not** JS ones. Verified
+   distribution: `index.html` 7 counters (3 hero above fold, 4 in `#stats` below),
+   `about.html` 4 (below fold), the other four pages none. Verified final values: `500+`,
+   `15+`, `100%`, `12,500+`, `42`, `98%`. No counter uses decimals, so stripping non-digits
+   is a safe comparison.
 
 ```js
 import { test, expect } from '@playwright/test';
@@ -804,19 +815,34 @@ const pages = [
 ];
 
 /**
- * Walk the page so every IntersectionObserver fires — scroll reveals and the
- * stat counters both depend on it — then return to the top and let everything
- * settle. Without this, a fullPage capture records below-fold content at
- * opacity 0 and counters mid-count, and the baseline is non-deterministic.
+ * Make the page deterministic before capture.
+ *
+ * Walks the full height so every IntersectionObserver fires (scroll reveals and
+ * the below-fold stat counters both depend on it), then returns to the top.
+ *
+ * `behavior: 'instant'` is REQUIRED, not stylistic: css/style.css:16 sets
+ * `scroll-behavior: smooth` globally, so a plain scrollTo animates, this loop
+ * outruns it, and the page freezes part-way with content still at opacity:0.
+ * That failure is silent — a frozen page compares as "stable" and the baseline
+ * passes green while showing blank sections.
  */
 async function settle(page) {
   await page.evaluate(async () => {
     const step = Math.floor(window.innerHeight * 0.8);
     for (let y = 0; y < document.body.scrollHeight; y += step) {
-      window.scrollTo(0, y);
+      window.scrollTo({ top: y, behavior: 'instant' });
       await new Promise((r) => setTimeout(r, 150));
     }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  });
+
+  // The testimonial slider autoplays every 6s and would race the capture.
+  // Stop it through the module's own exported instances and pin it to slide 0.
+  await page.evaluate(() => {
+    window.Slider?.instances?.forEach((s) => {
+      s.stop();
+      s.goTo(0, false);
+    });
   });
 
   // Every counter must have reached its target. Pages with no counters pass
@@ -831,12 +857,13 @@ async function settle(page) {
     )
     .catch(() => {
       throw new Error(
-        'Counters never reached their targets. Investigate — do NOT weaken this ' +
-          'wait to get a green baseline; a mid-count capture makes the baseline flaky.'
+        'Counters never reached their targets — the page did not fully reveal. ' +
+          'Check that scrollTo is using behavior:"instant". Do NOT weaken this wait: ' +
+          'a partially-revealed page still compares as stable and passes green.'
       );
     });
 
-  // Hero entrance chain: 520ms delay + 900ms duration, plus parallax reset.
+  // Hero entrance chain: 520ms delay + 900ms duration, plus slider settle.
   await page.waitForTimeout(1500);
 }
 
