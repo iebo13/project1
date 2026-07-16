@@ -170,6 +170,14 @@
   color: var(--color-primary);
 }
 
+/* .section-title's own `color` declaration (a class selector) always beats
+   the heading reset regardless of :where(), and there was nothing to make
+   it defer to .section--dark's white on dark sections — hence the inline
+   style hack this rule replaces. Inherit explicitly instead. */
+.section--dark .section-title {
+  color: inherit;
+}
+
 .section-subtitle {
   font-size: var(--fs-lg);
   color: var(--color-muted);
@@ -918,6 +926,9 @@
   letter-spacing: var(--ls-tight);
   line-height: var(--lh-tight);
   margin-bottom: var(--space-5);
+  /* See .page-hero h1: the heading reset's declared `color` always beats
+     inheritance, :where() specificity notwithstanding. Inherit explicitly. */
+  color: inherit;
 }
 
 .promo-banner p {
@@ -1131,6 +1142,11 @@
   letter-spacing: var(--ls-tight);
   line-height: var(--lh-tight);
   margin-bottom: var(--space-5);
+  /* The global heading reset (style.css) declares its own `color`, and a
+     declared value always wins over inheritance regardless of specificity
+     — :where() alone can't fix that here since nothing else targets this
+     element's color. Inherit explicitly from .page-hero's white instead. */
+  color: inherit;
 }
 
 .page-hero p {

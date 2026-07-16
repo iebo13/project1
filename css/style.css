@@ -92,7 +92,10 @@ ol {
 }
 
 /* ---------- Typography ---------- */
-h1, h2, h3, h4, h5, h6 {
+/* :where() keeps this at specificity (0,0,0) so an ancestor's colour is
+   inherited normally. At (0,0,1) it beat inheritance and painted headings
+   #0F172A on #0F172A backgrounds across every dark section. */
+:where(h1, h2, h3, h4, h5, h6) {
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
