@@ -143,6 +143,18 @@ p {
   background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
 }
 
+/* Sections that host decorative blobs behind glass cards: contain the blobs
+   and raise the content above them. */
+.section--blobs {
+  position: relative;
+  overflow: hidden;
+}
+
+.section--blobs > .container {
+  position: relative;
+  z-index: 1;
+}
+
 .section--gradient {
   background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
 }
@@ -1362,6 +1374,30 @@ p {
    inside one section. */
 .mv-grid + .values-grid {
   margin-top: var(--space-12);
+}
+
+/* Soft tier for the about page's mission/value cards. Appended here (same
+   specificity, later in the file) so it wins over their base declarations
+   above — components.css loads before style.css, so an override placed in
+   components.css's glass-tiers section would lose this cascade tie instead
+   of winning it. */
+.mv-card,
+.value-card {
+  background: var(--glass-soft-bg);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  border: 1px solid color-mix(in srgb, var(--color-white) 55%, transparent);
+}
+
+/* Reduced-transparency fallback for the pair above. Kept in this file, after
+   the override it must beat, for the same cascade-tie reason. */
+@media (prefers-reduced-transparency: reduce) {
+  .mv-card,
+  .value-card {
+    background: var(--color-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 /* ---------- Service detail (services page) ---------- */

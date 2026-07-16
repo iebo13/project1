@@ -120,7 +120,9 @@ robots: 'index, follow'
     </section>
 
     <!-- ===== SERVICES ===== -->
-    <section class="section" id="services" aria-label="Our services">
+    <section class="section section--blobs" id="services" aria-label="Our services">
+      <div class="blob blob--blue" style="width: 420px; height: 420px; top: -60px; right: -120px;" aria-hidden="true"></div>
+      <div class="blob blob--cyan" style="width: 360px; height: 360px; bottom: -80px; left: -100px;" aria-hidden="true"></div>
       <div class="container">
         <div class="section-head" data-reveal>
           <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'services.eyebrow' | t(d) }}</span></span>
@@ -332,7 +334,9 @@ robots: 'index, follow'
     </section>
 
     <!-- ===== FAQ ===== -->
-    <section class="section section--tinted" id="faq" aria-label="Frequently asked questions">
+    <section class="section section--tinted section--blobs" id="faq" aria-label="Frequently asked questions">
+      <div class="blob blob--blue" style="width: 380px; height: 380px; top: -40px; left: -120px;" aria-hidden="true"></div>
+      <div class="blob blob--cyan" style="width: 340px; height: 340px; bottom: -60px; right: -100px;" aria-hidden="true"></div>
       <div class="container">
         <div class="section-head" data-reveal>
           <span class="eyebrow"><span class="eyebrow__dot"></span> <span>{{ 'faq.eyebrow' | t(d) }}</span></span>
@@ -340,7 +344,7 @@ robots: 'index, follow'
           <p class="section-subtitle">{{ 'faq.subtitle' | t(d) }}</p>
         </div>
 
-        <div class="faq-wrap" data-reveal>
+        <div class="faq-wrap glass-backdrop" data-reveal>
           {% for item in faq %}
           <details class="faq-item" name="faq"{% if loop.first %} open{% endif %}>
             <summary class="faq-question">
