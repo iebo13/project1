@@ -26,7 +26,7 @@ function contrast(fg, bg) {
   return (a + 0.05) / (b + 0.05);
 }
 
-const darkHeroPages = ['/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/'];
+const darkHeroPages = ['/leistungen/', '/galerie/', '/kontakt/'];
 
 for (const path of darkHeroPages) {
   test(`h1 on ${path} is readable against the dark hero`, async ({ page }) => {
@@ -45,18 +45,12 @@ test('CTA banner h2 is readable against its dark background', async ({ page }) =
   expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
 });
 
-test('no inline colour workaround remains on the about section title', async ({ page }) => {
-  await page.goto('/ueber-uns/');
-  const count = await page.locator('.section--dark .section-title[style*="color"]').count();
-  expect(count).toBe(0);
-});
-
 // The navbar is state-driven, not page-driven: solid navy (light text) at the
 // top of EVERY page, solid white (dark text) once scrolled. The old per-page
 // .navbar--solid variant caused a whole class of dark-on-dark bugs (invisible
 // logo/links, and a phone number that was still dark-on-navy when it was
 // visible) — deleting the variant deletes the bug class.
-const allPages = ['/', '/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/'];
+const allPages = ['/', '/leistungen/', '/galerie/', '/kontakt/'];
 
 function lightness01(rgb) {
   const [r, g, b] = rgb.match(/[\d.]+/g).slice(0, 3).map(Number);
@@ -64,6 +58,17 @@ function lightness01(rgb) {
   const max = Math.max(r, g, b) <= 1 ? 1 : 255;
   return (r + g + b) / 3 / max;
 }
+
+test('active language button is visibly highlighted in both navbar states', async ({ page, viewport }) => {
+  test.skip(!viewport || viewport.width < 1280, 'lang switch lives in the drawer on mobile');
+  await page.goto('/');
+  const active = page.locator('.lang-switch__btn.is-active');
+  expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage),
+    'active chip needs its gradient pill on the navy bar too').toContain('gradient');
+  await page.evaluate(() => window.scrollTo(0, 300));
+  await expect(page.locator('.navbar')).toHaveClass(/is-scrolled/);
+  expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage)).toContain('gradient');
+});
 
 for (const path of allPages) {
   test(`navbar on ${path} is light-on-navy at top, dark-on-white when scrolled`, async ({ page, viewport }) => {

@@ -2,7 +2,7 @@
 //
 // Nav items carry a translation `key` and a `page` key (resolved to a
 // language-correct URL by the `url` filter) rather than a hardcoded href and
-// an English label — the same seven links render as /leistungen/ for a German
+// an English label — the same six links render as /leistungen/ for a German
 // visitor and /en/services/ for an English one.
 
 export default {
@@ -28,7 +28,6 @@ export default {
   // FAQ are sections of the homepage, not pages of their own).
   nav: [
     { key: 'nav.home', page: 'home', inHeader: true },
-    { key: 'nav.about', page: 'about', inHeader: true },
     { key: 'nav.services', page: 'services', inHeader: true },
     { key: 'nav.gallery', page: 'gallery', inHeader: true },
     { key: 'nav.reviews', page: 'home', hash: '#reviews', inHeader: false },

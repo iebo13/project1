@@ -1,7 +1,7 @@
 // The header nav lists only real pages. Reviews and FAQ are homepage
 // *sections* (/#reviews, /#faq) — from an interior page a header link to them
 // unexpectedly navigates back to the homepage, so they live in the footer
-// only. Guards both directions: header stays at 5, footer keeps all 7.
+// only. Guards both directions: header stays at 4, footer keeps all 6.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -17,8 +17,8 @@ test('header nav lists only real pages; footer keeps the anchor links', () => {
   const html = readFileSync('_site/index.html', 'utf8');
 
   const header = html.match(/<nav class="nav-menu"[\s\S]*?<\/nav>/)[0];
-  assert.equal((header.match(/class="nav-link"/g) || []).length, 5,
-    'header should show exactly the 5 real pages');
+  assert.equal((header.match(/class="nav-link"/g) || []).length, 4,
+    'header should show exactly the 4 real pages');
   assert.ok(!header.includes('#reviews') && !header.includes('#faq'),
     'homepage anchors must not appear in the header');
 
