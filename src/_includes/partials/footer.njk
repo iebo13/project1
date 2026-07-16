@@ -35,12 +35,9 @@
         <div class="footer__col">
           <h5 data-i18n="footer.services">Services</h5>
           <nav class="footer__links">
-            <a href="services.html#office"><span data-i18n="srv.office.title">Office Cleaning</span></a>
-            <a href="services.html#house"><span data-i18n="srv.house.title">House Cleaning</span></a>
-            <a href="services.html#window"><span data-i18n="srv.window.title">Window Cleaning</span></a>
-            <a href="services.html#deep"><span data-i18n="srv.deep.title">Deep Cleaning</span></a>
-            <a href="services.html#carpet"><span data-i18n="srv.carpet.title">Carpet Cleaning</span></a>
-            <a href="services.html#industrial"><span data-i18n="srv.industrial.title">Industrial Cleaning</span></a>
+            {% for service in services | selectattr('onHome') | sort(attribute='homeOrder') %}
+            <a href="services.html#{{ service.id }}"><span data-i18n="srv.{{ service.id }}.title">{{ service.title }}</span></a>
+            {% endfor %}
           </nav>
         </div>
 

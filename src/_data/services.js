@@ -1,0 +1,226 @@
+// The 10 BlitzBlank services, in the exact order they appear on services.njk
+// (the "all services" catalogue page). Each service also owns a detail
+// section further down that same page.
+//
+// Six of these ten also appear as cards on the homepage (index.njk) and as
+// links in the footer's "Services" column — but with DIFFERENT blurb copy
+// and, for three of them, a different icon than their services.njk card.
+// That isn't a typo to "fix": the two pages were hand-authored independently
+// and genuinely disagree with each other. `homeBlurb` / `homeIcon` preserve
+// that disagreement verbatim rather than silently unifying it. `onHome` /
+// `homeOrder` capture that the homepage's subset is hand-picked and in a
+// different order than this catalogue (office, house, window, deep, carpet,
+// industrial — not the first six here).
+export default [
+  {
+    id: 'office',
+    detailId: 'office-detail',
+    title: 'Office Cleaning',
+    blurb: 'Daily, weekly, or nightly cleaning for offices of any size — from 5-person studios to 50,000 sq ft campuses.',
+    icon: '<path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/>',
+    onHome: true,
+    homeOrder: 1,
+    homeBlurb: 'Keep your team focused and your clients impressed with daily, weekly, or nightly office cleaning tailored to your workflow.',
+    homeIcon: '<path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><rect x="8" y="9" width="2" height="2"/><rect x="8" y="13" width="2" height="2"/><rect x="8" y="17" width="2" height="2"/>',
+    detail: {
+      heading: 'Office Cleaning',
+      body: "Whether you run a five-person studio or a 50,000 sq ft campus, your office is the first impression your clients get and the daily environment your team lives in. Our commercial crews work around your hours — early morning, after close, or overnight — so your team walks into a fresh, focused space every single day.",
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80',
+      alt: 'Spotless open-plan office after BlitzBlank clean',
+      bullets: [
+        'Workstations, kitchens, restrooms, meeting rooms',
+        'Sanitisation of high-touch surfaces (CDC protocol)',
+        'Glass partitions, whiteboards, electronics-safe dusting',
+        'Restocking of paper goods & eco soap (optional)',
+      ],
+    },
+  },
+  {
+    id: 'house',
+    detailId: 'house-detail',
+    title: 'House Cleaning',
+    blurb: 'Weekly, bi-weekly, monthly, or one-time. The same crew, every visit, who already knows your home.',
+    icon: '<path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/>',
+    onHome: true,
+    homeOrder: 2,
+    homeBlurb: 'Reclaim your weekends. Our recurring house cleaning service keeps every corner of your home consistently spotless.',
+    detail: {
+      heading: 'House Cleaning',
+      body: 'Your home deserves more than a rushed once-over. Our residential crews follow a 47-point checklist on every visit — from the top of the ceiling fan to the baseboards behind the bed. We pair you with the same team for every clean, so they learn your preferences and your space.',
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80',
+      alt: 'Sunlit minimalist living room cleaned by BlitzBlank',
+      bullets: [
+        'Weekly, bi-weekly, monthly, or one-time cleans',
+        'Same crew every visit, whenever possible',
+        'Eco-friendly, kid- and pet-safe products',
+        'Custom preferences saved to your profile',
+      ],
+    },
+  },
+  {
+    id: 'window',
+    detailId: 'window-detail',
+    title: 'Window Cleaning',
+    blurb: 'Pure-water fed brush technology, squeegee-finished. Streak-free interior and exterior panes, skylights included.',
+    icon: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h18"/><path d="M12 3v18"/>',
+    onHome: true,
+    homeOrder: 3,
+    homeBlurb: 'Streak-free, sparkling windows inside and out — including hard-to-reach panes and skylights. Pure-water fed brush technology.',
+    detail: {
+      heading: 'Window Cleaning',
+      body: 'Streak-free glass is harder than it looks. We use a pure-water fed brush system that deionises the water — meaning zero mineral spots when it dries. Combined with traditional squeegee technique on interior panes, you get windows that disappear, exactly as the architect intended.',
+      image: 'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80',
+      alt: 'Floor-to-ceiling windows sparkling after cleaning',
+      bullets: [
+        'Interior and exterior panes, including French doors',
+        'Skylights, mirrors, glass partitions',
+        'Screen cleaning and track detailing',
+        'Up to three-storey exterior reach without lifts',
+      ],
+    },
+  },
+  {
+    id: 'industrial',
+    detailId: 'industrial-detail',
+    title: 'Industrial Cleaning',
+    blurb: 'Warehouses, factories, production floors. OSHA-grade protocols, specialised equipment, trained crews.',
+    icon: '<path d="M2 20h20"/><path d="M4 20V8l5 4V8l5 4V8l5 4v8"/>',
+    onHome: true,
+    homeOrder: 6,
+    homeBlurb: 'Warehouses, factories, and production floors cleaned to OSHA-grade standards. Specialised equipment, trained crews.',
+    homeIcon: '<path d="M2 20h20"/><path d="M4 20V8l5 4V8l5 4V8l5 4v8"/><path d="M9 14h1"/><path d="M14 14h1"/>',
+    detail: {
+      heading: 'Industrial Cleaning',
+      body: 'Warehouses, manufacturing floors, distribution centres — these are not standard-office cleans with bigger equipment. They require OSHA-trained crews, specialised chemistry for oil and metal shavings, ride-on scrubbers, and a real understanding of your production schedule. We bring all of it.',
+      image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=80',
+      alt: 'Industrial warehouse floor after deep cleaning',
+      bullets: [
+        'OSHA-compliant crews and protocols',
+        'Ride-on scrubbers, pressure washing, degreasing',
+        'High-bay dusting, racking, and overhead structure',
+        'Flexible scheduling around production windows',
+      ],
+    },
+  },
+  {
+    id: 'deep',
+    detailId: 'deep-detail',
+    title: 'Deep Cleaning',
+    blurb: 'A top-to-bottom reset: baseboards, grout, behind appliances, light fixtures, vents, and forgotten corners.',
+    icon: '<path d="M12 2 L14 9 L21 9 L15.5 13.5 L17.5 21 L12 16.5 L6.5 21 L8.5 13.5 L3 9 L10 9 Z"/>',
+    onHome: true,
+    homeOrder: 4,
+    homeBlurb: 'A top-to-bottom reset for spaces that need serious attention. Baseboards, grout, behind appliances, light fixtures — everything.',
+    detail: {
+      heading: 'Deep Cleaning',
+      body: "Sometimes a regular clean isn't enough. Spring reset, post-illness, pre-move-in, or just because the dust has been quietly winning — our deep clean pulls everything out from everywhere. Baseboards, grout lines, behind appliances, inside light fixtures, vents, and the tops of cabinets you forgot existed.",
+      image: 'https://images.unsplash.com/photo-1567548083313-04c67ac2f4f0?auto=format&fit=crop&w=900&q=80',
+      alt: 'Spa-grade bathroom after deep cleaning',
+      bullets: [
+        '2-3 person crew, 4-6 hours typical',
+        'Inside appliances, cabinets, and behind furniture',
+        'Grout scrubbing, vent & light fixture detailing',
+        'Optional add-on: upholstery & carpet shampoo',
+      ],
+    },
+  },
+  {
+    id: 'moveout',
+    detailId: 'moveout-detail',
+    title: 'Move-out Cleaning',
+    blurb: 'Landlord-approved, deposit-saving cleans for vacating tenants. Includes interior appliances and cabinets.',
+    icon: '<path d="M3 12h18M3 12l4-4M3 12l4 4M21 6l-4 4M21 6l-4-4"/>',
+    detail: {
+      heading: 'Move-out Cleaning',
+      body: 'Moving is stressful enough without scrubbing a fridge at midnight. Our move-out cleans are calibrated to landlord expectations — we know exactly what they look for and exactly what gets deposits returned. Every interior surface, every cabinet, every appliance, every baseboard.',
+      image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=80',
+      alt: 'Empty apartment ready for handover after move-out clean',
+      bullets: [
+        'Interior of fridge, oven, microwave, cabinets',
+        'Walls spot-cleaned, switch plates, vents',
+        'Landlord-approved checklist provided on completion',
+        'Receipt available for landlord / property manager',
+      ],
+    },
+  },
+  {
+    id: 'carpet',
+    detailId: 'carpet-detail',
+    title: 'Carpet Cleaning',
+    blurb: 'Hot-water extraction lifts years of dirt and allergens. Stains vanish, fibres fluff back to life.',
+    icon: '<rect x="3" y="6" width="18" height="12" rx="1"/><path d="M7 10v4"/><path d="M11 10v4"/><path d="M15 10v4"/>',
+    onHome: true,
+    homeOrder: 5,
+    homeBlurb: 'Hot-water extraction lifts years of embedded dirt and allergens. Stains vanish, fibres fluff back to life, colours brighten.',
+    homeIcon: '<rect x="3" y="6" width="18" height="12" rx="1"/><path d="M7 10v4"/><path d="M11 10v4"/><path d="M15 10v4"/><path d="M3 18v2"/><path d="M21 18v2"/>',
+    detail: {
+      heading: 'Carpet Cleaning',
+      body: 'Carpets are filters — and after a few years, they\'re full. Our hot-water extraction process (what most people call "steam cleaning") pushes superheated water deep into the fibres, then pulls it back out along with years of dirt, dust mites, allergens, and the occasional wine stain you\'d given up on.',
+      image: 'https://images.unsplash.com/photo-1600166898405-da9535204843?auto=format&fit=crop&w=900&q=80',
+      alt: 'Carpet being professionally steam-cleaned',
+      bullets: [
+        'Hot-water extraction (truck-mounted for large jobs)',
+        'Pet stain & odour treatment available',
+        'Scotchgard protector optional add-on',
+        'Rugs, runners, and stair carpet welcome',
+      ],
+    },
+  },
+  {
+    id: 'restaurant',
+    detailId: 'restaurant-detail',
+    title: 'Restaurant Cleaning',
+    blurb: 'After-hours kitchen, dining, and restroom cleaning that passes every health inspection. Hood & extractors included.',
+    icon: '<path d="M3 2v7c0 1.1.9 2 2 2h2v11M9 2v7M7 2v7M15 2v20M15 8c2 0 3-2 3-6 0 4 1 6 3 6"/>',
+    detail: {
+      heading: 'Restaurant Cleaning',
+      body: 'In hospitality, cleanliness is the only review that matters. Our after-hours restaurant crews handle the kitchen, dining room, and restrooms — every night if you need it. Hood cleaning, grease trap maintenance, floor degreasing, and the kind of detail that makes health inspectors smile.',
+      image: 'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=900&q=80',
+      alt: 'Restaurant dining room after BlitzBlank clean',
+      bullets: [
+        'Nightly, weekly, or one-off deep cleans',
+        'Hood, duct, and extractor cleaning',
+        'Floor degreasing, drain care, restroom detailing',
+        'Health-inspection-ready, every shift',
+      ],
+    },
+  },
+  {
+    id: 'medical',
+    detailId: 'medical-detail',
+    title: 'Medical Cleaning',
+    blurb: 'Clinics, dental offices, urgent care. CDC-compliant terminal cleaning, HIPAA-trained crews, audit-ready always.',
+    icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+    detail: {
+      heading: 'Medical Cleaning',
+      body: "Clinics, dental offices, urgent care, and outpatient facilities have one standard: zero tolerance for error. Our medical crews are trained to CDC terminal-cleaning protocols, HIPAA-compliant in patient areas, and audited on every shift. We've passed every inspection on first try for five years running.",
+      image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=80',
+      alt: 'Medical clinic exam room after terminal cleaning',
+      bullets: [
+        'CDC-compliant terminal cleaning protocols',
+        'HIPAA-trained, discreet, uniformed crews',
+        'Hospital-grade disinfectants (EPA List N)',
+        'Full audit trail & shift documentation',
+      ],
+    },
+  },
+  {
+    id: 'construction',
+    detailId: 'construction-detail',
+    title: 'Construction Cleaning',
+    blurb: 'Post-build and post-reno cleans. Dust extraction, debris removal, surface detailing — make it move-in ready.',
+    icon: '<path d="M2 20h20M4 20V8l5-3v15M14 20V8l6 3v9M9 12h0M9 16h0M14 12h6M14 16h6"/>',
+    detail: {
+      heading: 'Construction Cleaning',
+      body: "The builders are gone. Now there's a film of fine dust on every surface, labels stuck to every appliance, and debris in every corner. Our post-construction crews handle the rough clean, the final clean, and the touch-up clean — getting your new space move-in ready, no dust required.",
+      image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80',
+      alt: 'Post-construction interior after final clean',
+      bullets: [
+        'HEPA vacuuming of all surfaces & vents',
+        'Sticker & label removal from windows and appliances',
+        'Debris haul-away and recycling',
+        'Rough, final, and touch-up cleans available',
+      ],
+    },
+  },
+];
