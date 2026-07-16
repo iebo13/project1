@@ -1365,6 +1365,12 @@
   box-shadow: var(--shadow-glow);
 }
 
+/* Specificity: the scrolled state's 3-class muted-text rule would otherwise
+   beat the 2-class active rule on `color`. */
+.navbar.is-scrolled .lang-switch__btn.is-active {
+  color: var(--color-white);
+}
+
 .lang-switch__btn:not(.is-active):hover {
   color: var(--color-white);
 }

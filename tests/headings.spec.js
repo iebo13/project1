@@ -65,9 +65,15 @@ test('active language button is visibly highlighted in both navbar states', asyn
   const active = page.locator('.lang-switch__btn.is-active');
   expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage),
     'active chip needs its gradient pill on the navy bar too').toContain('gradient');
+  expect(lightness01(await active.evaluate((el) => getComputedStyle(el).color)),
+    'active label must be light on the pill').toBeGreaterThan(0.9);
   await page.evaluate(() => window.scrollTo(0, 300));
   await expect(page.locator('.navbar')).toHaveClass(/is-scrolled/);
   expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage)).toContain('gradient');
+  await expect(async () => {
+    expect(lightness01(await active.evaluate((el) => getComputedStyle(el).color)),
+      'active label must stay light on the pill when scrolled').toBeGreaterThan(0.9);
+  }).toPass({ timeout: 5000 });
 });
 
 for (const path of allPages) {
