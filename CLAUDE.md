@@ -43,7 +43,7 @@ src/
   _data/
     site.js                # brand, origin, contact details, nav structure
     langs.js               # language codes + per-language slugs
-    dict.js                # the 287-key EN/DE translation table
+    dict.js                # the 288-key EN/DE translation table
     meta.js                # per-page <title>/<meta description>, per language
     services.js            # the 10 services (see below)
     faq.js                 # 6 FAQ entries
@@ -98,7 +98,7 @@ variables.css → animations.css → components.css → style.css → responsive
 
 Later files rely on cascade position, not specificity, to override earlier ones. Reordering these links changes rendering. If you add a new stylesheet, decide deliberately where in this chain it belongs.
 
-The palette is real: `variables.css`'s alpha variants, overlays, glass tiers, and gradients are all derived from the base color tokens via `color-mix()` rather than spelled out as hand-written `rgba()` literals. Changing `--color-primary` propagates through every overlay, shadow, and glass surface that references it. `variables.css` remains the source of truth — don't add a new hand-written `rgba()`/hex literal when a token or a `color-mix()` derived from one already exists.
+The palette is real: `variables.css`'s alpha variants, overlays, and glass tiers are derived from the base color tokens via `color-mix()` rather than spelled out as hand-written `rgba()` literals. Changing `--color-primary` propagates through every overlay, shadow, and glass surface that references it. (Exception: the `--gradient-*` tokens still hardcode the secondary/accent hex stops.) `variables.css` remains the source of truth — don't add a new hand-written `rgba()`/hex literal when a token or a `color-mix()` derived from one already exists.
 
 Glassmorphism is a deliberate 3-tier system (see
 docs/superpowers/specs/2026-07-16-visual-refresh-design.md): `.glass-strong`

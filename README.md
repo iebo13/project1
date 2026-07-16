@@ -9,7 +9,7 @@ A multi-page marketing website for a fictional boutique cleaning company based i
 ## ✨ Highlights
 
 - **Bilingual EN/DE, resolved at build time** — every page is rendered twice with localized URLs (German at the root, English under `/en/`), correct `lang`/`canonical`/`hreflang`, and per-language `<title>`/`<meta description>`. No translation JavaScript ships to the browser.
-- **Enhanced glassmorphism** — frosted glass navbar, cards, buttons, hero stats panel, with strong `backdrop-filter` blur throughout
+- **Deliberate glassmorphism** — a restrained 3-tier glass system in the page sections (glass stat chips, frosted cards, one backdrop panel per page); the navbar is deliberately solid, not glass
 - **Awwwards-grade design** — soft shadows, large whitespace, fluid typography via `clamp()`
 - **5 pages, 1 layout** — Home, Services, Gallery, Contact, 404, all rendered from `src/_includes/layouts/base.njk`
 - **10 services, data-driven** — each with its own dedicated detail section; adding one is a single entry in `src/_data/services.js`
