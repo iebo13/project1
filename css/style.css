@@ -852,7 +852,11 @@ p {
   display: grid;
   place-items: center;
   color: var(--color-muted);
-  transition: all var(--t-base) var(--ease-out);
+  transition: background var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-out);
 }
 
 .contact-socials a:hover {
@@ -1061,7 +1065,10 @@ p {
   display: grid;
   place-items: center;
   color: color-mix(in srgb, var(--color-white) 80%, transparent);
-  transition: all var(--t-base) var(--ease-out);
+  transition: background var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-out);
 }
 
 .footer__socials a:hover {
@@ -1483,7 +1490,11 @@ p {
   color: var(--color-secondary);
   position: relative;
   z-index: 1;
-  transition: all var(--t-base) var(--ease-out);
+  transition: background var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-out);
 }
 
 .process-step:hover .process-step__num {
