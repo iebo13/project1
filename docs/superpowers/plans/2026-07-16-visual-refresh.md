@@ -821,11 +821,11 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 ---
 
-### Task 6: Interior page heroes — variant C
+### Task 6: Interior page heroes — variant C (3 pages after Task 10)
 
 **Files:**
 - Modify: `tests/headings.spec.js` (one test first)
-- Modify: `src/about.njk`, `src/services.njk`, `src/gallery.njk`, `src/contact.njk` (page-hero content block, ~lines 16-24 in each)
+- Modify: `src/services.njk`, `src/gallery.njk`, `src/contact.njk` (page-hero content block; the about page no longer exists — Task 10 merged it into contact)
 - Modify: `css/components.css:1118-1190` (page-hero + breadcrumb)
 - Modify: `css/responsive.css` (page-hero mobile overlay, in the `max-width: 768px` block near the existing `.page-hero h1` rules at ~427-433)
 
@@ -854,7 +854,7 @@ Expected: the new test FAILS (first child is currently the eyebrow `span`, align
 
 - [ ] **Step 3: Update the four page templates**
 
-In each of `src/about.njk`, `src/services.njk`, `src/gallery.njk`, `src/contact.njk`, the `.page-hero__content` div currently holds `eyebrow span → h1 → p → breadcrumb nav`. Reorder to `breadcrumb nav → h1 → p` and delete the eyebrow span (it duplicates the breadcrumb's role). Using contact as the model — the other three differ only in their `page.*`/`nav.*` keys, keep each page's own keys:
+In each of `src/services.njk`, `src/gallery.njk`, `src/contact.njk`, the `.page-hero__content` div currently holds `eyebrow span → h1 → p → breadcrumb nav`. Reorder to `breadcrumb nav → h1 → p` and delete the eyebrow span (it duplicates the breadcrumb's role). Using contact as the model — the other three differ only in their `page.*`/`nav.*` keys, keep each page's own keys:
 
 ```njk
       <div class="container page-hero__content">
@@ -1243,7 +1243,7 @@ Run: `npx playwright test tests/headings.spec.js --project=desktop` — the new 
 
 In the `.lang-switch` block (~1324): delete the two `backdrop-filter` lines (the bar behind it is opaque now — the blur is a no-op that costs GPU).
 
-Replace the `.lang-switch__btn.is-active` block and DELETE the `.navbar.is-scrolled .lang-switch__btn.is-active` block (it becomes identical):
+Replace the `.lang-switch__btn.is-active` block, and REDUCE the `.navbar.is-scrolled .lang-switch__btn.is-active` block to a color-only override — it must NOT be deleted: `.navbar.is-scrolled .lang-switch__btn` (3 classes) sets muted text and would beat the 2-class active rule on `color` in the scrolled state (found by Task 10's review):
 
 ```css
 /* The active pill is state-independent: on the navy bar the old white-text-only
@@ -1252,6 +1252,12 @@ Replace the `.lang-switch__btn.is-active` block and DELETE the `.navbar.is-scrol
   color: var(--color-white);
   background: var(--gradient-primary);
   box-shadow: var(--shadow-glow);
+}
+
+/* Specificity: the scrolled state's 3-class muted-text rule would otherwise
+   beat the 2-class active rule on `color`. */
+.navbar.is-scrolled .lang-switch__btn.is-active {
+  color: var(--color-white);
 }
 ```
 
