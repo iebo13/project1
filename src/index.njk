@@ -23,10 +23,6 @@ robots: 'index, follow'
       </div>
       <div class="hero__overlay" aria-hidden="true"></div>
 
-      <!-- Decorative floating blobs for richer glass effect -->
-      <div class="blob blob--blue" style="width: 480px; height: 480px; top: -120px; left: -120px;" aria-hidden="true"></div>
-      <div class="blob blob--cyan" style="width: 400px; height: 400px; bottom: -80px; right: -80px;" aria-hidden="true"></div>
-
       <div class="hero__content">
         <span class="eyebrow eyebrow--light hero__eyebrow">
           <span class="eyebrow__dot"></span>
@@ -50,24 +46,24 @@ robots: 'index, follow'
           </a>
           <a href="{{ 'services' | url(lang) }}" class="btn btn--ghost-light btn--lg"><span>{{ 'hero.cta2' | t(d) }}</span></a>
         </div>
+      </div>
 
-        <div class="hero__stats">
-          <div class="hero__stat">
-            <div class="hero__stat-num"><span data-counter="500" data-suffix="+">0</span></div>
-            <div class="hero__stat-label">{{ 'hero.stat1.label' | t(d) }}</div>
-          </div>
-          <div class="hero__stat">
-            <div class="hero__stat-num"><span data-counter="15" data-suffix="+">0</span></div>
-            <div class="hero__stat-label">{{ 'hero.stat2.label' | t(d) }}</div>
-          </div>
-          <div class="hero__stat">
-            <div class="hero__stat-num"><span data-counter="100" data-suffix="%">0</span></div>
-            <div class="hero__stat-label">{{ 'hero.stat3.label' | t(d) }}</div>
-          </div>
+      <div class="hero__stats">
+        <div class="hero__stat glass-strong">
+          <div class="hero__stat-num"><span data-counter="500" data-suffix="+">0</span></div>
+          <div class="hero__stat-label">{{ 'hero.stat1.label' | t(d) }}</div>
+        </div>
+        <div class="hero__stat glass-strong">
+          <div class="hero__stat-num"><span data-counter="15" data-suffix="+">0</span></div>
+          <div class="hero__stat-label">{{ 'hero.stat2.label' | t(d) }}</div>
+        </div>
+        <div class="hero__stat glass-strong">
+          <div class="hero__stat-num"><span data-counter="100" data-suffix="%">0</span></div>
+          <div class="hero__stat-label">{{ 'hero.stat3.label' | t(d) }}</div>
         </div>
       </div>
 
-      <a href="#stats" class="scroll-indicator" aria-label="Scroll down">
+      <a href="#stats" class="scroll-indicator" aria-label="{{ 'hero.scroll' | t(d) }}">
         <span>{{ 'hero.scroll' | t(d) }}</span>
         <span class="scroll-indicator__mouse" aria-hidden="true"></span>
       </a>

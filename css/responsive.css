@@ -115,8 +115,18 @@
   }
 
   .hero__stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: var(--container-max);
+    margin: var(--space-10) auto 0;
+    padding-inline: var(--container-pad);
+  }
+
+  .hero {
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
   }
 
   /* About preview becomes single column */
@@ -189,9 +199,47 @@
     -webkit-backdrop-filter: none;
   }
 
-  /* Hero */
+  /* V5 stacks on phones: navy text block first, untinted photo band below,
+     stat chips overlapping the seam. Text never sits on the photo. */
   .hero {
-    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--color-primary);
+  }
+
+  .hero__content {
+    order: 1;
+    padding-block: var(--space-16) var(--space-12);
+  }
+
+  .hero__bg {
+    order: 2;
+    position: relative;
+    height: 46vh;
+  }
+
+  .hero__bg img {
+    transform: none;
+    animation: none;
+  }
+
+  .hero__overlay {
+    display: none;
+  }
+
+  .hero__stats {
+    order: 3;
+    position: relative;
+    z-index: 2;
+    margin: calc(-1 * var(--space-16)) 0 0;
+    padding-inline: var(--container-pad);
+    gap: var(--space-3);
+  }
+
+  .hero__stat {
+    flex: 1 1 40%;
+    padding: var(--space-3) var(--space-4);
   }
 
   .hero__title {
@@ -201,13 +249,6 @@
 
   .hero__subtitle {
     font-size: var(--fs-lg);
-  }
-
-  .hero__stats {
-    grid-template-columns: 1fr;
-    max-width: 360px;
-    gap: var(--space-5);
-    margin-top: var(--space-12);
   }
 
   .hero__cta {

@@ -437,18 +437,35 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 72% center;
   transform: scale(1.05);
   animation: floatY 12s ease-in-out infinite;
 }
 
+/* V5 dark split: a solid navy panel owns the left ~half (guaranteed white-text
+   contrast), clearing to a fully untinted photo on the right. The glow is the
+   only decoration — it stays inside the panel side. */
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-secondary) 42%, transparent) 0%, transparent 55%),
-    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--color-accent) 38%, transparent) 0%, transparent 55%),
-    linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 78%, transparent) 0%, color-mix(in srgb, var(--color-secondary) 40%, transparent) 50%, color-mix(in srgb, var(--color-accent) 30%, transparent) 100%);
+  background: linear-gradient(90deg,
+    var(--color-primary) 0%,
+    var(--color-primary) 46%,
+    color-mix(in srgb, var(--color-primary) 82%, transparent) 58%,
+    color-mix(in srgb, var(--color-primary) 20%, transparent) 74%,
+    transparent 100%);
   z-index: 1;
+}
+
+.hero__overlay::before {
+  content: '';
+  position: absolute;
+  left: 16%;
+  top: -22%;
+  width: 620px;
+  height: 620px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-secondary) 30%, transparent) 0%, transparent 70%);
 }
 
 .hero__content {
@@ -468,7 +485,7 @@ p {
 }
 
 .hero__title {
-  font-size: var(--fs-6xl);
+  font-size: var(--fs-5xl);
   font-weight: var(--fw-extrabold);
   line-height: 1.04;
   letter-spacing: var(--ls-tight);
@@ -508,38 +525,23 @@ p {
   animation: fadeInUp 800ms var(--ease-out) 900ms forwards;
 }
 
-/* Glass stats panel — sits at the bottom of hero, frosted card */
+/* Stat chips float over the photo side; each chip is its own glass-strong
+   surface (the tint guarantees the numbers stay readable on any photo). */
 .hero__stats {
-  margin-top: var(--space-20);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
-  max-width: 760px;
-  padding: var(--space-8) var(--space-10);
-  background: var(--color-glass);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border: 1px solid var(--color-glass-border);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 20px 60px color-mix(in srgb, var(--color-primary) 32%, transparent);
+  position: absolute;
+  z-index: 2;
+  right: max(var(--container-pad), calc((100% - var(--container-max)) / 2 + var(--container-pad)));
+  bottom: var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
   opacity: 0;
   animation: fadeInUp 800ms var(--ease-out) 1100ms forwards;
 }
 
 .hero__stat {
-  position: relative;
-  padding-left: var(--space-5);
-}
-
-.hero__stat::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 2px;
-  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-secondary) 100%);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-6);
 }
 
 .hero__stat-num {
