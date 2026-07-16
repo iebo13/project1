@@ -378,15 +378,17 @@ In `css/components.css`, directly above the `/* ---------- Cards ---------- */` 
 In `css/responsive.css`, inside the `@media (max-width: 768px)` block (after the `:root` rule at its top), add:
 
 ```css
-  /* Blur is the main scroll-jank risk on mid-range phones: shrink the radii
+  /* Blur is the main scroll-jank risk on mid-range phones: shrink the radius
      and turn the one large frosted surface solid. */
   :root {
     --glass-blur: 14px;
-    --glass-blur-strong: 20px;
   }
 
   .glass-backdrop {
-    background: color-mix(in srgb, var(--color-white) 92%, transparent);
+    /* Solid white, matching the reduced-transparency value — a 92% tint here
+       would win the specificity tie against components.css's solid fallback
+       (same specificity, later file) and break the collapse-to-solid promise. */
+    background: var(--color-white);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
@@ -790,17 +792,7 @@ Then search `css/animations.css` for `@keyframes scrollIndicator` and delete tha
 
 In `css/responsive.css`:
 - Line ~537: change `.scroll-indicator__mouse::after,` to `.scroll-indicator__chevron,` (inside the `prefers-reduced-motion` animation-none list).
-- In the `@media (max-width: 768px)` block, after the `.hero__stat` rule added in Task 4, add — on the stacked mobile hero, an absolutely-positioned hint at `bottom: 28px` would sit on top of the stat chips, so it joins the flow after them instead:
-
-```css
-  .scroll-indicator {
-    position: static;
-    order: 4;
-    align-self: center;
-    margin: var(--space-4) auto var(--space-6);
-    transform: none;
-  }
-```
+- (RESOLVED DURING TASK 4's REVIEW: the static-flow positioning rule for `.scroll-indicator` lives in the `@media (max-width: 1024px)` block — not ≤768px — because the absolutely-positioned hint overlapped the stat chips across the whole ≤1024px range once the hero content became a centered flex column. Task 4's fix round added it; this task only restyles the indicator's own appearance.)
 
 - After the print block (line ~527), add:
 
