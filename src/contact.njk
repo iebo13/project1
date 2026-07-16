@@ -77,16 +77,16 @@ navbarSolid: true
             <h3 style="margin-bottom: var(--space-2)">Request your free quote</h3>
             <p style="color: var(--color-muted); margin-bottom: var(--space-6); font-size: var(--fs-sm);">Fields marked with * are required. We respond within one business day.</p>
 
-            <form id="contact-form" novalidate>
+            <form id="contact-form">
               <div class="form-row">
                 <div class="field">
                   <label class="field__label" for="firstName">First name *</label>
-                  <input class="field__input" type="text" id="firstName" name="firstName" autocomplete="given-name" data-rules="required|minLength:2" data-min="2" required />
+                  <input class="field__input" type="text" id="firstName" name="firstName" autocomplete="given-name" minlength="2" required />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
                 <div class="field">
                   <label class="field__label" for="lastName">Last name *</label>
-                  <input class="field__input" type="text" id="lastName" name="lastName" autocomplete="family-name" data-rules="required|minLength:2" data-min="2" required />
+                  <input class="field__input" type="text" id="lastName" name="lastName" autocomplete="family-name" minlength="2" required />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
               </div>
@@ -94,12 +94,12 @@ navbarSolid: true
               <div class="form-row">
                 <div class="field">
                   <label class="field__label" for="email">Email *</label>
-                  <input class="field__input" type="email" id="email" name="email" autocomplete="email" data-rules="required|email" required />
+                  <input class="field__input" type="email" id="email" name="email" autocomplete="email" required />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
                 <div class="field">
                   <label class="field__label" for="phone">Phone</label>
-                  <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel" data-rules="phone" />
+                  <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel" pattern="[+0-9()\.\- ]{7,}" inputmode="tel" />
                   <span class="field__error" aria-live="polite"></span>
                 </div>
               </div>
@@ -107,7 +107,7 @@ navbarSolid: true
               <div class="form-row form-row--single">
                 <div class="field">
                   <label class="field__label" for="service">Service needed *</label>
-                  <select class="field__select" id="service" name="service" data-rules="required" required>
+                  <select class="field__select" id="service" name="service" required>
                     <option value="">Please choose…</option>
                     <option value="office">Office Cleaning</option>
                     <option value="house">House Cleaning</option>
@@ -128,14 +128,14 @@ navbarSolid: true
               <div class="form-row form-row--single">
                 <div class="field">
                   <label class="field__label" for="message">Tell us about your space *</label>
-                  <textarea class="field__textarea" id="message" name="message" placeholder="Square footage, frequency, any specific concerns…" data-rules="required|minLength:10" data-min="10" required></textarea>
+                  <textarea class="field__textarea" id="message" name="message" placeholder="Square footage, frequency, any specific concerns…" minlength="10" required></textarea>
                   <span class="field__error" aria-live="polite"></span>
                 </div>
               </div>
 
               <div class="form-row form-row--single">
                 <div class="field" style="display:flex; align-items:flex-start; gap: var(--space-3); background: var(--color-bg); padding: var(--space-4); border-radius: var(--radius-md); flex-wrap: wrap;">
-                  <input class="field__input" type="checkbox" id="consent" name="consent" data-rules="checked" style="margin-top:4px; width:18px; height:18px; flex: 0 0 auto; accent-color: var(--color-secondary);" required />
+                  <input class="field__input" type="checkbox" id="consent" name="consent" style="margin-top:4px; width:18px; height:18px; flex: 0 0 auto; accent-color: var(--color-secondary);" required />
                   <label for="consent" style="font-size: var(--fs-sm); color: var(--color-muted); margin: 0; line-height: var(--lh-normal); flex: 1;">
                     I agree to be contacted about my request and accept the <a href="#" style="color: var(--color-secondary); text-decoration: underline;">privacy policy</a>. We never share your data.
                   </label>

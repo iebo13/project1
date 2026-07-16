@@ -591,34 +591,30 @@
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
-.field--error .field__input,
-.field--error .field__textarea,
-.field--error .field__select {
-  border-color: #EF4444;
+/* Native validation: style a field the user has interacted with and left
+   invalid. :user-invalid only fires after input/blur, so it never flags a
+   pristine required field on first paint. */
+.field__input:user-invalid,
+.field__textarea:user-invalid,
+.field__select:user-invalid {
+  border-color: var(--color-error, #EF4444);
   background: rgba(239, 68, 68, 0.04);
 }
 
-.field--error .field__input:focus,
-.field--error .field__textarea:focus,
-.field--error .field__select:focus {
+.field__input:user-invalid:focus,
+.field__textarea:user-invalid:focus,
+.field__select:user-invalid:focus {
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.14);
 }
 
+/* Reserves vertical space so the form doesn't jump when a field is flagged.
+   The message itself comes from the browser's native validation bubble. */
 .field__error {
   display: block;
   font-size: var(--fs-xs);
-  color: #EF4444;
+  color: var(--color-error, #EF4444);
   margin-top: var(--space-2);
   min-height: 1em;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity var(--t-fast) var(--ease-out),
-              transform var(--t-fast) var(--ease-out);
-}
-
-.field--error .field__error {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 
