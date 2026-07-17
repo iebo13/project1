@@ -6,6 +6,8 @@ const pages = [
   ['services', '/leistungen/'],
   ['gallery', '/galerie/'],
   ['contact', '/kontakt/'],
+  ['impressum', '/impressum/'],
+  ['datenschutz', '/datenschutz/'],
   ['notfound', '/404.html'],
 ];
 

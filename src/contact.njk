@@ -84,7 +84,14 @@ navbarSolid: true
             <h3 style="margin-bottom: var(--space-2)">{{ 'contact.form.title' | t(d) }}</h3>
             <p style="color: var(--color-muted); margin-bottom: var(--space-6); font-size: var(--fs-sm);">{{ 'contact.form.desc' | t(d) }}</p>
 
-            <form id="contact-form">
+            {# data-endpoint appears only when site.formEndpoint is configured;
+               without it js/contact.js stays in demo mode (mock submit). #}
+            <form id="contact-form"
+                  {% if site.formEndpoint %}data-endpoint="https://formsubmit.co/ajax/{{ site.formEndpoint }}"{% endif %}
+                  data-subject="{{ 'form.subject' | t(d) }}">
+              {# FormSubmit honeypot: invisible to people; a bot that fills it
+                 makes FormSubmit silently discard the submission. #}
+              <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
               <div class="form-row">
                 <div class="field">
                   <label class="field__label" for="firstName">{{ 'contact.form.firstName' | t(d) }} *</label>
@@ -137,7 +144,8 @@ navbarSolid: true
                 <div class="field field--consent">
                   <input class="field__input" type="checkbox" id="consent" name="consent" required />
                   <label for="consent">
-                    {{ 'contact.form.consent' | t(d) }} <a href="#">{{ 'contact.form.consent.privacy' | t(d) }}</a>. {{ 'contact.form.consent.cont' | t(d) }}
+                    {# target=_blank so opening the policy doesn't discard a half-filled form #}
+                    {{ 'contact.form.consent' | t(d) }} <a href="{{ 'privacy' | url(lang) }}" target="_blank" rel="noopener">{{ 'contact.form.consent.privacy' | t(d) }}</a>. {{ 'contact.form.consent.cont' | t(d) }}
                   </label>
                   <span class="field__error" aria-live="polite"></span>
                 </div>
@@ -150,7 +158,9 @@ navbarSolid: true
 
               <div class="form-message" role="status" aria-live="polite"
                    data-success="{{ 'form.successMsg' | t(d) }}"
-                   data-toast-success="{{ 'form.toast.success' | t(d) }}"></div>
+                   data-toast-success="{{ 'form.toast.success' | t(d) }}"
+                   data-error="{{ 'form.sendError' | t(d) }}"
+                   data-toast-error="{{ 'form.toast.sendError' | t(d) }}"></div>
             </form>
           </div>
         </div>

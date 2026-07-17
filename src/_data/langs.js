@@ -19,6 +19,8 @@ export default {
     services: { de: 'leistungen', en: 'services' },
     gallery: { de: 'galerie', en: 'gallery' },
     contact: { de: 'kontakt', en: 'contact' },
+    imprint: { de: 'impressum', en: 'imprint' },
+    privacy: { de: 'datenschutz', en: 'privacy' },
   },
 
   // Language names as written in their own language, for the switcher.

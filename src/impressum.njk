@@ -1,0 +1,66 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'imprint' | permalinkFor(lang) }}index.html"
+  title: "{{ meta[lang].imprint.title }}"
+  description: "{{ meta[lang].imprint.description }}"
+  pageKey: 'imprint'
+navbarSolid: true
+---
+{% set d = dict[lang] %}
+  <main id="main">
+    {# No hero photo on the legal pages: they are the pages that disclose the
+       site's third-party requests, so they make none of their own beyond the
+       shared fonts. The solid navy .page-hero background carries the look. #}
+    <section class="page-hero">
+      <div class="container page-hero__content">
+        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>{{ 'legal.eyebrow' | t(d) }}</span>
+        <h1>{{ 'legal.imprint.title' | t(d) }}</h1>
+        <p>{{ 'legal.imprint.subtitle' | t(d) }}</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'legal.imprint.title' | t(d) }}</span></nav>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container legal">
+        <h2>{{ 'legal.imprint.provider.h' | t(d) }}</h2>
+        <p>
+          {{ site.brand }} {{ site.tagline }}<br />
+          {{ 'legal.imprint.owner' | t(d) }}<br />
+          Königsallee 42<br />
+          40212 Düsseldorf<br />
+          {{ 'legal.imprint.country' | t(d) }}
+        </p>
+
+        <h2>{{ 'legal.imprint.contact.h' | t(d) }}</h2>
+        <p>
+          {{ 'contact.phone.label' | t(d) }}: <a href="{{ site.phoneHref }}">{{ site.phone }}</a><br />
+          {{ 'contact.email.label' | t(d) }}: <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+        </p>
+
+        <h2>{{ 'legal.imprint.vat.h' | t(d) }}</h2>
+        <p>{{ 'legal.imprint.vat.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.imprint.editor.h' | t(d) }}</h2>
+        <p>{{ 'legal.imprint.editor.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.imprint.dispute.h' | t(d) }}</h2>
+        <p>{{ 'legal.imprint.dispute.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.imprint.liability.h' | t(d) }}</h2>
+        <p>{{ 'legal.imprint.liability.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.imprint.links.h' | t(d) }}</h2>
+        <p>{{ 'legal.imprint.links.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.imprint.copyright.h' | t(d) }}</h2>
+        <p>{{ 'legal.imprint.copyright.p' | t(d) }}</p>
+
+        <p class="legal__note">{{ 'legal.demo' | t(d) }}</p>
+      </div>
+    </section>
+  </main>

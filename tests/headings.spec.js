@@ -26,7 +26,7 @@ function contrast(fg, bg) {
   return (a + 0.05) / (b + 0.05);
 }
 
-const darkHeroPages = ['/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/'];
+const darkHeroPages = ['/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/', '/impressum/', '/datenschutz/'];
 
 for (const path of darkHeroPages) {
   test(`h1 on ${path} is readable against the dark hero`, async ({ page }) => {

@@ -1,6 +1,10 @@
 /* =========================================================
    CONTACT.JS
-   Form submission (mock) + toast feedback.
+   Form submission + toast feedback.
+   Submits to FormSubmit (formsubmit.co) when the form carries a
+   data-endpoint (set in contact.njk from site.js formEndpoint);
+   without one it falls back to a mock submit, so the demo works
+   with zero configuration.
    Validation is native: the form has no `novalidate`, so the browser
    checks required/minlength/type=email/pattern before the submit event
    fires. This handler only runs on a valid form.
@@ -55,7 +59,34 @@ const Contact = (() => {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="loading-dots"><span></span><span></span><span></span></span>';
 
-      await new Promise((r) => setTimeout(r, 1400));
+      try {
+        if (form.dataset.endpoint) {
+          // FormSubmit's AJAX endpoint (CORS-enabled, JSON in/out) — set via
+          // site.js formEndpoint. Delivery requires the target address to have
+          // been activated once through FormSubmit's confirmation email.
+          const data = Object.fromEntries(new FormData(form));
+          data._subject = form.dataset.subject || document.title;
+          const res = await fetch(form.dataset.endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) throw new Error(`FormSubmit answered ${res.status}`);
+        } else {
+          // No endpoint configured: demo mode.
+          await new Promise((r) => setTimeout(r, 1400));
+        }
+      } catch (err) {
+        // Keep the visitor's input so they can retry.
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
+        if (messageBox) {
+          messageBox.textContent = messageBox.dataset.error || '';
+          messageBox.className = 'form-message form-message--error is-visible';
+        }
+        showToast(messageBox?.dataset.toastError || '', 'error');
+        return;
+      }
 
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalLabel;

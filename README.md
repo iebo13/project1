@@ -1,8 +1,8 @@
 # BlitzBlank — Premium Reinigung Düsseldorf
 
-A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Six pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
+A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Eight pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
 
-> **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404); and there is **no Impressum or Datenschutz (privacy policy) page** — the consent checkbox and the footer's "Privacy" link both point to `href="#"`. For a commercial site actually operating in Germany, an Impressum is a legal requirement (§5 DDG), not a nice-to-have. All of this is scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
+> **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; and every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404). The Impressum (`/impressum/`) and Datenschutzerklärung (`/datenschutz/`) pages now exist and are linked from the footer and the consent checkbox — but their company details (owner, VAT ID) are **fictional placeholders**, clearly labeled as such on the pages; a real operator must replace them before going live. The contact form is wired for FormSubmit but ships unconfigured (see "Wire the contact form" below). The remaining gaps are scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
 
 ---
 
@@ -11,7 +11,7 @@ A multi-page marketing website for a fictional boutique cleaning company based i
 - **Bilingual EN/DE, resolved at build time** — every page is rendered twice with localized URLs (German at the root, English under `/en/`), correct `lang`/`canonical`/`hreflang`, and per-language `<title>`/`<meta description>`. No translation JavaScript ships to the browser.
 - **Enhanced glassmorphism** — frosted glass navbar, cards, buttons, hero stats panel, with strong `backdrop-filter` blur throughout
 - **Awwwards-grade design** — soft shadows, large whitespace, fluid typography via `clamp()`
-- **6 pages, 1 layout** — Home, About, Services, Gallery, Contact, 404, all rendered from `src/_includes/layouts/base.njk`
+- **8 pages, 1 layout** — Home, About, Services, Gallery, Contact, Impressum, Datenschutz, 404, all rendered from `src/_includes/layouts/base.njk`
 - **10 services, data-driven** — each with its own dedicated detail section; adding one is a single entry in `src/_data/services.js`
 - **Premium interactions** — scroll reveal, parallax hero, magnetic buttons, ripple effect, tilt cards, animated counters, testimonial slider, lightbox, accordion FAQ
 - **Fully responsive** — fluid layout from 320px to 4K via CSS Grid + Flexbox
@@ -31,6 +31,8 @@ project1/
 │   ├── services.njk              # All 10 services + detail sections + process
 │   ├── gallery.njk                # Filterable grid + lightbox
 │   ├── contact.njk               # Contact form with validation + map placeholder
+│   ├── impressum.njk             # Impressum / Legal Notice (§ 5 DDG structure, placeholder data)
+│   ├── datenschutz.njk           # Datenschutzerklärung / Privacy Policy
 │   ├── 404.njk                   # Custom error page (loads a reduced set of scripts)
 │   ├── _includes/
 │   │   ├── layouts/
@@ -65,7 +67,7 @@ project1/
 ├── assets/                       # Reserved for local images/icons/fonts — currently empty; all imagery is hot-linked
 ├── tests/                        # Playwright: functional tests + visual-regression baselines
 │   ├── *.spec.js
-│   └── visual.spec.js-snapshots/ # 12 committed PNGs — never update these to make a failure disappear
+│   └── visual.spec.js-snapshots/ # 16 committed PNGs — never update these to make a failure disappear
 ├── .github/workflows/deploy.yml  # Builds + deploys _site/ to GitHub Pages on push to main
 ├── .eleventy.js                  # Eleventy config: src/ → _site/, passthrough copy for css/js/assets
 ├── playwright.config.js
@@ -108,7 +110,7 @@ project1/
 npm install         # installs Eleventy, Playwright, axe-core (dev dependencies only)
 npm start            # dev server at http://localhost:8080, rebuilds on change
 npm run build         # writes static output to _site/
-npm test             # Playwright: 97 tests — functional checks + visual regression
+npm test             # Playwright: 162 tests — functional checks + visual regression
 ```
 
 Playwright's config auto-starts `npm start` for you when you run `npm test`, so you don't need to run the dev server separately first. There is no `file://`-based workflow anymore — Eleventy needs its dev server (or a build) to resolve templates and passthrough assets correctly.
@@ -150,8 +152,14 @@ For links, never hardcode an href — `{{ 'services' | url(lang) }}` resolves to
 Per-page `<title>` and `<meta description>` live in `src/_data/meta.js`, not the
 dictionary.
 
-### Wire the contact form to a backend
-Open `js/contact.js` and replace the mock `await new Promise(...)` block in the submit handler with a real `fetch()` call to your endpoint.
+### Wire the contact form (FormSubmit)
+The form is already wired for [FormSubmit](https://formsubmit.co) — a form-to-email relay that needs no backend, which suits a static host. It activates when `formEndpoint` in `src/_data/site.js` is non-empty (set the `FORM_ENDPOINT` env var at build time, e.g. as a repository variable consumed by the deploy workflow). To go live:
+
+1. Set `FORM_ENDPOINT` to an email address you can read and deploy. **Until this is set, the form runs in demo mode** — the mock submit with a fake success message, exactly as before.
+2. Submit the form once. FormSubmit emails a confirmation link to that address; **nothing is delivered until it is clicked**.
+3. After activating, replace the address with the random alias from FormSubmit's confirmation — the endpoint is baked into the published HTML, and the alias keeps the raw address unharvestable.
+
+The submit handler in `js/contact.js` POSTs to FormSubmit's AJAX endpoint (keeping the in-page success/toast UX), includes a `_honey` honeypot field, and on a failed request keeps the visitor's input and shows a translated error. Swapping in a different backend still only means replacing that `fetch()` block.
 
 ---
 
