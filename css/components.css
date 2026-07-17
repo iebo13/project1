@@ -1229,7 +1229,9 @@
 .slider__dot {
   width: 10px;
   height: 10px;
-  border-radius: var(--radius-full);
+  /* --radius-pill, not --radius-full: 50% draws an ellipse once .is-active
+     widens the box to 28×10. */
+  border-radius: var(--radius-pill);
   background: var(--color-border);
   border: none;
   cursor: pointer;

@@ -1705,3 +1705,10 @@ section[id] {
   color: var(--color-primary);
   white-space: nowrap;
 }
+
+/* On the dark reviews band the default navy wordmarks vanish into the
+   background — same dark-context override pattern as .section--dark
+   .testimonial in components.css. */
+.section--dark .brands__item {
+  color: var(--color-white);
+}

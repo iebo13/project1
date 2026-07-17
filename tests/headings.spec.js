@@ -111,6 +111,48 @@ for (const path of allPages) {
   });
 }
 
+// The brands strip sits inside the dark #reviews band — its wordmarks must be
+// readable against the navy, not navy-on-navy. Threshold is WCAG large-text
+// (3:1): the items are --fs-2xl extrabold.
+test('brand wordmarks are readable against the dark reviews band', async ({ page }) => {
+  await page.goto('/');
+  const item = page.locator('.brands__item').first();
+  await item.scrollIntoViewIfNeeded();
+  // data-reveal holds the strip at opacity 0 until the reveal lands.
+  await expect(page.locator('.brands')).toHaveClass(/is-visible/);
+  const bg = await page.locator('#reviews').evaluate((el) => getComputedStyle(el).backgroundColor);
+  // The strip's own opacity dims whatever color the items have — composite it
+  // in, polling past the 800ms reveal transition.
+  await expect(async () => {
+    const { color, alpha } = await item.evaluate((el) => ({
+      color: getComputedStyle(el).color,
+      alpha: parseFloat(getComputedStyle(el.closest('.brands')).opacity),
+    }));
+    const [r, g, b] = color.match(/[\d.]+/g).slice(0, 3).map(Number);
+    expect(contrast(`rgba(${r}, ${g}, ${b}, ${alpha})`, bg)).toBeGreaterThanOrEqual(3);
+  }).toPass({ timeout: 5000 });
+});
+
+// The active testimonial dot widens into a pill (28×10). A percentage
+// border-radius draws an ellipse on that non-square box — a tapered blob that
+// reads as a misplaced highlight — so the radius must be an absolute length
+// of at least half the height (a capsule).
+test('active testimonial dot renders as a capsule, not an ellipse', async ({ page }) => {
+  await page.goto('/');
+  const dot = page.locator('.slider__dot.is-active');
+  // The width transitions 10px → 28px when is-active first lands; poll past it.
+  await expect.poll(async () => {
+    const r = await dot.boundingBox();
+    return r.width / r.height;
+  }).toBeGreaterThan(2);
+  const { height, radius } = await dot.evaluate((el) => ({
+    height: el.getBoundingClientRect().height,
+    radius: getComputedStyle(el).borderTopLeftRadius,
+  }));
+  expect(radius, 'percentage radii draw an ellipse on a non-square element').toMatch(/px$/);
+  expect(parseFloat(radius)).toBeGreaterThanOrEqual(height / 2);
+});
+
 test('interior heroes lead with the breadcrumb, left-aligned', async ({ page }) => {
   await page.goto('/kontakt/');
   const first = page.locator('.page-hero__content > *').first();
