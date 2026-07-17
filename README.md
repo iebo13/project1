@@ -2,7 +2,43 @@
 
 A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Eight pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
 
-> **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; and every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404). The Impressum (`/impressum/`) and Datenschutzerklärung (`/datenschutz/`) pages now exist and are linked from the footer and the consent checkbox — but their company details (owner, VAT ID) are **fictional placeholders**, clearly labeled as such on the pages; a real operator must replace them before going live. The contact form is wired for FormSubmit but ships unconfigured (see "Wire the contact form" below). The remaining gaps are scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
+> **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; and every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404). The Impressum (`/impressum/`) and Datenschutzerklärung (`/datenschutz/`) pages now exist and are linked from the footer and the consent checkbox — but their company details (owner, VAT ID) are **fictional placeholders**, clearly labeled as such on the pages; a real operator must replace them before going live. The contact form is wired for FormSubmit but ships unconfigured (see "Wire the contact form" below). **The full pre-launch task list is in [Before going live](#-before-going-live--todo).** The remaining structural gaps are scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
+
+---
+
+## 🚀 Before going live — TODO
+
+Work through this list top to bottom before pointing real customers at the site. Items are ordered so the legally required ones come first.
+
+### Legal (required)
+
+- [ ] **Replace the fictional Impressum data.** Owner name, address, and the placeholder VAT ID `DE999999999` live in `src/_data/dict.js` under `legal.imprint.*` (both `en` and `de`). Swap in the real operator's details.
+- [ ] **Remove the demo-project notes** once the data is real: delete the `legal.demo` key from `dict.js` and the `.legal__note` paragraph at the bottom of `src/impressum.njk` and `src/datenschutz.njk`.
+- [ ] **Have both legal texts reviewed by a lawyer.** They follow the standard § 5 DDG / GDPR structure and honestly describe what the site does, but they are templates, not legal advice.
+
+### Contact form (required, ~10 minutes)
+
+- [ ] Set the `FORM_ENDPOINT` repository variable (Settings → Secrets and variables → Actions → Variables) to an email address you actually read, and deploy.
+- [ ] Submit the form once and **click the confirmation link FormSubmit emails you** — nothing is delivered until you do.
+- [ ] Replace the variable's value with the random alias from that confirmation, so the raw address never sits in the published HTML. Full details under [Wire the contact form](#wire-the-contact-form-formsubmit).
+
+### Content honesty (required)
+
+- [ ] Replace the placeholder stats and the four testimonials with real data — **especially the `aggregateRating` (4.9★, 528 reviews) in the homepage JSON-LD**. Fabricated review markup is the kind of thing search engines penalize; if there are no real reviews yet, delete that block.
+- [ ] Fix or replace the two Unsplash photo IDs that already 404 (see [CLAUDE.md](CLAUDE.md) Notes).
+- [ ] Wire the footer and contact-page social icons to real profiles, or remove them (all currently `href="#"`).
+- [ ] The footer newsletter form is a mock — connect a real list provider (with GDPR double opt-in, and a matching section in the Datenschutzerklärung) or remove it.
+
+### Privacy hardening (strongly recommended)
+
+- [ ] **Self-host the Inter font files** instead of loading them from Google Fonts. German case law (LG München, 2022) treats remote Google Fonts as a GDPR violation. After self-hosting, delete the Google Fonts section from the Datenschutzerklärung.
+- [ ] Host images locally instead of hot-linking Unsplash (also removes the Unsplash section from the Datenschutzerklärung, and is Part 2 scope anyway alongside `width`/`height` + `srcset`).
+
+### Infrastructure & polish
+
+- [ ] If serving from a custom domain instead of GitHub Pages' URL, make sure `SITE_ORIGIN` matches it — canonicals pointing at a domain you don't control tell Google to index that one instead.
+- [ ] Decide on the map: the contact page shows a styled placeholder. A real embed (Google Maps/OSM) adds a third-party request that must be added to the Datenschutzerklärung.
+- [ ] Close the known accessibility gaps before real traffic: gallery cards aren't keyboard-reachable, the lightbox is permanently `aria-hidden`, and the testimonial slider has no visible pause control (see [Accessibility](#-accessibility)).
 
 ---
 
