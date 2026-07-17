@@ -143,8 +143,26 @@ p {
   background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
 }
 
+/* Sections that host decorative blobs behind glass cards: contain the blobs
+   and raise the content above them. */
+.section--blobs {
+  position: relative;
+  overflow: hidden;
+}
+
+.section--blobs > .container {
+  position: relative;
+  z-index: 1;
+}
+
 .section--gradient {
   background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+}
+
+/* Anchor navigation (`/kontakt/#about`, `/#reviews`, `/#faq`, `/#stats`) must
+   not land content under the fixed navbar. Scroll offset only — never paints. */
+section[id] {
+  scroll-margin-top: calc(var(--navbar-height) + var(--space-4));
 }
 
 /* ---------- Skip link ---------- */
@@ -179,40 +197,20 @@ p {
   align-items: center;
   transition: height var(--t-base) var(--ease-out),
               background var(--t-base) var(--ease-out),
-              backdrop-filter var(--t-base),
               box-shadow var(--t-base) var(--ease-out),
               border-color var(--t-base) var(--ease-out);
-  border-bottom: 1px solid transparent;
-  /* Glass by default */
-  background: color-mix(in srgb, var(--color-white) 10%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: color-mix(in srgb, var(--color-white) 10%, transparent);
+  /* Two states only, both fully opaque: navy at the top of every page, white
+     once scrolled. No blur — glass lives in the page sections now, and an
+     opaque bar cannot produce photo-dependent (il)legibility. */
+  background: var(--color-primary);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-white) 8%, transparent);
 }
 
 .navbar.is-scrolled {
   height: var(--navbar-height-scrolled);
-  background: color-mix(in srgb, var(--color-white) 72%, transparent);
-  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  background: var(--color-white);
   border-bottom-color: var(--color-border);
-  box-shadow: 0 6px 24px color-mix(in srgb, var(--color-primary) 4%, transparent);
-}
-
-/* When navbar is over hero (not scrolled) — glass over image */
-.navbar:not(.is-scrolled):not(.navbar--solid) {
-  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: color-mix(in srgb, var(--color-white) 12%, transparent);
-}
-
-/* Solid navbar variant (interior pages without hero image behind) */
-.navbar--solid {
-  background: color-mix(in srgb, var(--color-primary) 85%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border-bottom-color: color-mix(in srgb, var(--color-white) 8%, transparent);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .navbar__inner {
@@ -312,9 +310,8 @@ p {
   transition: color var(--t-base) var(--ease-out);
 }
 
-/* Only .is-scrolled gets dark text: its background is white at 72%.
-   .navbar--solid is DARK navy at 85% — grouping it here painted the links
-   dark-on-dark and made them near-invisible on every interior page. */
+/* Only .is-scrolled gets dark text: the default state is solid navy, so
+   light text is the only correct answer there. */
 .navbar.is-scrolled .nav-link {
   color: var(--color-primary-soft);
 }
@@ -339,8 +336,7 @@ p {
   border-radius: var(--radius-pill);
 }
 
-.navbar.is-scrolled .nav-link__underline,
-.navbar--solid .nav-link__underline {
+.navbar.is-scrolled .nav-link__underline {
   background: var(--color-secondary);
 }
 
@@ -348,8 +344,7 @@ p {
   color: var(--color-white);
 }
 
-.navbar.is-scrolled .nav-link.is-active,
-.navbar--solid .nav-link.is-active {
+.navbar.is-scrolled .nav-link.is-active {
   color: var(--color-secondary);
 }
 
@@ -377,8 +372,7 @@ p {
   transition: color var(--t-base) var(--ease-out);
 }
 
-.navbar.is-scrolled .navbar__phone,
-.navbar--solid .navbar__phone {
+.navbar.is-scrolled .navbar__phone {
   color: var(--color-primary-soft);
 }
 
@@ -388,8 +382,7 @@ p {
   color: var(--color-accent);
 }
 
-.navbar.is-scrolled .navbar__phone svg,
-.navbar--solid .navbar__phone svg {
+.navbar.is-scrolled .navbar__phone svg {
   color: var(--color-secondary);
 }
 
@@ -407,8 +400,7 @@ p {
   flex-shrink: 0;
 }
 
-.navbar.is-scrolled .nav-toggle,
-.navbar--solid .nav-toggle {
+.navbar.is-scrolled .nav-toggle {
   background: var(--color-bg);
   border-color: var(--color-border);
   color: var(--color-primary);
@@ -463,18 +455,35 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 72% center;
   transform: scale(1.05);
   animation: floatY 12s ease-in-out infinite;
 }
 
+/* V5 dark split: a solid navy panel owns the left ~half (guaranteed white-text
+   contrast), clearing to a fully untinted photo on the right. The glow is the
+   only decoration — it stays inside the panel side. */
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-secondary) 42%, transparent) 0%, transparent 55%),
-    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--color-accent) 38%, transparent) 0%, transparent 55%),
-    linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 78%, transparent) 0%, color-mix(in srgb, var(--color-secondary) 40%, transparent) 50%, color-mix(in srgb, var(--color-accent) 30%, transparent) 100%);
+  background: linear-gradient(90deg,
+    var(--color-primary) 0%,
+    var(--color-primary) 46%,
+    color-mix(in srgb, var(--color-primary) 82%, transparent) 58%,
+    color-mix(in srgb, var(--color-primary) 20%, transparent) 74%,
+    transparent 100%);
   z-index: 1;
+}
+
+.hero__overlay::before {
+  content: '';
+  position: absolute;
+  left: 16%;
+  top: -22%;
+  width: 620px;
+  height: 620px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-secondary) 30%, transparent) 0%, transparent 70%);
 }
 
 .hero__content {
@@ -494,7 +503,7 @@ p {
 }
 
 .hero__title {
-  font-size: var(--fs-6xl);
+  font-size: var(--fs-5xl);
   font-weight: var(--fw-extrabold);
   line-height: 1.04;
   letter-spacing: var(--ls-tight);
@@ -534,38 +543,23 @@ p {
   animation: fadeInUp 800ms var(--ease-out) 900ms forwards;
 }
 
-/* Glass stats panel — sits at the bottom of hero, frosted card */
+/* Stat chips float over the photo side; each chip is its own glass-strong
+   surface (the tint guarantees the numbers stay readable on any photo). */
 .hero__stats {
-  margin-top: var(--space-20);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
-  max-width: 760px;
-  padding: var(--space-8) var(--space-10);
-  background: var(--color-glass);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border: 1px solid var(--color-glass-border);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 20px 60px color-mix(in srgb, var(--color-primary) 32%, transparent);
+  position: absolute;
+  z-index: 2;
+  right: max(var(--container-pad), calc((100% - var(--container-max)) / 2 + var(--container-pad)));
+  bottom: var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
   opacity: 0;
   animation: fadeInUp 800ms var(--ease-out) 1100ms forwards;
 }
 
 .hero__stat {
-  position: relative;
-  padding-left: var(--space-5);
-}
-
-.hero__stat::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 2px;
-  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-secondary) 100%);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-6);
 }
 
 .hero__stat-num {
@@ -1112,7 +1106,7 @@ p {
 .footer__newsletter p {
   font-size: var(--fs-sm);
   line-height: var(--lh-relaxed);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
 .newsletter-form {
@@ -1122,6 +1116,10 @@ p {
   border: 1px solid color-mix(in srgb, var(--color-white) 10%, transparent);
   border-radius: var(--radius-pill);
   padding: var(--space-2);
+  /* Symmetric breathing room: the pill gets --space-6 above (the paragraph's
+     margin) and below, so it reads as its own object rather than leaning on
+     the contact block. */
+  margin-bottom: var(--space-6);
   transition: border-color var(--t-base) var(--ease-out);
 }
 
@@ -1135,7 +1133,10 @@ p {
   background: none;
   border: none;
   color: var(--color-white);
-  padding: var(--space-2) var(--space-4);
+  /* 20px inline: with the wrapper's 8px padding + 1px border the text starts
+     ~29px in — the tangent of the pill's end cap — instead of inside the
+     curve, where it looks cramped. */
+  padding: var(--space-2) var(--space-5);
   font-size: var(--fs-sm);
 }
 
@@ -1168,6 +1169,13 @@ p {
 .newsletter-form svg {
   width: 18px;
   height: 18px;
+}
+
+.footer__contact {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
 }
 
 .footer__bottom {
@@ -1380,6 +1388,48 @@ p {
   color: var(--color-muted);
   font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
+}
+
+/* On the merged contact page the values grid follows the mission/vision grid
+   inside one section. */
+.mv-grid + .values-grid {
+  margin-top: var(--space-12);
+}
+
+/* Soft tier for the about page's mission/value cards. Appended here (same
+   specificity, later in the file) so it wins over their base declarations
+   above — components.css loads before style.css, so an override placed in
+   components.css's glass-tiers section would lose this cascade tie instead
+   of winning it. */
+.mv-card,
+.value-card {
+  background: var(--glass-soft-bg);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  border: 1px solid color-mix(in srgb, var(--color-white) 55%, transparent);
+}
+
+/* No-backdrop-filter fallback for the pair above — same solid value as the
+   reduced-transparency fallback below (the spec: "the solid fallback
+   doubles as the no-backdrop-filter fallback"). Kept in this file, after
+   the override it must beat: equal specificity, so the fallback must sit
+   after the override to win the cascade tie. */
+@supports not (backdrop-filter: blur(1px)) {
+  .mv-card,
+  .value-card {
+    background: var(--color-white);
+  }
+}
+
+/* Reduced-transparency fallback for the pair above. Kept in this file, after
+   the override it must beat, for the same cascade-tie reason. */
+@media (prefers-reduced-transparency: reduce) {
+  .mv-card,
+  .value-card {
+    background: var(--color-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 /* ---------- Service detail (services page) ---------- */
@@ -1668,6 +1718,13 @@ p {
   letter-spacing: var(--ls-tight);
   color: var(--color-primary);
   white-space: nowrap;
+}
+
+/* On the dark reviews band the default navy wordmarks vanish into the
+   background — same dark-context override pattern as .section--dark
+   .testimonial in components.css. */
+.section--dark .brands__item {
+  color: var(--color-white);
 }
 
 /* ---------- Legal pages (Impressum / Datenschutz) ---------- */

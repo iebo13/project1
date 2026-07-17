@@ -1,6 +1,6 @@
 # BlitzBlank — Premium Reinigung Düsseldorf
 
-A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Eight pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
+A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Seven pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
 
 > **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; and every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404). The Impressum (`/impressum/`) and Datenschutzerklärung (`/datenschutz/`) pages now exist and are linked from the footer and the consent checkbox — but their company details (owner, VAT ID) are **fictional placeholders**, clearly labeled as such on the pages; a real operator must replace them before going live. The contact form is wired for FormSubmit but ships unconfigured (see "Wire the contact form" below). **The full pre-launch task list is in [Before going live](#-before-going-live--todo).** The remaining structural gaps are scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
 
@@ -45,9 +45,9 @@ Work through this list top to bottom before pointing real customers at the site.
 ## ✨ Highlights
 
 - **Bilingual EN/DE, resolved at build time** — every page is rendered twice with localized URLs (German at the root, English under `/en/`), correct `lang`/`canonical`/`hreflang`, and per-language `<title>`/`<meta description>`. No translation JavaScript ships to the browser.
-- **Enhanced glassmorphism** — frosted glass navbar, cards, buttons, hero stats panel, with strong `backdrop-filter` blur throughout
+- **Deliberate glassmorphism** — a restrained 3-tier glass system in the page sections (glass stat chips, frosted cards, one backdrop panel per page); the navbar is deliberately solid, not glass
 - **Awwwards-grade design** — soft shadows, large whitespace, fluid typography via `clamp()`
-- **8 pages, 1 layout** — Home, About, Services, Gallery, Contact, Impressum, Datenschutz, 404, all rendered from `src/_includes/layouts/base.njk`
+- **7 pages, 1 layout** — Home, Services, Gallery, Contact, Impressum, Datenschutz, 404, all rendered from `src/_includes/layouts/base.njk`
 - **10 services, data-driven** — each with its own dedicated detail section; adding one is a single entry in `src/_data/services.js`
 - **Premium interactions** — scroll reveal, parallax hero, magnetic buttons, ripple effect, tilt cards, animated counters, testimonial slider, lightbox, accordion FAQ
 - **Fully responsive** — fluid layout from 320px to 4K via CSS Grid + Flexbox
@@ -63,7 +63,6 @@ Work through this list top to bottom before pointing real customers at the site.
 project1/
 ├── src/                          # Eleventy source — never edit _site/, it's generated
 │   ├── index.njk                 # Home page
-│   ├── about.njk                 # Mission, vision, values, timeline, team, certificates
 │   ├── services.njk              # All 10 services + detail sections + process
 │   ├── gallery.njk                # Filterable grid + lightbox
 │   ├── contact.njk               # Contact form with validation + map placeholder
@@ -210,7 +209,7 @@ What's actually true today:
 - **Reduced motion** — `@media (prefers-reduced-motion: reduce)` disables animations
 - **High contrast** — `@media (prefers-contrast: high)` strengthens borders and muted text
 - **Form validation** — `aria-live="polite"` on every field error and the form status message; focus moves to the first invalid field on submit
-- **Dark-hero heading contrast** — `<h1>`/`<h2>` on the four dark-hero pages (about, services, gallery, contact) and the CTA banner were fixed to clear 4.5:1 contrast and are covered by an automated test (`tests/headings.spec.js`)
+- **Dark-hero heading contrast** — `<h1>`/`<h2>` on the three dark-hero pages (services, gallery, contact) and the CTA banner were fixed to clear 4.5:1 contrast and are covered by an automated test (`tests/headings.spec.js`)
 
 What's **not** true yet, despite earlier claims — both deferred to Part 2:
 

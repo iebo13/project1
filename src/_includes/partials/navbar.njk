@@ -1,5 +1,5 @@
 {% set d = dict[lang] %}
-  <header class="navbar{% if navbarSolid %} navbar--solid{% endif %}" id="navbar">
+  <header class="navbar" id="navbar">
     <div class="navbar__inner">
       <a href="{{ 'home' | url(lang) }}" class="logo" aria-label="{{ site.brand }} — {{ 'nav.home' | t(d) }}">
         <span class="logo__mark" aria-hidden="true">
@@ -14,7 +14,7 @@
       </a>
 
       <nav class="nav-menu" id="navMenu" aria-label="{{ 'nav.home' | t(d) }}">
-        {% for item in site.nav %}
+        {% for item in site.nav | selectattr('inHeader') %}
         <a href="{{ item.page | url(lang) }}{{ item.hash or '' }}" class="nav-link"{% if item.page == pageKey and not item.hash %} aria-current="page"{% endif %}><span>{{ item.key | t(d) }}</span><span class="nav-link__underline"></span></a>
         {% endfor %}
       </nav>

@@ -179,11 +179,43 @@
   max-width: 620px;
 }
 
-/* ---------- Cards ---------- */
-.card {
-  background: color-mix(in srgb, var(--color-white) 72%, transparent);
+/* ---------- Glass tiers ----------
+   Glass only where something visual sits behind it. The solid fallbacks serve
+   both missing backdrop-filter support and the user's reduced-transparency
+   preference — same values on purpose. */
+.glass-strong {
+  background: var(--glass-strong-bg);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--color-glass-border-strong);
+  color: var(--color-white);
+  text-shadow: 0 1px 3px color-mix(in srgb, var(--color-black) 30%, transparent);
+}
+
+.glass-backdrop {
+  background: var(--glass-backdrop-bg);
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  border: 1px solid color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+}
+
+/* The no-backdrop-filter fallback (@supports not) and the
+   prefers-reduced-transparency fallback both live at the end of this section
+   (after .promo-banner__content) rather than here. Every consumer either
+   targets (.card, .service-card, .section--dark .testimonial,
+   .promo-banner__content, plus .glass-strong/.glass-backdrop themselves)
+   declares its glass background later in this file at equal specificity to
+   the fallback selector; a same-specificity fallback must come after what it
+   overrides to win the cascade tie, so both blocks moved below the last
+   consumer instead of sitting above the first one. */
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--glass-soft-bg);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
   border: 1px solid color-mix(in srgb, var(--color-white) 55%, transparent);
   border-radius: var(--radius-lg);
   padding: var(--space-8);
@@ -219,9 +251,9 @@
 
 /* ---------- Service card ---------- */
 .service-card {
-  background: color-mix(in srgb, var(--color-white) 72%, transparent);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  background: var(--glass-soft-bg);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
   border: 1px solid color-mix(in srgb, var(--color-white) 55%, transparent);
   border-radius: var(--radius-lg);
   padding: var(--space-10) var(--space-8);
@@ -437,6 +469,29 @@
 .testimonial__role {
   font-size: var(--fs-sm);
   color: var(--color-muted);
+}
+
+/* Reviews band: over the dark gradient the cards go glass-strong — the blur
+   finally has the band's glow to diffuse, and white text is guaranteed by
+   the tint, not the slide behind it. */
+.section--dark .testimonial {
+  background: var(--glass-strong-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-color: var(--color-glass-border);
+}
+
+.section--dark .testimonial__text,
+.section--dark .testimonial__name {
+  color: var(--color-white);
+}
+
+.section--dark .testimonial__role {
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
+}
+
+.section--dark .testimonial::before {
+  color: color-mix(in srgb, var(--color-white) 10%, transparent);
 }
 
 /* ---------- FAQ accordion ---------- */
@@ -916,6 +971,79 @@
   z-index: 1;
   max-width: 760px;
   margin: 0 auto;
+  background: var(--glass-strong-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-xl);
+  padding: clamp(2rem, 1.25rem + 3vw, 3.5rem);
+}
+
+/* No-backdrop-filter fallback for every glass consumer declared in this
+   file, plus the scroll hint (the one glass surface outside the 3-tier
+   system, styled in animations.css but overridden here — components.css
+   loads after animations.css, so equal specificity is enough to win).
+   Positioned after all of them (not beside .glass-strong / .glass-backdrop
+   near the top of the glass-tiers section) so each fallback rule sits later
+   in the cascade than the same-specificity rule it must beat: .glass-strong/
+   .glass-backdrop above, .card/.service-card in the Cards section, and
+   .section--dark .testimonial/.promo-banner__content just above. Earlier
+   placement would lose every one of those ties. Same solid values as the
+   prefers-reduced-transparency fallback below — the spec: "the solid
+   fallback doubles as the no-backdrop-filter fallback". */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-strong,
+  .section--dark .testimonial,
+  .promo-banner__content {
+    background: var(--color-primary-soft);
+  }
+  .glass-backdrop {
+    background: var(--color-white);
+  }
+  .card,
+  .service-card {
+    background: var(--color-white);
+  }
+  .scroll-indicator {
+    background: color-mix(in srgb, var(--color-primary) 92%, transparent);
+  }
+}
+
+/* prefers-reduced-transparency fallback for every glass consumer declared
+   in this file. Positioned after all of them (not beside .glass-strong /
+   .glass-backdrop near the top of the glass-tiers section) so each fallback
+   rule sits later in the cascade than the same-specificity rule it must
+   beat: .glass-strong/.glass-backdrop above, .card/.service-card in the
+   Cards section, and .section--dark .testimonial/.promo-banner__content
+   just above. Earlier placement would lose every one of those ties. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-strong {
+    background: var(--color-primary-soft);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glass-backdrop {
+    background: var(--color-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .card,
+  .service-card {
+    background: var(--color-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .section--dark .testimonial,
+  .promo-banner__content {
+    background: var(--color-primary-soft);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .scroll-indicator {
+    background: color-mix(in srgb, var(--color-primary) 92%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 .promo-banner h2 {
@@ -1098,26 +1226,42 @@
   gap: var(--space-2);
 }
 
+/* Every dot owns a fixed 28px slot; the visible dot is the ::before, which
+   fills the slot when active. Growing in place — instead of widening the
+   button, which pushed the neighbouring dots apart and slid them sideways on
+   every slide change — keeps the four centers on an even grid. */
 .slider__dot {
-  width: 10px;
+  width: 28px;
   height: 10px;
-  border-radius: var(--radius-full);
-  background: var(--color-border);
+  padding: 0;
+  background: transparent;
   border: none;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background var(--t-base) var(--ease-out),
-              width var(--t-base) var(--ease-out);
+  position: relative;
 }
 
-.slider__dot.is-active {
-  width: 28px;
+.slider__dot::before {
+  content: '';
+  position: absolute;
+  /* 9px each side leaves a 10px circle centered in the slot */
+  inset: 0 9px;
+  /* --radius-pill, not --radius-full: 50% draws an ellipse once the active
+     state stretches this to 28×10. */
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  transition: inset var(--t-base) var(--ease-out);
+}
+
+.slider__dot.is-active::before {
+  inset: 0;
   background: var(--gradient-primary);
 }
 
 /* ---------- Page hero (interior pages) ---------- */
 .page-hero {
   position: relative;
-  padding: calc(var(--navbar-height) + var(--space-20)) 0 var(--space-20);
+  padding: calc(var(--navbar-height) + var(--space-16)) 0 var(--space-16);
   background: var(--color-primary);
   color: var(--color-white);
   overflow: hidden;
@@ -1133,22 +1277,25 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.35;
+  opacity: 1;
 }
 
 .page-hero__bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 70%, transparent) 0%, color-mix(in srgb, var(--color-primary) 90%, transparent) 100%);
+  /* ≥88% navy where the text sits, clearing rightward so the photo reads.
+     Contrast comes from this wash, never from the photo. */
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--color-primary) 88%, transparent) 0%,
+    color-mix(in srgb, var(--color-primary) 62%, transparent) 55%,
+    color-mix(in srgb, var(--color-primary) 35%, transparent) 100%);
 }
 
 .page-hero__content {
   position: relative;
   z-index: 1;
-  text-align: center;
-  max-width: 820px;
-  margin: 0 auto;
+  text-align: left;
 }
 
 .page-hero h1 {
@@ -1168,13 +1315,14 @@
   font-size: var(--fs-xl);
   color: color-mix(in srgb, var(--color-white) 78%, transparent);
   line-height: var(--lh-relaxed);
+  max-width: 60ch;
 }
 
 .breadcrumb {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-2);
-  margin-top: var(--space-8);
+  margin: 0 0 var(--space-4);
   color: color-mix(in srgb, var(--color-white) 60%, transparent);
   font-size: var(--fs-sm);
 }
@@ -1285,8 +1433,6 @@
   display: inline-flex;
   align-items: center;
   background: var(--color-glass-strong);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border: 1px solid var(--color-glass-border);
   border-radius: var(--radius-pill);
   padding: 3px;
@@ -1294,8 +1440,7 @@
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-white) 18%, transparent);
 }
 
-.navbar.is-scrolled .lang-switch,
-.navbar--solid .lang-switch {
+.navbar.is-scrolled .lang-switch {
   background: color-mix(in srgb, var(--color-primary) 6%, transparent);
   border-color: var(--color-border);
 }
@@ -1316,28 +1461,29 @@
   text-transform: uppercase;
 }
 
-.navbar.is-scrolled .lang-switch__btn,
-.navbar--solid .lang-switch__btn {
+.navbar.is-scrolled .lang-switch__btn {
   color: var(--color-muted);
 }
 
+/* The active pill is state-independent: on the navy bar the old white-text-only
+   treatment was indistinguishable from the inactive button. */
 .lang-switch__btn.is-active {
-  color: var(--color-white);
-}
-
-.navbar.is-scrolled .lang-switch__btn.is-active,
-.navbar--solid .lang-switch__btn.is-active {
   color: var(--color-white);
   background: var(--gradient-primary);
   box-shadow: var(--shadow-glow);
+}
+
+/* Specificity: the scrolled state's 3-class muted-text rule would otherwise
+   beat the 2-class active rule on `color`. */
+.navbar.is-scrolled .lang-switch__btn.is-active {
+  color: var(--color-white);
 }
 
 .lang-switch__btn:not(.is-active):hover {
   color: var(--color-white);
 }
 
-.navbar.is-scrolled .lang-switch__btn:not(.is-active):hover,
-.navbar--solid .lang-switch__btn:not(.is-active):hover {
+.navbar.is-scrolled .lang-switch__btn:not(.is-active):hover {
   color: var(--color-secondary);
 }
 

@@ -2,11 +2,8 @@
 //
 // Nav items carry a translation `key` and a `page` key (resolved to a
 // language-correct URL by the `url` filter) rather than a hardcoded href and
-// an English label — the same seven links render as /leistungen/ for a German
+// an English label — the same six links render as /leistungen/ for a German
 // visitor and /en/services/ for an English one.
-//
-// `hash` appends an in-page anchor to the home page (Reviews and FAQ are
-// sections of the homepage, not pages of their own).
 
 export default {
   // Absolute origin for canonical + hreflang + og:url — the scheme and host
@@ -36,13 +33,17 @@ export default {
   // from that email over the raw address: whatever is set here is baked into
   // the published HTML, and the alias keeps the mailbox unharvestable.
   formEndpoint: process.env.FORM_ENDPOINT || '',
+
+  // `inHeader` mirrors the `onHome` idiom on services: the header shows only
+  // real pages; the footer renders the full list including the two homepage
+  // anchors. `hash` appends an in-page anchor to the home page (Reviews and
+  // FAQ are sections of the homepage, not pages of their own).
   nav: [
-    { key: 'nav.home', page: 'home' },
-    { key: 'nav.about', page: 'about' },
-    { key: 'nav.services', page: 'services' },
-    { key: 'nav.gallery', page: 'gallery' },
-    { key: 'nav.reviews', page: 'home', hash: '#reviews' },
-    { key: 'nav.faq', page: 'home', hash: '#faq' },
-    { key: 'nav.contact', page: 'contact' },
+    { key: 'nav.home', page: 'home', inHeader: true },
+    { key: 'nav.services', page: 'services', inHeader: true },
+    { key: 'nav.gallery', page: 'gallery', inHeader: true },
+    { key: 'nav.reviews', page: 'home', hash: '#reviews', inHeader: false },
+    { key: 'nav.faq', page: 'home', hash: '#faq', inHeader: false },
+    { key: 'nav.contact', page: 'contact', inHeader: true },
   ],
 };

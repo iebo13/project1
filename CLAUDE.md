@@ -22,7 +22,7 @@ not forgotten.
 ```bash
 npm start                     # dev server on http://localhost:8080, rebuilds on change
 npm run build                 # writes static output to _site/
-npm test                      # 2 build-output tests + 162 Playwright tests
+npm test                      # 3 build-output tests + 176 Playwright tests
 npm run test:build            # just the build-output tests (fast, no browser)
 npm run test:update-snapshots # regenerate visual baselines for *intentional* visual changes only
 ```
@@ -46,14 +46,19 @@ src/
   _data/
     site.js                # brand, origin, contact details, nav structure
     langs.js               # language codes + per-language slugs
-    dict.js                # the 326-key EN/DE translation table
+    dict.js                # the 340-key EN/DE translation table
     meta.js                # per-page <title>/<meta description>, per language
     services.js            # the 10 services (see below)
     faq.js                 # 6 FAQ entries
     testimonials.js        # 4 testimonial slides
-  index.njk, about.njk, services.njk, gallery.njk, contact.njk,
+  index.njk, services.njk, gallery.njk, contact.njk,
   impressum.njk, datenschutz.njk, 404.njk
 ```
+
+The former `about.njk` was merged into the contact page in July 2026: the About
+content (mission, vision, the five values) now renders as the `#about` section
+on `/kontakt/` (and `/en/contact/#about`). There is no standalone About page or
+route.
 
 ### Deploying to a subpath
 
@@ -74,7 +79,7 @@ prefixed; Pages already serves `_site/` *at* the subpath), hrefs use `url`
 (always prefixed). [tests/pathprefix.test.mjs](tests/pathprefix.test.mjs)
 asserts both.
 
-Each `.njk` page sets `layout: layouts/base.njk` in its front matter and supplies only its `<main>` content — the navbar, footer, `<head>` meta, and script tags live once in the layout and its partials. Output URLs are unchanged from the pre-migration site: `_site/{index,about,services,gallery,contact,404}.html`.
+Each `.njk` page sets `layout: layouts/base.njk` in its front matter and supplies only its `<main>` content — the navbar, footer, `<head>` meta, and script tags live once in the layout and its partials. Output lands at localized paths — German at the root, English under `/en/`: `_site/index.html`, `_site/leistungen/`, `_site/galerie/`, `_site/kontakt/` and their `_site/en/{index.html,services,gallery,contact}/` counterparts, plus a single `_site/404.html`.
 
 `css/` and `js/` are passed through unmodified by `.eleventy.js` (`addPassthroughCopy`) — they are not part of the `src/` template tree and Eleventy does not process them.
 
@@ -97,11 +102,21 @@ variables.css → animations.css → components.css → style.css → responsive
 
 Later files rely on cascade position, not specificity, to override earlier ones. Reordering these links changes rendering. If you add a new stylesheet, decide deliberately where in this chain it belongs.
 
-**Do not** trust the older claim that "components reference variables, so palette changes only need to happen in `variables.css`." That is currently false: `css/*.css` contains 128 hand-written `rgba()` literals (about 45 of them the literal navy `rgba(15, 23, 42, …)`, i.e. `--color-primary` spelled out by hand). Roughly 31 box-shadows are pinned to that hardcoded hue. Changing `--color-primary` today will *not* repaint those shadows — they'll silently stay the old color. This is fixed in Part 2 via `color-mix()`; until then, treat `variables.css` as the source of truth for new code but don't assume existing code obeys it.
+The palette is real: `variables.css`'s alpha variants, overlays, and glass tiers are derived from the base color tokens via `color-mix()` rather than spelled out as hand-written `rgba()` literals. Changing `--color-primary` propagates through every overlay, shadow, and glass surface that references it. (Exception: the `--gradient-*` tokens still hardcode the secondary/accent hex stops.) `variables.css` remains the source of truth — don't add a new hand-written `rgba()`/hex literal when a token or a `color-mix()` derived from one already exists.
+
+Glassmorphism is a deliberate 3-tier system (see
+docs/superpowers/specs/2026-07-16-visual-refresh-design.md): `.glass-strong`
+(navy tint over photos/dark bands, carries its own white text + shadow),
+soft-tier card surfaces (`.card`, `.service-card`, `.mv-card`, `.value-card`
+over `.section--blobs` backgrounds), and `.glass-backdrop` (max one large
+frosted container per page). All tiers collapse to solid surfaces under
+`prefers-reduced-transparency` and when `backdrop-filter` is unsupported. The
+navbar is deliberately NOT glass — solid navy at top, solid white when
+scrolled, no per-page variants.
 
 ### Script order encodes init order — preserve it
 
-`base.njk` loads nine `<script defer>` tags in this exact order, with `app.js` last:
+`base.njk` loads seven `<script defer>` tags in this exact order, with `app.js` last:
 
 ```
 animations.js → navigation.js → counter.js → slider.js → gallery.js → contact.js → app.js
@@ -147,7 +162,6 @@ config):
 | key | de | en |
 |---|---|---|
 | home | `/` | `/en/` |
-| about | `/ueber-uns/` | `/en/about/` |
 | services | `/leistungen/` | `/en/services/` |
 | gallery | `/galerie/` | `/en/gallery/` |
 | contact | `/kontakt/` | `/en/contact/` |
@@ -169,13 +183,13 @@ Markup opts into JS behaviour declaratively: `data-reveal` (+ `data-reveal-delay
 
 ## Testing
 
-Playwright ([playwright.config.js](playwright.config.js)) is both the test runner and the visual-regression harness, run across two projects (`desktop`, `mobile`). 162 tests, covering smoke checks, hero content, heading contrast, native form validation, navbar geometry in both languages, translation coverage ([tests/i18n.spec.js](tests/i18n.spec.js)), the legal pages and every link leading to them ([tests/legal.spec.js](tests/legal.spec.js)), and 16 committed visual baselines under `tests/visual.spec.js-snapshots/`.
+Playwright ([playwright.config.js](playwright.config.js)) is both the test runner and the visual-regression harness, run across two projects (`desktop`, `mobile`). 176 tests, covering smoke checks, hero content, heading and dark-band contrast, native form validation, navbar geometry in both languages, translation coverage ([tests/i18n.spec.js](tests/i18n.spec.js)), the legal pages and every link leading to them ([tests/legal.spec.js](tests/legal.spec.js)), and 14 committed visual baselines under `tests/visual.spec.js-snapshots/`.
 
 [tests/i18n.spec.js](tests/i18n.spec.js) is worth knowing about: it scans every German page for English strings that appeared in the pre-migration markup, so the "only the nav translates" bug cannot come back silently.
 
 **The visual baselines are the migration's proof of correctness — never update them just to make a failure go away.** `npm run test:update-snapshots` exists for *intentional* visual changes only; running it to silence an unexplained diff destroys the thing it exists to catch. If a visual test fails, find out why the render changed before touching the baseline.
 
-CI (`.github/workflows/deploy.yml`) deliberately runs only the functional tests (`smoke`, `hero`, `headings`, `contact-form`) with `--ignore-snapshots`, skipping the visual suite — a GitHub Actions runner's font stack and GPU differ enough from a dev machine that every visual test would fail for reasons unrelated to the change. The visual suite is a local/dev-machine safety net, not a deploy gate.
+CI (`.github/workflows/deploy.yml`) deliberately runs only the functional tests (`smoke`, `hero`, `headings`, `contact-form`, `i18n`, `navbar`, `legal`) with `--ignore-snapshots`, skipping the visual suite — a GitHub Actions runner's font stack and GPU differ enough from a dev machine that every visual test would fail for reasons unrelated to the change. The visual suite is a local/dev-machine safety net, not a deploy gate.
 
 ## Fixed bugs worth knowing about
 
@@ -184,11 +198,11 @@ Four real, user-facing bugs were found and fixed during the migration (see git h
 - The contact form could never be submitted — a validator signature bug in `js/contact.js` (`minLength`) rejected every submission regardless of input.
 - The consent checkbox was never actually validated before submission.
 - The hero headline's third line ("obsessive care.") had `opacity: 0` from a CSS cascade collision and had never been visible to any visitor.
-- Headings rendered dark navy on dark navy across four page heroes (about, services, gallery, contact) and the CTA banner.
+- Headings rendered dark navy on dark navy across four page heroes (about, services, gallery, contact) and the CTA banner. The per-page `navbarSolid`/`.navbar--solid` variant that enabled this bug class was later removed entirely — navbar styling is scroll-state-driven only.
 
 ## Notes
 
-- `assets/` is empty; all imagery is hot-linked from Unsplash. Two of the photo IDs currently used (`photo-1556909114-44e3e9399a2e`, `photo-1567548083313-04c67ac2f4f0`) 404.
+- `assets/` is empty; all imagery is hot-linked from Unsplash.
 - The contact form submits to FormSubmit (formsubmit.co) when `site.formEndpoint` is set (via the `FORM_ENDPOINT` env var); unset, [js/contact.js](js/contact.js) falls back to its `setTimeout` mock so the demo and tests need no config. FormSubmit requires a one-time email confirmation before it delivers anything — see README's "Wire the contact form" section.
 - The Impressum (`/impressum/`) and Datenschutz (`/datenschutz/`) pages exist and are linked from the footer legal row and the consent checkbox. Their company details (owner, VAT ID) are fictional placeholders, disclosed as such on the pages themselves — a real deployment must replace them.
 - Deploy is [.github/workflows/deploy.yml](.github/workflows/deploy.yml): builds and publishes `_site/` to GitHub Pages on push to `main`. All site links are relative, so Pages' `/<repo>/` subpath works with no `pathPrefix` configured.

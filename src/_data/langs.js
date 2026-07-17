@@ -15,7 +15,6 @@ export default {
   // key -> { de: slug, en: slug }.  '' means the language's index.
   slugs: {
     home: { de: '', en: '' },
-    about: { de: 'ueber-uns', en: 'about' },
     services: { de: 'leistungen', en: 'services' },
     gallery: { de: 'galerie', en: 'gallery' },
     contact: { de: 'kontakt', en: 'contact' },

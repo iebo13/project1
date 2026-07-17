@@ -378,15 +378,17 @@ In `css/components.css`, directly above the `/* ---------- Cards ---------- */` 
 In `css/responsive.css`, inside the `@media (max-width: 768px)` block (after the `:root` rule at its top), add:
 
 ```css
-  /* Blur is the main scroll-jank risk on mid-range phones: shrink the radii
+  /* Blur is the main scroll-jank risk on mid-range phones: shrink the radius
      and turn the one large frosted surface solid. */
   :root {
     --glass-blur: 14px;
-    --glass-blur-strong: 20px;
   }
 
   .glass-backdrop {
-    background: color-mix(in srgb, var(--color-white) 92%, transparent);
+    /* Solid white, matching the reduced-transparency value — a 92% tint here
+       would win the specificity tie against components.css's solid fallback
+       (same specificity, later file) and break the collapse-to-solid promise. */
+    background: var(--color-white);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
@@ -790,17 +792,7 @@ Then search `css/animations.css` for `@keyframes scrollIndicator` and delete tha
 
 In `css/responsive.css`:
 - Line ~537: change `.scroll-indicator__mouse::after,` to `.scroll-indicator__chevron,` (inside the `prefers-reduced-motion` animation-none list).
-- In the `@media (max-width: 768px)` block, after the `.hero__stat` rule added in Task 4, add — on the stacked mobile hero, an absolutely-positioned hint at `bottom: 28px` would sit on top of the stat chips, so it joins the flow after them instead:
-
-```css
-  .scroll-indicator {
-    position: static;
-    order: 4;
-    align-self: center;
-    margin: var(--space-4) auto var(--space-6);
-    transform: none;
-  }
-```
+- (RESOLVED DURING TASK 4's REVIEW: the static-flow positioning rule for `.scroll-indicator` lives in the `@media (max-width: 1024px)` block — not ≤768px — because the absolutely-positioned hint overlapped the stat chips across the whole ≤1024px range once the hero content became a centered flex column. Task 4's fix round added it; this task only restyles the indicator's own appearance.)
 
 - After the print block (line ~527), add:
 
@@ -829,11 +821,11 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 ---
 
-### Task 6: Interior page heroes — variant C
+### Task 6: Interior page heroes — variant C (3 pages after Task 10)
 
 **Files:**
 - Modify: `tests/headings.spec.js` (one test first)
-- Modify: `src/about.njk`, `src/services.njk`, `src/gallery.njk`, `src/contact.njk` (page-hero content block, ~lines 16-24 in each)
+- Modify: `src/services.njk`, `src/gallery.njk`, `src/contact.njk` (page-hero content block; the about page no longer exists — Task 10 merged it into contact)
 - Modify: `css/components.css:1118-1190` (page-hero + breadcrumb)
 - Modify: `css/responsive.css` (page-hero mobile overlay, in the `max-width: 768px` block near the existing `.page-hero h1` rules at ~427-433)
 
@@ -862,7 +854,7 @@ Expected: the new test FAILS (first child is currently the eyebrow `span`, align
 
 - [ ] **Step 3: Update the four page templates**
 
-In each of `src/about.njk`, `src/services.njk`, `src/gallery.njk`, `src/contact.njk`, the `.page-hero__content` div currently holds `eyebrow span → h1 → p → breadcrumb nav`. Reorder to `breadcrumb nav → h1 → p` and delete the eyebrow span (it duplicates the breadcrumb's role). Using contact as the model — the other three differ only in their `page.*`/`nav.*` keys, keep each page's own keys:
+In each of `src/services.njk`, `src/gallery.njk`, `src/contact.njk`, the `.page-hero__content` div currently holds `eyebrow span → h1 → p → breadcrumb nav`. Reorder to `breadcrumb nav → h1 → p` and delete the eyebrow span (it duplicates the breadcrumb's role). Using contact as the model — the other three differ only in their `page.*`/`nav.*` keys, keep each page's own keys:
 
 ```njk
       <div class="container page-hero__content">
@@ -1206,3 +1198,228 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - [ ] **Step 6: Report**
 
 Summarize to the user: what changed per finding, test totals, and a reminder that `stash@{0}` (their WIP on `css/animations.css`) still exists and may need rebasing onto the rewritten scroll-indicator styles.
+
+---
+
+### Task 10: User revisions — lang-toggle active state, nav order, merge About into Kontakt
+
+(User-requested mid-execution; runs BEFORE Task 6. After this task the site has 5 pages:
+home, services, gallery, contact, 404 — Task 6 applies to services/gallery/contact only.)
+
+**Files:**
+- Modify: `css/components.css` (lang-switch block ~1324-1378; new sibling-spacing rule near mv/values styles)
+- Modify: `tests/headings.spec.js` (new lang-toggle test; page lists; delete the orphaned about-page test)
+- Modify: `src/_data/site.js` (nav order + drop the about entry)
+- Modify: `src/contact.njk` (insert the merged About section after the page-hero)
+- Modify: `src/_data/dict.js` (17 new key pairs in BOTH en and de — exact strings below)
+- Delete: `src/about.njk` (copy its 7 icon SVGs into contact.njk first)
+- Modify: `src/_data/langs.js` (remove the about slug row), `src/_data/meta.js` (remove both about entries)
+- Modify: `src/index.njk` (~line 189: about-preview CTA retarget), `src/404.njk` (~line 44: suggestion retarget)
+- Modify: `tests/nav-structure.test.mjs`, `tests/i18n.spec.js`, `tests/pathprefix.test.mjs`, `tests/visual.spec.js`, `tests/navbar.spec.js` (comment only)
+- Modify: `CLAUDE.md` (URL table + src file list only)
+
+**Interfaces:**
+- Consumes: solid navbar states (Task 2), `.is-scrolled` behavior.
+- Produces: header nav = Start · Leistungen · Galerie · Kontakt (4 links); footer = those 4 + the two anchors (6); `/kontakt/#about` (and `/en/contact/#about`) is the About anchor; `src/about.njk`, the `about` slug, and both meta.about entries cease to exist. Task 6 and later tasks may assume 3 interior pages.
+
+- [ ] **Step 1: Failing test for the lang toggle (append to tests/headings.spec.js)**
+
+```js
+test('active language button is visibly highlighted in both navbar states', async ({ page, viewport }) => {
+  test.skip(!viewport || viewport.width < 1280, 'lang switch lives in the drawer on mobile');
+  await page.goto('/');
+  const active = page.locator('.lang-switch__btn.is-active');
+  expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage),
+    'active chip needs its gradient pill on the navy bar too').toContain('gradient');
+  await page.evaluate(() => window.scrollTo(0, 300));
+  await expect(page.locator('.navbar')).toHaveClass(/is-scrolled/);
+  expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage)).toContain('gradient');
+});
+```
+
+Run: `npx playwright test tests/headings.spec.js --project=desktop` — the new test FAILS at the first assertion (`backgroundImage` is `none` at top of page).
+
+- [ ] **Step 2: Fix the lang switch in css/components.css**
+
+In the `.lang-switch` block (~1324): delete the two `backdrop-filter` lines (the bar behind it is opaque now — the blur is a no-op that costs GPU).
+
+Replace the `.lang-switch__btn.is-active` block, and REDUCE the `.navbar.is-scrolled .lang-switch__btn.is-active` block to a color-only override — it must NOT be deleted: `.navbar.is-scrolled .lang-switch__btn` (3 classes) sets muted text and would beat the 2-class active rule on `color` in the scrolled state (found by Task 10's review):
+
+```css
+/* The active pill is state-independent: on the navy bar the old white-text-only
+   treatment was indistinguishable from the inactive button. */
+.lang-switch__btn.is-active {
+  color: var(--color-white);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Specificity: the scrolled state's 3-class muted-text rule would otherwise
+   beat the 2-class active rule on `color`. */
+.navbar.is-scrolled .lang-switch__btn.is-active {
+  color: var(--color-white);
+}
+```
+
+Re-run the headings suite: new test PASSES.
+
+- [ ] **Step 3: Nav order + drop about (src/_data/site.js)**
+
+Replace the nav array (services directly after home — what you sell comes first; about is gone, merged into contact):
+
+```js
+  nav: [
+    { key: 'nav.home', page: 'home', inHeader: true },
+    { key: 'nav.services', page: 'services', inHeader: true },
+    { key: 'nav.gallery', page: 'gallery', inHeader: true },
+    { key: 'nav.reviews', page: 'home', hash: '#reviews', inHeader: false },
+    { key: 'nav.faq', page: 'home', hash: '#faq', inHeader: false },
+    { key: 'nav.contact', page: 'contact', inHeader: true },
+  ],
+```
+
+Also fix the file's top comment: "the same seven links" → "the same six links".
+
+- [ ] **Step 4: New dictionary keys (src/_data/dict.js, BOTH languages, alphabetical position)**
+
+First `grep -n "about.mission\|about.vision\|about.value\|about.head" src/_data/dict.js` — must return nothing (no collisions). Then add to **en**:
+
+```js
+    "about.head.eyebrow": "About Us",
+    "about.head.title": "The team behind the shine",
+    "about.head.subtitle": "Our mission, our vision, and the five values we measure every decision against.",
+    "about.mission.title": "Our Mission",
+    "about.mission.text": "To elevate the standard of cleaning in every home and business we touch — proving that a spotless space is not a luxury, but a foundation for clearer thinking, calmer living, and more productive work. We exist to give people their time back, and a space they're proud of.",
+    "about.vision.title": "Our Vision",
+    "about.vision.text": "To become the Rhein-Ruhr region's most quietly trusted cleaning studio — known not for marketing volume, but for the calibre of our crews, the rigour of our training, and the relationships we build with each client.",
+    "about.value.1.title": "Integrity",
+    "about.value.1.text": "We do what we said we'd do, exactly when we said we'd do it. If we mess up, we say so — and we fix it, fast, no excuses.",
+    "about.value.2.title": "Craft",
+    "about.value.2.text": "Cleaning is not a chore to us — it's a craft. We study tools, techniques, and chemistry so you don't have to think about any of it.",
+    "about.value.3.title": "Care",
+    "about.value.3.text": "We treat every space as if it were our own. Your home, your office, your restaurant — it matters to us because it matters to you.",
+    "about.value.4.title": "Reliability",
+    "about.value.4.text": "You'll never have to wonder if we're showing up. Same crew, same time, same spotless result — visit after visit, year after year.",
+    "about.value.5.title": "Sustainability",
+    "about.value.5.text": "Plant-based products, refillable bottles, electric vehicles. We obsess over our environmental footprint as much as your dust bunnies.",
+```
+
+And to **de**:
+
+```js
+    "about.head.eyebrow": "Über uns",
+    "about.head.title": "Das Team hinter dem Glanz",
+    "about.head.subtitle": "Unsere Mission, unsere Vision und die fünf Werte, an denen wir jede Entscheidung messen.",
+    "about.mission.title": "Unsere Mission",
+    "about.mission.text": "Wir heben den Standard der Reinigung in jedem Zuhause und jedem Unternehmen, das wir betreuen — ein makelloser Raum ist kein Luxus, sondern die Grundlage für klareres Denken, ruhigeres Wohnen und produktiveres Arbeiten. Wir geben Menschen ihre Zeit zurück — und einen Raum, auf den sie stolz sind.",
+    "about.vision.title": "Unsere Vision",
+    "about.vision.text": "Die leise vertrauteste Reinigungsmanufaktur der Rhein-Ruhr-Region zu werden — bekannt nicht durch lautes Marketing, sondern durch das Können unserer Teams, die Gründlichkeit unserer Ausbildung und die Beziehungen zu unseren Kunden.",
+    "about.value.1.title": "Integrität",
+    "about.value.1.text": "Wir tun, was wir zugesagt haben — genau dann, wann wir es zugesagt haben. Machen wir einen Fehler, sagen wir es und beheben ihn sofort, ohne Ausreden.",
+    "about.value.2.title": "Handwerk",
+    "about.value.2.text": "Reinigung ist für uns keine Pflicht, sondern ein Handwerk. Wir studieren Werkzeuge, Techniken und Chemie, damit Sie an nichts davon denken müssen.",
+    "about.value.3.title": "Sorgfalt",
+    "about.value.3.text": "Wir behandeln jeden Raum, als wäre er unser eigener. Ihr Zuhause, Ihr Büro, Ihr Restaurant — es ist uns wichtig, weil es Ihnen wichtig ist.",
+    "about.value.4.title": "Verlässlichkeit",
+    "about.value.4.text": "Sie müssen sich nie fragen, ob wir kommen. Gleiches Team, gleiche Zeit, gleiches makelloses Ergebnis — Besuch für Besuch, Jahr für Jahr.",
+    "about.value.5.title": "Nachhaltigkeit",
+    "about.value.5.text": "Pflanzenbasierte Produkte, nachfüllbare Flaschen, Elektrofahrzeuge. Unser ökologischer Fußabdruck beschäftigt uns genauso wie Ihr Staub.",
+```
+
+(The former about page's mission/values body copy was hardcoded English even on the German page — these keys fix that gap for the merged content. The five value texts above are the about page's originals; mission/vision are lightly trimmed. Timeline/team/certifications/stats sections are deliberately NOT carried over — the homepage already tells that story.)
+
+- [ ] **Step 5: Insert the merged About section into src/contact.njk**
+
+Directly after the closing `</section>` of the page-hero, insert — copying each icon SVG **verbatim** from `src/about.njk` (mission: compass icon at ~line 44, vision: eye icon at ~line 51, values 1-5: the five icons at ~lines 72, 79, 86, 93, 100, 107):
+
+```njk
+    <!-- ===== ABOUT (merged from the former about page) ===== -->
+    <section class="section section--tinted" id="about">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>{{ 'about.head.eyebrow' | t(d) }}</span>
+          <h2 class="section-title">{{ 'about.head.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'about.head.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="mv-grid" data-stagger="180">
+          <article class="mv-card">
+            <div class="mv-card__icon" aria-hidden="true">[compass SVG verbatim]</div>
+            <h3>{{ 'about.mission.title' | t(d) }}</h3>
+            <p>{{ 'about.mission.text' | t(d) }}</p>
+          </article>
+          <article class="mv-card">
+            <div class="mv-card__icon" aria-hidden="true">[eye SVG verbatim]</div>
+            <h3>{{ 'about.vision.title' | t(d) }}</h3>
+            <p>{{ 'about.vision.text' | t(d) }}</p>
+          </article>
+        </div>
+
+        <div class="values-grid" data-stagger="120">
+          <article class="value-card">
+            <div class="value-card__icon" aria-hidden="true">[value-1 SVG verbatim]</div>
+            <h4>{{ 'about.value.1.title' | t(d) }}</h4>
+            <p>{{ 'about.value.1.text' | t(d) }}</p>
+          </article>
+          [… value-cards 2-5, same shape, each with its verbatim SVG …]
+        </div>
+      </div>
+    </section>
+```
+
+And in `css/components.css`, next to the existing mv/values styles, add the stacking gap:
+
+```css
+/* On the merged contact page the values grid follows the mission/vision grid
+   inside one section. */
+.mv-grid + .values-grid,
+.section-head ~ .values-grid {
+  margin-top: var(--space-12);
+}
+```
+
+(Use just `.mv-grid + .values-grid` if `.values-grid` already carries top spacing from its own section elsewhere — check `grep -n "values-grid" css/*.css` and keep whichever selector doesn't double-space the standalone use. There is no other standalone use after about.njk is deleted, so `.mv-grid + .values-grid` alone is correct.)
+
+- [ ] **Step 6: Delete the about page and every reference**
+
+1. Delete `src/about.njk`.
+2. `src/_data/langs.js`: remove the `about: { de: 'ueber-uns', en: 'about' },` row.
+3. `src/_data/meta.js`: remove the `about:` entry from BOTH language objects.
+4. `src/index.njk` (~189): `href="{{ 'about' | url(lang) }}"` → `href="{{ 'contact' | url(lang) }}#about"` (the `about.cta` label text stays).
+5. `src/404.njk` (~44): `href="{{ 'about' | url('de') }}"` → `href="{{ 'contact' | url('de') }}#about"`.
+6. Verify: `grep -rn "'about' | url\|ueber-uns" src/` returns nothing; `npm run build` succeeds (the `url` filter throws on an unknown page key, so any missed reference fails the build loudly).
+
+- [ ] **Step 7: Update the tests that reference the about page**
+
+- `tests/nav-structure.test.mjs`: header count `5` → `4`; update the comment ("4 real pages").
+- `tests/headings.spec.js`: remove `'/ueber-uns/'` from `darkHeroPages` AND from `allPages`; DELETE the `no inline colour workaround remains on the about section title` test entirely (its subject page no longer exists; the homepage's own inline-style debt is pre-existing and out of scope).
+- `tests/i18n.spec.js`: remove `'/ueber-uns/'` from `DE_PAGES`.
+- `tests/pathprefix.test.mjs`: remove `'ueber-uns'` from the pages array.
+- `tests/visual.spec.js`: remove the `['about', '/ueber-uns/']` entry (the orphaned baseline PNGs are cleaned up in Task 9, which owns the snapshot dir).
+- `tests/navbar.spec.js`: comment "five nav links" → "four nav links".
+
+- [ ] **Step 8: CLAUDE.md minimal accuracy fixes**
+
+- URL table: delete the `| about | /ueber-uns/ | /en/about/ |` row.
+- Source-layout listing: `index.njk, about.njk, services.njk, …` → drop `about.njk`.
+(The fuller docs pass happens in Task 9.)
+
+- [ ] **Step 9: Run everything functional**
+
+Run: `npm run test:build && npx playwright test tests/smoke.spec.js tests/headings.spec.js tests/hero.spec.js tests/navbar.spec.js tests/contact-form.spec.js tests/i18n.spec.js`
+Expected: all pass on both projects. Do NOT run the visual suite.
+
+- [ ] **Step 10: Commit (two commits, NO attribution trailer — user rule)**
+
+```bash
+git add css/components.css tests/headings.spec.js src/_data/site.js tests/navbar.spec.js tests/nav-structure.test.mjs
+git commit -m "fix: lang-toggle active pill works on the navy bar; nav reordered services-first"
+
+git add -A
+git commit -m "feat: merge the About page into Kontakt
+
+/kontakt/#about carries mission, vision and values (newly translated —
+the old about page's body copy was hardcoded English even on /ueber-uns/).
+The timeline/team/certification sections are retired; the homepage keeps
+the stats and about-preview. Header nav is now 4 links."
+```
