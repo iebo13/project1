@@ -22,6 +22,18 @@ export default {
   phoneHref: 'tel:+4921193456789',
   email: 'hallo@blitzblank.de',
   address: 'Königsallee 42, 40212 Düsseldorf',
+
+  // FormSubmit (formsubmit.co) target for the contact form. Empty string
+  // means "not configured": js/contact.js falls back to its demo mock, so the
+  // form still works locally and in tests with zero setup.
+  //
+  // To go live, set FORM_ENDPOINT at build time to an address you can read —
+  // FormSubmit emails a confirmation link on the first submission and delivers
+  // nothing until it is clicked. After activating, prefer the random alias
+  // from that email over the raw address: whatever is set here is baked into
+  // the published HTML, and the alias keeps the mailbox unharvestable.
+  formEndpoint: process.env.FORM_ENDPOINT || '',
+
   // `inHeader` mirrors the `onHome` idiom on services: the header shows only
   // real pages; the footer renders the full list including the two homepage
   // anchors. `hash` appends an in-page anchor to the home page (Reviews and

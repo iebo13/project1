@@ -61,9 +61,8 @@
       <div class="footer__bottom">
         <div>&copy; <span data-year>2025</span> {{ 'footer.rights' | t(d) }}</div>
         <div class="footer__legal">
-          <a href="#">{{ 'footer.privacy' | t(d) }}</a>
-          <a href="#">{{ 'footer.terms' | t(d) }}</a>
-          <a href="#">{{ 'footer.cookies' | t(d) }}</a>
+          <a href="{{ 'imprint' | url(lang) }}">{{ 'footer.imprint' | t(d) }}</a>
+          <a href="{{ 'privacy' | url(lang) }}">{{ 'footer.privacy' | t(d) }}</a>
         </div>
       </div>
     </div>

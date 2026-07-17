@@ -29,6 +29,16 @@ export default {
       description:
         'Kontaktieren Sie BlitzBlank für ein kostenloses, unverbindliches Reinigungsangebot. Telefon, E-Mail oder Formular — Antwort innerhalb eines Werktages.',
     },
+    imprint: {
+      title: 'Impressum — BlitzBlank Düsseldorf',
+      description:
+        'Impressum von BlitzBlank: Anbieterkennzeichnung gemäß § 5 DDG, Kontaktdaten und rechtliche Hinweise.',
+    },
+    privacy: {
+      title: 'Datenschutzerklärung — BlitzBlank Düsseldorf',
+      description:
+        'Datenschutzerklärung von BlitzBlank: welche Daten beim Besuch der Website und über das Kontaktformular verarbeitet werden und welche Rechte Sie haben.',
+    },
   },
   en: {
     home: {
@@ -50,6 +60,16 @@ export default {
       title: 'Contact — BlitzBlank Düsseldorf',
       description:
         'Get in touch with BlitzBlank for a free, no-obligation cleaning quote. Phone, email, or the form — we reply within one business day.',
+    },
+    imprint: {
+      title: 'Legal Notice — BlitzBlank Düsseldorf',
+      description:
+        'Legal notice (Impressum) for BlitzBlank: provider identification under § 5 DDG, contact details, and legal information.',
+    },
+    privacy: {
+      title: 'Privacy Policy — BlitzBlank Düsseldorf',
+      description:
+        'BlitzBlank privacy policy: what data is processed when you visit this site or use the contact form, and the rights you have.',
     },
   },
 };

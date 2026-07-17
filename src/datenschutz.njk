@@ -1,0 +1,79 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: langs.codes
+  size: 1
+  alias: lang
+eleventyComputed:
+  permalink: "{{ 'privacy' | permalinkFor(lang) }}index.html"
+  title: "{{ meta[lang].privacy.title }}"
+  description: "{{ meta[lang].privacy.description }}"
+  pageKey: 'privacy'
+navbarSolid: true
+---
+{% set d = dict[lang] %}
+  <main id="main">
+    {# No hero photo, same reasoning as impressum.njk. #}
+    <section class="page-hero">
+      <div class="container page-hero__content">
+        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>{{ 'legal.eyebrow' | t(d) }}</span>
+        <h1>{{ 'legal.privacy.title' | t(d) }}</h1>
+        <p>{{ 'legal.privacy.subtitle' | t(d) }}</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'legal.privacy.title' | t(d) }}</span></nav>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container legal">
+        <p>{{ 'legal.privacy.intro' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.controller.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.controller.p' | t(d) }}</p>
+        <p>
+          {{ site.brand }} {{ site.tagline }}<br />
+          {{ 'legal.imprint.owner' | t(d) }}<br />
+          Königsallee 42<br />
+          40212 Düsseldorf<br />
+          {{ 'legal.imprint.country' | t(d) }}<br />
+          {{ 'contact.email.label' | t(d) }}: <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+        </p>
+
+        <h2>{{ 'legal.privacy.hosting.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.hosting.p1' | t(d) }}</p>
+        <p>{{ 'legal.privacy.hosting.p2' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.fonts.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.fonts.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.images.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.images.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.form.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.form.p1' | t(d) }}</p>
+        <p>{{ 'legal.privacy.form.p2' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.contact.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.contact.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.retention.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.retention.p' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.rights.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.rights.p' | t(d) }}</p>
+        <ul>
+          <li>{{ 'legal.privacy.rights.l1' | t(d) }}</li>
+          <li>{{ 'legal.privacy.rights.l2' | t(d) }}</li>
+          <li>{{ 'legal.privacy.rights.l3' | t(d) }}</li>
+          <li>{{ 'legal.privacy.rights.l4' | t(d) }}</li>
+          <li>{{ 'legal.privacy.rights.l5' | t(d) }}</li>
+          <li>{{ 'legal.privacy.rights.l6' | t(d) }}</li>
+        </ul>
+        <p>{{ 'legal.privacy.rights.p2' | t(d) }}</p>
+
+        <h2>{{ 'legal.privacy.cookies.h' | t(d) }}</h2>
+        <p>{{ 'legal.privacy.cookies.p' | t(d) }}</p>
+
+        <p class="legal__note">{{ 'legal.demo' | t(d) }}</p>
+      </div>
+    </section>
+  </main>
