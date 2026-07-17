@@ -42,8 +42,10 @@ test('the consent checkbox links to the privacy page in the page language', asyn
 });
 
 test('the language switcher pairs the legal pages across languages', async ({ page }) => {
+  // Scoped to the header: below the drawer breakpoint (js/navigation.js) a
+  // second .lang-switch lives in .nav-drawer, so the bare selector matches two.
   await page.goto('/impressum/');
-  await expect(page.locator('.lang-switch a[hreflang="en"]')).toHaveAttribute('href', '/en/imprint/');
+  await expect(page.locator('.navbar__actions .lang-switch a[hreflang="en"]')).toHaveAttribute('href', '/en/imprint/');
   await page.goto('/en/privacy/');
-  await expect(page.locator('.lang-switch a[hreflang="de"]')).toHaveAttribute('href', '/datenschutz/');
+  await expect(page.locator('.navbar__actions .lang-switch a[hreflang="de"]')).toHaveAttribute('href', '/datenschutz/');
 });
