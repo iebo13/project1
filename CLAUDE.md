@@ -8,18 +8,21 @@ BlitzBlank — a static, multi-page marketing site for a fictional Düsseldorf c
 
 Rebuild status: the HTML is a templated 11ty build, the JS is platform-first
 (native `<details>`, `<dialog>`, and constraint validation), and translation
-resolves at build time. **Still outstanding:** the CSS restructure (`@layer`,
-`color-mix()`, intrinsic layout), image `width`/`height` + `srcset`, the
-remaining accessibility gaps (slider pause control, the two fake
-`role="tablist"` widgets), and the Impressum/Datenschutz pages. Anything
-described below as a known gap is deliberately deferred, not forgotten.
+resolves at build time. The Impressum/Datenschutz pages exist (fictional
+placeholder details, labeled as such on-page), and the contact form is wired
+for FormSubmit behind `site.formEndpoint` (demo-mode mock when unset).
+**Still outstanding:** the CSS restructure (`@layer`, `color-mix()`,
+intrinsic layout), image `width`/`height` + `srcset`, and the remaining
+accessibility gaps (slider pause control, the two fake `role="tablist"`
+widgets). Anything described below as a known gap is deliberately deferred,
+not forgotten.
 
 ## Running
 
 ```bash
 npm start                     # dev server on http://localhost:8080, rebuilds on change
 npm run build                 # writes static output to _site/
-npm test                      # 3 build-output tests + 142 Playwright tests
+npm test                      # 3 build-output tests + 176 Playwright tests
 npm run test:build            # just the build-output tests (fast, no browser)
 npm run test:update-snapshots # regenerate visual baselines for *intentional* visual changes only
 ```
@@ -43,12 +46,13 @@ src/
   _data/
     site.js                # brand, origin, contact details, nav structure
     langs.js               # language codes + per-language slugs
-    dict.js                # the 288-key EN/DE translation table
+    dict.js                # the 340-key EN/DE translation table
     meta.js                # per-page <title>/<meta description>, per language
     services.js            # the 10 services (see below)
     faq.js                 # 6 FAQ entries
     testimonials.js        # 4 testimonial slides
-  index.njk, services.njk, gallery.njk, contact.njk, 404.njk
+  index.njk, services.njk, gallery.njk, contact.njk,
+  impressum.njk, datenschutz.njk, 404.njk
 ```
 
 The former `about.njk` was merged into the contact page in July 2026: the About
@@ -161,6 +165,8 @@ config):
 | services | `/leistungen/` | `/en/services/` |
 | gallery | `/galerie/` | `/en/gallery/` |
 | contact | `/kontakt/` | `/en/contact/` |
+| imprint | `/impressum/` | `/en/imprint/` |
+| privacy | `/datenschutz/` | `/en/privacy/` |
 
 Adding a string means adding it to **both** `en` and `de` in `dict.js` — but
 unlike the old system, forgetting one breaks the build instead of silently
@@ -177,13 +183,13 @@ Markup opts into JS behaviour declaratively: `data-reveal` (+ `data-reveal-delay
 
 ## Testing
 
-Playwright ([playwright.config.js](playwright.config.js)) is both the test runner and the visual-regression harness, run across two projects (`desktop`, `mobile`). 142 tests, covering smoke checks, hero content, heading and dark-band contrast, native form validation, navbar geometry in both languages, translation coverage ([tests/i18n.spec.js](tests/i18n.spec.js)), and 10 committed visual baselines under `tests/visual.spec.js-snapshots/`.
+Playwright ([playwright.config.js](playwright.config.js)) is both the test runner and the visual-regression harness, run across two projects (`desktop`, `mobile`). 176 tests, covering smoke checks, hero content, heading and dark-band contrast, native form validation, navbar geometry in both languages, translation coverage ([tests/i18n.spec.js](tests/i18n.spec.js)), the legal pages and every link leading to them ([tests/legal.spec.js](tests/legal.spec.js)), and 14 committed visual baselines under `tests/visual.spec.js-snapshots/`.
 
 [tests/i18n.spec.js](tests/i18n.spec.js) is worth knowing about: it scans every German page for English strings that appeared in the pre-migration markup, so the "only the nav translates" bug cannot come back silently.
 
 **The visual baselines are the migration's proof of correctness — never update them just to make a failure go away.** `npm run test:update-snapshots` exists for *intentional* visual changes only; running it to silence an unexplained diff destroys the thing it exists to catch. If a visual test fails, find out why the render changed before touching the baseline.
 
-CI (`.github/workflows/deploy.yml`) deliberately runs only the functional tests (`smoke`, `hero`, `headings`, `contact-form`, `i18n`, `navbar`) with `--ignore-snapshots`, skipping the visual suite — a GitHub Actions runner's font stack and GPU differ enough from a dev machine that every visual test would fail for reasons unrelated to the change. The visual suite is a local/dev-machine safety net, not a deploy gate.
+CI (`.github/workflows/deploy.yml`) deliberately runs only the functional tests (`smoke`, `hero`, `headings`, `contact-form`, `i18n`, `navbar`, `legal`) with `--ignore-snapshots`, skipping the visual suite — a GitHub Actions runner's font stack and GPU differ enough from a dev machine that every visual test would fail for reasons unrelated to the change. The visual suite is a local/dev-machine safety net, not a deploy gate.
 
 ## Fixed bugs worth knowing about
 
@@ -197,6 +203,6 @@ Four real, user-facing bugs were found and fixed during the migration (see git h
 ## Notes
 
 - `assets/` is empty; all imagery is hot-linked from Unsplash.
-- The contact form in [js/contact.js](js/contact.js) is a mock — a `setTimeout` promise stands in for the request. Wiring a backend means replacing that block with `fetch()`.
-- There is no Impressum or Datenschutz (privacy policy) page yet, and the consent checkbox and footer "Privacy" link both point to `href="#"`. See [README.md](README.md) for why this matters before deploying for real.
+- The contact form submits to FormSubmit (formsubmit.co) when `site.formEndpoint` is set (via the `FORM_ENDPOINT` env var); unset, [js/contact.js](js/contact.js) falls back to its `setTimeout` mock so the demo and tests need no config. FormSubmit requires a one-time email confirmation before it delivers anything — see README's "Wire the contact form" section.
+- The Impressum (`/impressum/`) and Datenschutz (`/datenschutz/`) pages exist and are linked from the footer legal row and the consent checkbox. Their company details (owner, VAT ID) are fictional placeholders, disclosed as such on the pages themselves — a real deployment must replace them.
 - Deploy is [.github/workflows/deploy.yml](.github/workflows/deploy.yml): builds and publishes `_site/` to GitHub Pages on push to `main`. All site links are relative, so Pages' `/<repo>/` subpath works with no `pathPrefix` configured.

@@ -26,7 +26,7 @@ function contrast(fg, bg) {
   return (a + 0.05) / (b + 0.05);
 }
 
-const darkHeroPages = ['/leistungen/', '/galerie/', '/kontakt/'];
+const darkHeroPages = ['/leistungen/', '/galerie/', '/kontakt/', '/impressum/', '/datenschutz/'];
 
 for (const path of darkHeroPages) {
   test(`h1 on ${path} is readable against the dark hero`, async ({ page }) => {
@@ -50,7 +50,7 @@ test('CTA banner h2 is readable against its dark background', async ({ page }) =
 // .navbar--solid variant caused a whole class of dark-on-dark bugs (invisible
 // logo/links, and a phone number that was still dark-on-navy when it was
 // visible) — deleting the variant deletes the bug class.
-const allPages = ['/', '/leistungen/', '/galerie/', '/kontakt/'];
+const allPages = ['/', '/leistungen/', '/galerie/', '/kontakt/', '/impressum/', '/datenschutz/'];
 
 function lightness01(rgb) {
   const [r, g, b] = rgb.match(/[\d.]+/g).slice(0, 3).map(Number);

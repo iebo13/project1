@@ -1,8 +1,44 @@
 # BlitzBlank — Premium Reinigung Düsseldorf
 
-A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Six pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
+A multi-page marketing website for a fictional boutique cleaning company based in Düsseldorf. Built with **Eleventy (11ty) 3.1.6 + Nunjucks**, vanilla CSS3, and vanilla JavaScript (ES6+, global-namespace pattern — see [CLAUDE.md](CLAUDE.md)). Seven pages render from one shared layout; content (services, FAQ, testimonials) is data-driven.
 
-> **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404); and there is **no Impressum or Datenschutz (privacy policy) page** — the consent checkbox and the footer's "Privacy" link both point to `href="#"`. For a commercial site actually operating in Germany, an Impressum is a legal requirement (§5 DDG), not a nice-to-have. All of this is scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
+> **Status: structurally deployable, not launch-ready.** The build is clean, the test suite is green, and it deploys to GitHub Pages on every push to `main`. But: the stats (500+ clients, 12,500+ cleans, the 4.9★/528-review rating in the homepage JSON-LD) and all four testimonials are placeholder content, not real customer data; and every image is hot-linked from Unsplash rather than hosted locally (and two of the current photo IDs already 404). The Impressum (`/impressum/`) and Datenschutzerklärung (`/datenschutz/`) pages now exist and are linked from the footer and the consent checkbox — but their company details (owner, VAT ID) are **fictional placeholders**, clearly labeled as such on the pages; a real operator must replace them before going live. The contact form is wired for FormSubmit but ships unconfigured (see "Wire the contact form" below). **The full pre-launch task list is in [Before going live](#-before-going-live--todo).** The remaining structural gaps are scoped for Part 2 of the rebuild; see [CLAUDE.md](CLAUDE.md) for what Part 2 covers.
+
+---
+
+## 🚀 Before going live — TODO
+
+Work through this list top to bottom before pointing real customers at the site. Items are ordered so the legally required ones come first.
+
+### Legal (required)
+
+- [ ] **Replace the fictional Impressum data.** Owner name, address, and the placeholder VAT ID `DE999999999` live in `src/_data/dict.js` under `legal.imprint.*` (both `en` and `de`). Swap in the real operator's details.
+- [ ] **Remove the demo-project notes** once the data is real: delete the `legal.demo` key from `dict.js` and the `.legal__note` paragraph at the bottom of `src/impressum.njk` and `src/datenschutz.njk`.
+- [ ] **Have both legal texts reviewed by a lawyer.** They follow the standard § 5 DDG / GDPR structure and honestly describe what the site does, but they are templates, not legal advice.
+
+### Contact form (required, ~10 minutes)
+
+- [ ] Set the `FORM_ENDPOINT` repository variable (Settings → Secrets and variables → Actions → Variables) to an email address you actually read, and deploy.
+- [ ] Submit the form once and **click the confirmation link FormSubmit emails you** — nothing is delivered until you do.
+- [ ] Replace the variable's value with the random alias from that confirmation, so the raw address never sits in the published HTML. Full details under [Wire the contact form](#wire-the-contact-form-formsubmit).
+
+### Content honesty (required)
+
+- [ ] Replace the placeholder stats and the four testimonials with real data — **especially the `aggregateRating` (4.9★, 528 reviews) in the homepage JSON-LD**. Fabricated review markup is the kind of thing search engines penalize; if there are no real reviews yet, delete that block.
+- [ ] Fix or replace the two Unsplash photo IDs that already 404 (see [CLAUDE.md](CLAUDE.md) Notes).
+- [ ] Wire the footer and contact-page social icons to real profiles, or remove them (all currently `href="#"`).
+- [ ] The footer newsletter form is a mock — connect a real list provider (with GDPR double opt-in, and a matching section in the Datenschutzerklärung) or remove it.
+
+### Privacy hardening (strongly recommended)
+
+- [ ] **Self-host the Inter font files** instead of loading them from Google Fonts. German case law (LG München, 2022) treats remote Google Fonts as a GDPR violation. After self-hosting, delete the Google Fonts section from the Datenschutzerklärung.
+- [ ] Host images locally instead of hot-linking Unsplash (also removes the Unsplash section from the Datenschutzerklärung, and is Part 2 scope anyway alongside `width`/`height` + `srcset`).
+
+### Infrastructure & polish
+
+- [ ] If serving from a custom domain instead of GitHub Pages' URL, make sure `SITE_ORIGIN` matches it — canonicals pointing at a domain you don't control tell Google to index that one instead.
+- [ ] Decide on the map: the contact page shows a styled placeholder. A real embed (Google Maps/OSM) adds a third-party request that must be added to the Datenschutzerklärung.
+- [ ] Close the known accessibility gaps before real traffic: gallery cards aren't keyboard-reachable, the lightbox is permanently `aria-hidden`, and the testimonial slider has no visible pause control (see [Accessibility](#-accessibility)).
 
 ---
 
@@ -11,7 +47,7 @@ A multi-page marketing website for a fictional boutique cleaning company based i
 - **Bilingual EN/DE, resolved at build time** — every page is rendered twice with localized URLs (German at the root, English under `/en/`), correct `lang`/`canonical`/`hreflang`, and per-language `<title>`/`<meta description>`. No translation JavaScript ships to the browser.
 - **Deliberate glassmorphism** — a restrained 3-tier glass system in the page sections (glass stat chips, frosted cards, one backdrop panel per page); the navbar is deliberately solid, not glass
 - **Awwwards-grade design** — soft shadows, large whitespace, fluid typography via `clamp()`
-- **5 pages, 1 layout** — Home, Services, Gallery, Contact, 404, all rendered from `src/_includes/layouts/base.njk`
+- **7 pages, 1 layout** — Home, Services, Gallery, Contact, Impressum, Datenschutz, 404, all rendered from `src/_includes/layouts/base.njk`
 - **10 services, data-driven** — each with its own dedicated detail section; adding one is a single entry in `src/_data/services.js`
 - **Premium interactions** — scroll reveal, parallax hero, magnetic buttons, ripple effect, tilt cards, animated counters, testimonial slider, lightbox, accordion FAQ
 - **Fully responsive** — fluid layout from 320px to 4K via CSS Grid + Flexbox
@@ -30,6 +66,8 @@ project1/
 │   ├── services.njk              # All 10 services + detail sections + process
 │   ├── gallery.njk                # Filterable grid + lightbox
 │   ├── contact.njk               # Contact form with validation + map placeholder
+│   ├── impressum.njk             # Impressum / Legal Notice (§ 5 DDG structure, placeholder data)
+│   ├── datenschutz.njk           # Datenschutzerklärung / Privacy Policy
 │   ├── 404.njk                   # Custom error page (loads a reduced set of scripts)
 │   ├── _includes/
 │   │   ├── layouts/
@@ -64,7 +102,7 @@ project1/
 ├── assets/                       # Reserved for local images/icons/fonts — currently empty; all imagery is hot-linked
 ├── tests/                        # Playwright: functional tests + visual-regression baselines
 │   ├── *.spec.js
-│   └── visual.spec.js-snapshots/ # 12 committed PNGs — never update these to make a failure disappear
+│   └── visual.spec.js-snapshots/ # 16 committed PNGs — never update these to make a failure disappear
 ├── .github/workflows/deploy.yml  # Builds + deploys _site/ to GitHub Pages on push to main
 ├── .eleventy.js                  # Eleventy config: src/ → _site/, passthrough copy for css/js/assets
 ├── playwright.config.js
@@ -107,7 +145,7 @@ project1/
 npm install         # installs Eleventy, Playwright, axe-core (dev dependencies only)
 npm start            # dev server at http://localhost:8080, rebuilds on change
 npm run build         # writes static output to _site/
-npm test             # Playwright: 97 tests — functional checks + visual regression
+npm test             # Playwright: 162 tests — functional checks + visual regression
 ```
 
 Playwright's config auto-starts `npm start` for you when you run `npm test`, so you don't need to run the dev server separately first. There is no `file://`-based workflow anymore — Eleventy needs its dev server (or a build) to resolve templates and passthrough assets correctly.
@@ -149,8 +187,14 @@ For links, never hardcode an href — `{{ 'services' | url(lang) }}` resolves to
 Per-page `<title>` and `<meta description>` live in `src/_data/meta.js`, not the
 dictionary.
 
-### Wire the contact form to a backend
-Open `js/contact.js` and replace the mock `await new Promise(...)` block in the submit handler with a real `fetch()` call to your endpoint.
+### Wire the contact form (FormSubmit)
+The form is already wired for [FormSubmit](https://formsubmit.co) — a form-to-email relay that needs no backend, which suits a static host. It activates when `formEndpoint` in `src/_data/site.js` is non-empty (set the `FORM_ENDPOINT` env var at build time, e.g. as a repository variable consumed by the deploy workflow). To go live:
+
+1. Set `FORM_ENDPOINT` to an email address you can read and deploy. **Until this is set, the form runs in demo mode** — the mock submit with a fake success message, exactly as before.
+2. Submit the form once. FormSubmit emails a confirmation link to that address; **nothing is delivered until it is clicked**.
+3. After activating, replace the address with the random alias from FormSubmit's confirmation — the endpoint is baked into the published HTML, and the alias keeps the raw address unharvestable.
+
+The submit handler in `js/contact.js` POSTs to FormSubmit's AJAX endpoint (keeping the in-page success/toast UX), includes a `_honey` honeypot field, and on a failed request keeps the visitor's input and shows a translated error. Swapping in a different backend still only means replacing that `fetch()` block.
 
 ---
 
