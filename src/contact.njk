@@ -9,17 +9,81 @@ eleventyComputed:
   title: "{{ meta[lang].contact.title }}"
   description: "{{ meta[lang].contact.description }}"
   pageKey: 'contact'
-navbarSolid: true
 ---
 {% set d = dict[lang] %}
   <main id="main">
     <section class="page-hero">
       <div class="page-hero__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager" /></div>
       <div class="container page-hero__content">
-        <span class="eyebrow eyebrow--light" style="margin-bottom: var(--space-5)"><span class="eyebrow__dot"></span>{{ 'page.contact.eyebrow' | t(d) }}</span>
+        <nav class="breadcrumb" aria-label="{{ 'crumb.label' | t(d) }}"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'nav.contact' | t(d) }}</span></nav>
         <h1>{{ 'page.contact.title' | t(d) }}</h1>
         <p>{{ 'page.contact.subtitle' | t(d) }}</p>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ 'home' | url(lang) }}">{{ 'crumb.home' | t(d) }}</a><span class="breadcrumb__sep">/</span><span>{{ 'nav.contact' | t(d) }}</span></nav>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT (merged from the former about page) ===== -->
+    <section class="section section--tinted" id="about">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow"><span class="eyebrow__dot"></span>{{ 'about.head.eyebrow' | t(d) }}</span>
+          <h2 class="section-title">{{ 'about.head.title' | t(d) }}</h2>
+          <p class="section-subtitle">{{ 'about.head.subtitle' | t(d) }}</p>
+        </div>
+
+        <div class="mv-grid" data-stagger="180">
+          <article class="mv-card">
+            <div class="mv-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </div>
+            <h3>{{ 'about.mission.title' | t(d) }}</h3>
+            <p>{{ 'about.mission.text' | t(d) }}</p>
+          </article>
+          <article class="mv-card">
+            <div class="mv-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>{{ 'about.vision.title' | t(d) }}</h3>
+            <p>{{ 'about.vision.text' | t(d) }}</p>
+          </article>
+        </div>
+
+        <div class="values-grid" data-stagger="120">
+          <article class="value-card">
+            <div class="value-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h4>{{ 'about.value.1.title' | t(d) }}</h4>
+            <p>{{ 'about.value.1.text' | t(d) }}</p>
+          </article>
+          <article class="value-card">
+            <div class="value-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <h4>{{ 'about.value.2.title' | t(d) }}</h4>
+            <p>{{ 'about.value.2.text' | t(d) }}</p>
+          </article>
+          <article class="value-card">
+            <div class="value-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h4>{{ 'about.value.3.title' | t(d) }}</h4>
+            <p>{{ 'about.value.3.text' | t(d) }}</p>
+          </article>
+          <article class="value-card">
+            <div class="value-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h4>{{ 'about.value.4.title' | t(d) }}</h4>
+            <p>{{ 'about.value.4.text' | t(d) }}</p>
+          </article>
+          <article class="value-card">
+            <div class="value-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.07-7.07-2.83 2.83M9.76 14.24l-2.83 2.83m0-10 2.83 2.83m4.48 4.48 2.83 2.83"/></svg>
+            </div>
+            <h4>{{ 'about.value.5.title' | t(d) }}</h4>
+            <p>{{ 'about.value.5.text' | t(d) }}</p>
+          </article>
+        </div>
       </div>
     </section>
 

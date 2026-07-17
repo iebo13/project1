@@ -54,11 +54,6 @@
   50%      { box-shadow: 0 0 0 14px color-mix(in srgb, var(--color-secondary) 0%, transparent); }
 }
 
-@keyframes scrollIndicator {
-  0%   { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(18px); opacity: 0; }
-}
-
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -203,39 +198,38 @@
 /* ---------- Scroll indicator (hero) ---------- */
 .scroll-indicator {
   position: absolute;
-  bottom: 36px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
+  z-index: 2;
+  display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: color-mix(in srgb, var(--color-white) 70%, transparent);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--color-white) 35%, transparent);
+  color: var(--color-white);
   font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
+  text-decoration: none;
   animation: fadeIn 1200ms var(--ease-out) 1200ms backwards;
 }
 
-.scroll-indicator__mouse {
-  width: 26px;
-  height: 42px;
-  border: 2px solid color-mix(in srgb, var(--color-white) 50%, transparent);
-  border-radius: var(--radius-pill);
-  position: relative;
+.scroll-indicator__chevron {
+  width: 14px;
+  height: 14px;
+  animation: scrollDip 1.6s var(--ease-in-out) infinite;
 }
 
-.scroll-indicator__mouse::after {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  width: 4px;
-  height: 8px;
-  background: #fff;
-  border-radius: var(--radius-pill);
-  transform: translateX(-50%);
-  animation: scrollIndicator 1.6s var(--ease-in-out) infinite;
+@keyframes scrollDip {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(2px); }
 }
 
 /* ---------- Marquee ---------- */

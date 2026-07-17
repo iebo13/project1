@@ -33,7 +33,7 @@ test('project-subpath build prefixes every absolute path', () => {
       `${asset} must be served from the subpath`);
   }
 
-  for (const page of ['kontakt', 'leistungen', 'ueber-uns', 'galerie']) {
+  for (const page of ['kontakt', 'leistungen', 'galerie']) {
     assert.ok(html.includes(`href="/project1/${page}/"`), `${page} link must be prefixed`);
     assert.ok(!html.includes(`href="/${page}/"`), `${page} must not be linked unprefixed`);
   }

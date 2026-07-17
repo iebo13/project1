@@ -7,8 +7,8 @@ import { test, expect } from '@playwright/test';
 // These tests scan the German pages for English strings that appeared in the
 // old markup, so a regression fails the build instead of shipping.
 
-const DE_PAGES = ['/', '/ueber-uns/', '/leistungen/', '/galerie/', '/kontakt/'];
-const EN_PAGES = ['/en/', '/en/about/', '/en/services/', '/en/gallery/', '/en/contact/'];
+const DE_PAGES = ['/', '/leistungen/', '/galerie/', '/kontakt/'];
+const EN_PAGES = ['/en/', '/en/services/', '/en/gallery/', '/en/contact/'];
 
 // Strings that were hardcoded English in the pre-migration markup. If any of
 // these show up on a German page, something is falling back.

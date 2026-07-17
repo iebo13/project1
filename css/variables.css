@@ -42,8 +42,16 @@
   --color-glass-border: color-mix(in srgb, var(--color-white) 22%, transparent);
   --color-glass-border-strong: color-mix(in srgb, var(--color-white) 35%, transparent);
   --glass-blur: 22px;
-  --glass-blur-strong: 32px;
   --glass-saturate: 180%;
+
+  /* Glass tiers — see docs/superpowers/specs/2026-07-16-visual-refresh-design.md.
+     strong: over photos/dark surfaces, carries white text. soft: light cards
+     over colour blobs. backdrop: one large frosted section container per page.
+     Tint floors are contrast guarantees — do not lower them. */
+  --glass-strong-bg: color-mix(in srgb, var(--color-primary) 58%, transparent);
+  --glass-soft-bg: color-mix(in srgb, var(--color-white) 65%, transparent);
+  --glass-backdrop-bg: color-mix(in srgb, var(--color-white) 55%, transparent);
+  --glass-blur-soft: 12px;
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);

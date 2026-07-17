@@ -36,9 +36,7 @@
     height: 100vh;
     height: 100dvh;
     width: min(360px, 86vw);
-    background: color-mix(in srgb, var(--color-primary) 98%, transparent);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--color-primary);
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
@@ -112,13 +110,30 @@
   }
 
   /* Hero adjustments */
-  .hero__title {
-    font-size: var(--fs-5xl);
+  .hero__stats {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: var(--container-max);
+    margin: var(--space-10) auto 0;
+    padding-inline: var(--container-pad);
   }
 
-  .hero__stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
+  /* In the stacked/centered column layouts the hero's bottom edge is the stat
+     chips themselves — an absolutely-anchored hint lands on top of them, so it
+     joins the flow after them instead. */
+  .scroll-indicator {
+    position: static;
+    order: 4;
+    align-self: center;
+    margin: var(--space-8) auto 0;
+    transform: none;
+  }
+
+  .hero {
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
   }
 
   /* About preview becomes single column */
@@ -177,11 +192,61 @@
   :root {
     --section-pad-y: clamp(3rem, 1.5rem + 5vw, 5rem);
     --container-pad: clamp(1.25rem, 0.5rem + 4vw, 2rem);
+    --glass-blur: 14px;
   }
 
-  /* Hero */
+  /* Blur is the main scroll-jank risk on mid-range phones: shrink the radius
+     and turn the one large frosted surface solid. */
+  .glass-backdrop {
+    /* Solid white, matching the reduced-transparency value — a 92% tint here
+       would win the specificity tie against components.css's solid fallback
+       (same specificity, later file) and break the collapse-to-solid promise. */
+    background: var(--color-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* V5 stacks on phones: navy text block first, untinted photo band below,
+     stat chips overlapping the seam. Text never sits on the photo. */
   .hero {
-    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--color-primary);
+  }
+
+  .hero__content {
+    order: 1;
+    padding-block: var(--space-16) var(--space-12);
+  }
+
+  .hero__bg {
+    order: 2;
+    position: relative;
+    height: 46vh;
+  }
+
+  .hero__bg img {
+    transform: none;
+    animation: none;
+  }
+
+  .hero__overlay {
+    display: none;
+  }
+
+  .hero__stats {
+    order: 3;
+    position: relative;
+    z-index: 2;
+    margin: calc(-1 * var(--space-16)) 0 0;
+    padding-inline: var(--container-pad);
+    gap: var(--space-3);
+  }
+
+  .hero__stat {
+    flex: 1 1 40%;
+    padding: var(--space-3) var(--space-4);
   }
 
   .hero__title {
@@ -191,13 +256,6 @@
 
   .hero__subtitle {
     font-size: var(--fs-lg);
-  }
-
-  .hero__stats {
-    grid-template-columns: 1fr;
-    max-width: 360px;
-    gap: var(--space-5);
-    margin-top: var(--space-12);
   }
 
   .hero__cta {
@@ -337,6 +395,12 @@
     right: 16px;
     left: 16px;
     max-width: none;
+  }
+
+  /* Page hero */
+  /* Full-width text below 768px — no clear side to preserve, tint uniformly. */
+  .page-hero__bg::after {
+    background: color-mix(in srgb, var(--color-primary) 88%, transparent);
   }
 
   /* Error page */
@@ -526,6 +590,13 @@
   }
 }
 
+/* On short viewports the hint overlaps hero content — hide it there. */
+@media (max-height: 700px) {
+  .scroll-indicator {
+    display: none;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -534,7 +605,7 @@
 
   .hero__bg img,
   .blob,
-  .scroll-indicator__mouse::after,
+  .scroll-indicator__chevron,
   .map-embed__pin,
   .error-page__code {
     animation: none !important;

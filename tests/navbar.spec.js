@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// The desktop navbar packs a logo, seven nav links, a language switch, a phone
+// The desktop navbar packs a logo, four nav links, a language switch, a phone
 // number and a CTA into one row. German runs ~10% wider than English ("Angebot
 // anfordern" vs "Get a Quote"), so German is the width that actually has to fit
 // — every assertion here runs in both languages, and German is the one that

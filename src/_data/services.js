@@ -114,7 +114,7 @@ export default [
     detail: {
       heading: 'Deep Cleaning',
       body: "Sometimes a regular clean isn't enough. Spring reset, post-illness, pre-move-in, or just because the dust has been quietly winning — our deep clean pulls everything out from everywhere. Baseboards, grout lines, behind appliances, inside light fixtures, vents, and the tops of cabinets you forgot existed.",
-      image: 'https://images.unsplash.com/photo-1567548083313-04c67ac2f4f0?auto=format&fit=crop&w=900&q=80',
+      image: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=900&q=80',
       alt: 'Spa-grade bathroom after deep cleaning',
       bullets: [
         '2-3 person crew, 4-6 hours typical',
