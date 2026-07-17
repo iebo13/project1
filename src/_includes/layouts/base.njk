@@ -82,11 +82,20 @@
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
   <a href="#main" class="skip-link">{{ 'nav.skip' | t(d) }}</a>
 
-  <!-- Preloader -->
-  <div class="preloader" aria-hidden="true">
+  <!-- Preloader: shown once per browser session (js/navigation.js sets the
+       flag), not on every internal navigation. The inline script below must
+       be synchronous and sit right after the element — a <script defer> (like
+       navigation.js) runs after first paint, too late to stop a returning
+       visitor seeing a flash of this before it hides itself. -->
+  <div class="preloader" aria-hidden="true" id="preloader">
     <div class="preloader__ring"></div>
     <div class="preloader__brand">{{ site.brand }}</div>
   </div>
+  <script>
+    if (sessionStorage.getItem('bb-preloader-shown')) {
+      document.getElementById('preloader').classList.add('is-hidden-instant');
+    }
+  </script>
 
   <!-- ===== NAVBAR ===== -->
 {% include "partials/navbar.njk" %}

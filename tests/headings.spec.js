@@ -62,7 +62,8 @@ function lightness01(rgb) {
 test('active language button is visibly highlighted in both navbar states', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 1280, 'lang switch lives in the drawer on mobile');
   await page.goto('/');
-  const active = page.locator('.lang-switch__btn.is-active');
+  // Scoped to the header: the drawer carries a second .lang-switch now.
+  const active = page.locator('.navbar__actions .lang-switch__btn.is-active');
   expect(await active.evaluate((el) => getComputedStyle(el).backgroundImage),
     'active chip needs its gradient pill on the navy bar too').toContain('gradient');
   expect(lightness01(await active.evaluate((el) => getComputedStyle(el).color)),

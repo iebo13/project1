@@ -9,9 +9,7 @@ const Navigation = (() => {
   const NAV_DRAWER_MAX = 1279;
 
   let navbar = null;
-  let navMenu = null;
   let navToggle = null;
-  let backdrop = null;
   let backToTop = null;
 
   /* ---------- Sticky navbar scroll state ---------- */
@@ -34,58 +32,96 @@ const Navigation = (() => {
     onScroll();
   }
 
-  /* ---------- Mobile menu ---------- */
+  /* ---------- Mobile menu (native <dialog> drawer) ----------
+     showModal() supplies the focus trap, ESC handling, focus restore and
+     ::backdrop. This code only adds the slide-out animation (a dialog
+     disappears instantly on close(), so exit motion needs a class + delay)
+     and keeps the toggle's aria-expanded in sync. */
   function initMobile() {
     navToggle = document.querySelector('.nav-toggle');
-    navMenu = document.querySelector('.nav-menu');
-    if (!navToggle || !navMenu) return;
+    const drawer = document.getElementById('navDrawer');
+    if (!navToggle || !drawer || typeof drawer.showModal !== 'function') return;
 
-    // Create backdrop dynamically
-    backdrop = document.createElement('div');
-    backdrop.className = 'nav-backdrop';
-    document.body.appendChild(backdrop);
+    // Matches --t-slow, the drawer's translate transition in components.css.
+    const EXIT_MS = 480;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let closeTimer = null;
 
     const open = () => {
-      navMenu.classList.add('is-open');
+      if (drawer.open) return;
+      drawer.showModal();
       navToggle.classList.add('is-active');
-      backdrop.classList.add('is-visible');
       navToggle.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
     };
 
-    const close = () => {
-      navMenu.classList.remove('is-open');
-      navToggle.classList.remove('is-active');
-      backdrop.classList.remove('is-visible');
-      navToggle.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+    const finishClose = () => {
+      drawer.classList.remove('is-closing');
+      drawer.close();
     };
 
-    navToggle.addEventListener('click', () => {
-      navMenu.classList.contains('is-open') ? close() : open();
-    });
-
-    backdrop.addEventListener('click', close);
-
-    // Close on nav link click
-    navMenu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', close);
-    });
-
-    // Close on ESC
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && navMenu.classList.contains('is-open')) {
-        close();
-        navToggle.focus();
+    const close = () => {
+      if (!drawer.open || drawer.classList.contains('is-closing')) return;
+      // Unlock scrolling before the exit animation, not after: a tapped
+      // same-page anchor link (/#faq) must be able to scroll immediately.
+      document.body.style.overflow = '';
+      if (reduceMotion.matches) {
+        finishClose();
+        return;
       }
+      drawer.classList.add('is-closing');
+      closeTimer = setTimeout(finishClose, EXIT_MS);
+    };
+
+    // Single cleanup point — runs on every path that closes the dialog.
+    drawer.addEventListener('close', () => {
+      clearTimeout(closeTimer);
+      drawer.classList.remove('is-closing');
+      navToggle.classList.remove('is-active');
+      navToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+
+    // ESC: intercept the native instant close and play the exit animation.
+    drawer.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      close();
+    });
+
+    navToggle.addEventListener('click', () => {
+      drawer.open ? close() : open();
+    });
+
+    drawer.querySelector('.nav-drawer__close').addEventListener('click', close);
+
+    // Link taps close instantly, not animated: navigation is under way, and
+    // for same-page anchors (/#faq) a close() that lands mid-scroll restores
+    // focus and cancels the browser's smooth scroll to the target.
+    drawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        clearTimeout(closeTimer);
+        document.body.style.overflow = '';
+        finishClose();
+      });
+    });
+
+    // A click on ::backdrop targets the dialog element itself with
+    // coordinates outside its box.
+    drawer.addEventListener('click', (e) => {
+      if (e.target !== drawer) return;
+      const r = drawer.getBoundingClientRect();
+      const inside =
+        e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) close();
     });
 
     // Reset on resize to desktop. Must match the drawer breakpoint in
-    // responsive.css — if this is the larger of the two, the drawer stays open
-    // over a nav that CSS has already put back into its desktop row.
+    // responsive.css — if this is the larger of the two, the drawer stays
+    // modal over a page whose header has already grown its desktop nav row.
     window.addEventListener('resize', () => {
-      if (window.innerWidth > NAV_DRAWER_MAX && navMenu.classList.contains('is-open')) {
-        close();
+      if (window.innerWidth > NAV_DRAWER_MAX && drawer.open) {
+        clearTimeout(closeTimer);
+        finishClose();
       }
     });
   }
@@ -114,8 +150,17 @@ const Navigation = (() => {
 
   /* ---------- Preloader ---------- */
   function initPreloader() {
-    const preloader = document.querySelector('.preloader');
+    const preloader = document.getElementById('preloader');
     if (!preloader) return;
+
+    // base.njk's inline script already hid this instantly, before paint, if
+    // a prior page in this session set the flag below — just clean up.
+    if (preloader.classList.contains('is-hidden-instant')) {
+      preloader.remove();
+      return;
+    }
+
+    sessionStorage.setItem('bb-preloader-shown', '1');
 
     window.addEventListener('load', () => {
       setTimeout(() => {

@@ -64,10 +64,16 @@ test('every page declares canonical + both hreflang alternates', async ({ page }
 });
 
 test('the language switcher links to this page in the other language', async ({ page }) => {
+  // Two switches since the drawer rebuild: the header one (desktop) and the
+  // drawer one (mobile). Both must point at this page's counterpart.
   await page.goto('/kontakt/');
-  await expect(page.locator('.lang-switch a[hreflang="en"]')).toHaveAttribute('href', '/en/contact/');
+  for (const scope of ['.navbar__actions', '.nav-drawer']) {
+    await expect(page.locator(`${scope} .lang-switch a[hreflang="en"]`)).toHaveAttribute('href', '/en/contact/');
+  }
   await page.goto('/en/contact/');
-  await expect(page.locator('.lang-switch a[hreflang="de"]')).toHaveAttribute('href', '/kontakt/');
+  for (const scope of ['.navbar__actions', '.nav-drawer']) {
+    await expect(page.locator(`${scope} .lang-switch a[hreflang="de"]`)).toHaveAttribute('href', '/kontakt/');
+  }
 });
 
 test('no runtime i18n dictionary is shipped', async ({ page }) => {

@@ -341,6 +341,11 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   transition: gap var(--t-base) var(--ease-out);
+  /* Invisible hit-area extension: the bare text line was a ~30px touch
+     target. Padding grows it past 38px; the matching negative margin keeps
+     the card's visual rhythm untouched. */
+  padding-block: var(--space-2);
+  margin-block: calc(-1 * var(--space-2));
 }
 
 .service-card__link svg {
@@ -1485,6 +1490,216 @@
 
 .navbar.is-scrolled .lang-switch__btn:not(.is-active):hover {
   color: var(--color-secondary);
+}
+
+/* ---------- Mobile nav drawer ----------
+   A native <dialog>: closed it renders nowhere, so these styles are
+   unconditional and the ≤1279px media block in responsive.css only has to
+   manage what the header row shows. Solid navy, not glass — the chrome stays
+   opaque under the refresh's "glass lives in the sections" rule. */
+.nav-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(380px, 88vw);
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid color-mix(in srgb, var(--color-white) 10%, transparent);
+  background: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: -24px 0 64px color-mix(in srgb, var(--color-black) 35%, transparent);
+  overscroll-behavior: contain;
+}
+
+.nav-drawer[open] {
+  display: flex;
+  flex-direction: column;
+  translate: 0 0;
+  transition: translate var(--t-slow) var(--ease-out);
+}
+
+/* Entry slides in from the right edge; engines without @starting-style show
+   the drawer instantly, which is the correct degraded behaviour. */
+@starting-style {
+  .nav-drawer[open] {
+    translate: 100% 0;
+  }
+}
+
+/* Exit is JS-driven: .is-closing plays the slide-out, close() fires after
+   the transition (navigation.js owns the timing). */
+.nav-drawer.is-closing {
+  translate: 100% 0;
+}
+
+.nav-drawer::backdrop {
+  /* Literal fallback first: custom properties don't reach ::backdrop in older
+     engines. The color-mix line wins wherever it resolves — keep both in sync
+     with --color-primary (#0F172A). */
+  background: rgba(15, 23, 42, 0.55);
+  background: color-mix(in srgb, var(--color-primary) 55%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 1;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+@starting-style {
+  .nav-drawer[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.nav-drawer.is-closing::backdrop {
+  opacity: 0;
+}
+
+.nav-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+  padding-inline: var(--space-6);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-white) 8%, transparent);
+  flex-shrink: 0;
+}
+
+.nav-drawer__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nav-drawer__brand-name {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: var(--ls-tight);
+}
+
+.nav-drawer__close {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  color: var(--color-white);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.nav-drawer__close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav-drawer__close:hover {
+  background: var(--color-glass-strong);
+}
+
+.nav-drawer__nav {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-6);
+}
+
+.nav-drawer__link {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: color-mix(in srgb, var(--color-white) 85%, transparent);
+  border-radius: var(--radius-md);
+  transition: background var(--t-fast) var(--ease-out),
+              color var(--t-fast) var(--ease-out);
+}
+
+.nav-drawer__link:hover,
+.nav-drawer__link:focus-visible {
+  color: var(--color-white);
+  background: color-mix(in srgb, var(--color-white) 8%, transparent);
+}
+
+.nav-drawer__link[aria-current="page"] {
+  color: var(--color-white);
+  background: color-mix(in srgb, var(--color-white) 6%, transparent);
+  box-shadow: inset 3px 0 0 0 var(--color-accent);
+}
+
+/* Links stagger in behind the panel; --i is set per link in the markup. */
+@starting-style {
+  .nav-drawer[open] .nav-drawer__link {
+    opacity: 0;
+    translate: 16px 0;
+  }
+}
+
+.nav-drawer[open] .nav-drawer__link {
+  transition: opacity var(--t-base) var(--ease-out),
+              translate var(--t-base) var(--ease-out),
+              background var(--t-fast) var(--ease-out),
+              color var(--t-fast) var(--ease-out);
+  transition-delay: calc(60ms + var(--i, 0) * 35ms), calc(60ms + var(--i, 0) * 35ms), 0ms, 0ms;
+}
+
+.nav-drawer__foot {
+  flex-shrink: 0;
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid color-mix(in srgb, var(--color-white) 8%, transparent);
+}
+
+/* The shared .lang-switch stretches into a full-width segmented control. */
+.nav-drawer__foot .lang-switch {
+  display: flex;
+  width: 100%;
+}
+
+.nav-drawer__foot .lang-switch__btn {
+  flex: 1;
+  text-align: center;
+  padding-block: var(--space-3);
+  font-size: var(--fs-sm);
+}
+
+.nav-drawer__phone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: color-mix(in srgb, var(--color-white) 90%, transparent);
+}
+
+.nav-drawer__phone svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent);
+}
+
+.nav-drawer__cta {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-drawer,
+  .nav-drawer[open],
+  .nav-drawer::backdrop,
+  .nav-drawer[open] .nav-drawer__link {
+    transition: none;
+  }
 }
 
 /* 404 suggestions block — was six inline style attributes on the markup. */

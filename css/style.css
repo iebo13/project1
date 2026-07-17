@@ -18,6 +18,12 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Pre-reveal [data-reveal] states translate up to 50px sideways; clip (not
+     hidden) discards that overflow without creating a scroll container, so
+     document.scrollWidth stays honest — tests/navbar-mobile.spec.js asserts
+     it. body's overflow-x:hidden below remains the fallback for engines
+     without `clip`. */
+  overflow-x: clip;
 }
 
 body {

@@ -45,7 +45,7 @@ jobs:
       # for reasons that have nothing to do with the change. Those baselines
       # exist to verify local refactors, not to gate deploys.
       - name: Run functional tests
-        run: npx playwright test --ignore-snapshots tests/smoke.spec.js tests/hero.spec.js tests/headings.spec.js tests/contact-form.spec.js tests/i18n.spec.js tests/navbar.spec.js
+        run: npx playwright test --ignore-snapshots tests/smoke.spec.js tests/hero.spec.js tests/headings.spec.js tests/contact-form.spec.js tests/i18n.spec.js tests/navbar.spec.js tests/navbar-mobile.spec.js
 
       # MUST run before the build: it exposes the real base_path and origin,
       # which the build needs baked into every href and canonical.

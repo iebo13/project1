@@ -154,6 +154,12 @@
   pointer-events: none;
 }
 
+/* Repeat navigation within the same session: no fade, no flash — set by the
+   synchronous inline script in base.njk before first paint. */
+.preloader.is-hidden-instant {
+  display: none;
+}
+
 .preloader__ring {
   width: 56px;
   height: 56px;

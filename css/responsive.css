@@ -28,43 +28,12 @@
    "Über uns" and clipped the CTA. This breakpoint is measured, not chosen —
    see tests/navbar.spec.js. Keep in sync with NAV_DRAWER_MAX in js/navigation.js. */
 @media (max-width: 1279px) {
-  /* Hide desktop nav, show mobile toggle */
+  /* The nav lives in the .nav-drawer <dialog> (components.css) below this
+     breakpoint; the desktop row disappears entirely. The header row keeps
+     only logo + CTA + burger — the language switch moves into the drawer,
+     which is what keeps the burger on-screen (the old row needed 497px in
+     German and pushed the toggle past the right edge of a 390px phone). */
   .nav-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    height: 100dvh;
-    width: min(360px, 86vw);
-    background: var(--color-primary);
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: var(--space-12);
-    gap: var(--space-4);
-    transform: translateX(100%);
-    transition: transform var(--t-slow) var(--ease-out);
-    z-index: var(--z-dropdown);
-    box-shadow: -20px 0 60px color-mix(in srgb, var(--color-black) 40%, transparent);
-  }
-
-  .nav-menu.is-open {
-    transform: translateX(0);
-  }
-
-  .nav-link {
-    width: 100%;
-    padding: var(--space-4) var(--space-5);
-    font-size: var(--fs-lg);
-    color: var(--color-white) !important;
-    border-radius: var(--radius-md);
-  }
-
-  .nav-link:hover {
-    background: color-mix(in srgb, var(--color-white) 8%, transparent);
-  }
-
-  .nav-link__underline {
     display: none;
   }
 
@@ -72,23 +41,8 @@
     display: block;
   }
 
-  /* Mobile nav backdrop */
-  .nav-backdrop {
-    position: fixed;
-    inset: 0;
-    background: color-mix(in srgb, var(--color-primary) 60%, transparent);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--t-base) var(--ease-out),
-                visibility var(--t-base);
-    z-index: var(--z-dropdown);
-  }
-
-  .nav-backdrop.is-visible {
-    opacity: 1;
-    visibility: visible;
+  .navbar__actions .lang-switch {
+    display: none;
   }
 }
 
@@ -193,6 +147,12 @@
     --section-pad-y: clamp(3rem, 1.5rem + 5vw, 5rem);
     --container-pad: clamp(1.25rem, 0.5rem + 4vw, 2rem);
     --glass-blur: 14px;
+  }
+
+  /* Phone-width header is logo + burger only; the CTA still lives in the
+     drawer's footer. With it, the German row needs ~402px and overflows. */
+  .navbar__actions .btn {
+    display: none;
   }
 
   /* Blur is the main scroll-jank risk on mid-range phones: shrink the radius
@@ -424,6 +384,13 @@
 @media (max-width: 540px) {
   :root {
     --container-pad: 1.25rem;
+  }
+
+  /* An 18px checkbox is a hard target on a phone even with the label as a
+     second hit area. */
+  .field--consent .field__input {
+    width: 22px;
+    height: 22px;
   }
 
   /* Stats grid single column */
