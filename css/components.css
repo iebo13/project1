@@ -1226,21 +1226,35 @@
   gap: var(--space-2);
 }
 
+/* Every dot owns a fixed 28px slot; the visible dot is the ::before, which
+   fills the slot when active. Growing in place — instead of widening the
+   button, which pushed the neighbouring dots apart and slid them sideways on
+   every slide change — keeps the four centers on an even grid. */
 .slider__dot {
-  width: 10px;
+  width: 28px;
   height: 10px;
-  /* --radius-pill, not --radius-full: 50% draws an ellipse once .is-active
-     widens the box to 28×10. */
-  border-radius: var(--radius-pill);
-  background: var(--color-border);
+  padding: 0;
+  background: transparent;
   border: none;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background var(--t-base) var(--ease-out),
-              width var(--t-base) var(--ease-out);
+  position: relative;
 }
 
-.slider__dot.is-active {
-  width: 28px;
+.slider__dot::before {
+  content: '';
+  position: absolute;
+  /* 9px each side leaves a 10px circle centered in the slot */
+  inset: 0 9px;
+  /* --radius-pill, not --radius-full: 50% draws an ellipse once the active
+     state stretches this to 28×10. */
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  transition: inset var(--t-base) var(--ease-out);
+}
+
+.slider__dot.is-active::before {
+  inset: 0;
   background: var(--gradient-primary);
 }
 

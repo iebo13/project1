@@ -133,22 +133,41 @@ test('brand wordmarks are readable against the dark reviews band', async ({ page
   }).toPass({ timeout: 5000 });
 });
 
-// The active testimonial dot widens into a pill (28×10). A percentage
-// border-radius draws an ellipse on that non-square box — a tapered blob that
-// reads as a misplaced highlight — so the radius must be an absolute length
-// of at least half the height (a capsule).
-test('active testimonial dot renders as a capsule, not an ellipse', async ({ page }) => {
+// The active testimonial dot grows into a pill inside a fixed-width slot.
+// It used to widen the button itself, which pushed its neighbours sideways:
+// the four centers were unevenly spaced and the whole row shifted on every
+// slide change, so the highlight never sat on the dots' grid.
+test('dot highlight sits on the dot grid and never shifts its neighbours', async ({ page }) => {
   await page.goto('/');
-  const dot = page.locator('.slider__dot.is-active');
-  // The width transitions 10px → 28px when is-active first lands; poll past it.
-  await expect.poll(async () => {
-    const r = await dot.boundingBox();
-    return r.width / r.height;
-  }).toBeGreaterThan(2);
-  const { height, radius } = await dot.evaluate((el) => ({
-    height: el.getBoundingClientRect().height,
-    radius: getComputedStyle(el).borderTopLeftRadius,
-  }));
+  // Settle like a real user: reveal finished before interacting. Clicking
+  // mid-reveal makes Playwright's scroll-into-view race the transition and
+  // spuriously scroll the overflow-hidden .slider sideways.
+  await page.locator('#reviews').scrollIntoViewIfNeeded();
+  await expect(page.locator('.slider')).toHaveClass(/is-visible/);
+  await page.waitForTimeout(900);
+
+  const dots = page.locator('.slider__dot');
+  // Centers relative to the row, so ancestor scrolling can't skew the reading.
+  const centers = () => dots.evaluateAll((els) => {
+    const left = els[0].parentElement.getBoundingClientRect().x;
+    return els.map((el) => { const r = el.getBoundingClientRect(); return r.x + r.width / 2 - left; });
+  });
+
+  const before = await centers();
+  const gaps = before.slice(1).map((c, i) => c - before[i]);
+  for (const g of gaps) expect(g, 'dot centers must be evenly spaced').toBeCloseTo(gaps[0], 0);
+
+  await page.locator('.slider__btn--next').click();
+  await expect(dots.nth(1)).toHaveClass(/is-active/);
+  const after = await centers();
+  after.forEach((c, i) => expect(c, 'moving the highlight must not move the dots').toBeCloseTo(before[i], 0));
+
+  // The visible pill is the ::before; a percentage radius would draw a
+  // tapered ellipse on its non-square active box instead of a capsule.
+  const { radius, height } = await dots.nth(1).evaluate((el) => {
+    const s = getComputedStyle(el, '::before');
+    return { radius: s.borderTopLeftRadius, height: parseFloat(s.height) };
+  });
   expect(radius, 'percentage radii draw an ellipse on a non-square element').toMatch(/px$/);
   expect(parseFloat(radius)).toBeGreaterThanOrEqual(height / 2);
 });
