@@ -172,6 +172,26 @@ test('dot highlight sits on the dot grid and never shifts its neighbours', async
   expect(parseFloat(radius)).toBeGreaterThanOrEqual(height / 2);
 });
 
+// The footer contact block shipped unstyled: it inherited the 17px base font
+// next to the column's 15px --fs-sm text, and sat flush against the
+// newsletter pill with zero vertical gap.
+test('footer contact block matches the column type scale and clears the form', async ({ page }) => {
+  await page.goto('/');
+  const col = page.locator('.footer__newsletter');
+  await col.scrollIntoViewIfNeeded();
+  const { pSize, contactSize, gap } = await col.evaluate((el) => {
+    const contact = el.querySelector('.footer__contact');
+    const form = el.querySelector('.newsletter-form');
+    return {
+      pSize: getComputedStyle(el.querySelector('p')).fontSize,
+      contactSize: getComputedStyle(contact).fontSize,
+      gap: contact.getBoundingClientRect().top - form.getBoundingClientRect().bottom,
+    };
+  });
+  expect(contactSize, 'contact lines must use the same size as the column copy').toBe(pSize);
+  expect(gap, 'the contact block must not touch the newsletter pill').toBeGreaterThanOrEqual(16);
+});
+
 test('interior heroes lead with the breadcrumb, left-aligned', async ({ page }) => {
   await page.goto('/kontakt/');
   const first = page.locator('.page-hero__content > *').first();

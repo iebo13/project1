@@ -1106,7 +1106,7 @@ section[id] {
 .footer__newsletter p {
   font-size: var(--fs-sm);
   line-height: var(--lh-relaxed);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
 .newsletter-form {
@@ -1116,6 +1116,10 @@ section[id] {
   border: 1px solid color-mix(in srgb, var(--color-white) 10%, transparent);
   border-radius: var(--radius-pill);
   padding: var(--space-2);
+  /* Symmetric breathing room: the pill gets --space-6 above (the paragraph's
+     margin) and below, so it reads as its own object rather than leaning on
+     the contact block. */
+  margin-bottom: var(--space-6);
   transition: border-color var(--t-base) var(--ease-out);
 }
 
@@ -1129,7 +1133,10 @@ section[id] {
   background: none;
   border: none;
   color: var(--color-white);
-  padding: var(--space-2) var(--space-4);
+  /* 20px inline: with the wrapper's 8px padding + 1px border the text starts
+     ~29px in — the tangent of the pill's end cap — instead of inside the
+     curve, where it looks cramped. */
+  padding: var(--space-2) var(--space-5);
   font-size: var(--fs-sm);
 }
 
@@ -1162,6 +1169,13 @@ section[id] {
 .newsletter-form svg {
   width: 18px;
   height: 18px;
+}
+
+.footer__contact {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
 }
 
 .footer__bottom {

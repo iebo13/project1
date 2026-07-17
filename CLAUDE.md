@@ -19,7 +19,7 @@ described below as a known gap is deliberately deferred, not forgotten.
 ```bash
 npm start                     # dev server on http://localhost:8080, rebuilds on change
 npm run build                 # writes static output to _site/
-npm test                      # 3 build-output tests + 140 Playwright tests
+npm test                      # 3 build-output tests + 142 Playwright tests
 npm run test:build            # just the build-output tests (fast, no browser)
 npm run test:update-snapshots # regenerate visual baselines for *intentional* visual changes only
 ```
@@ -177,7 +177,7 @@ Markup opts into JS behaviour declaratively: `data-reveal` (+ `data-reveal-delay
 
 ## Testing
 
-Playwright ([playwright.config.js](playwright.config.js)) is both the test runner and the visual-regression harness, run across two projects (`desktop`, `mobile`). 140 tests, covering smoke checks, hero content, heading and dark-band contrast, native form validation, navbar geometry in both languages, translation coverage ([tests/i18n.spec.js](tests/i18n.spec.js)), and 10 committed visual baselines under `tests/visual.spec.js-snapshots/`.
+Playwright ([playwright.config.js](playwright.config.js)) is both the test runner and the visual-regression harness, run across two projects (`desktop`, `mobile`). 142 tests, covering smoke checks, hero content, heading and dark-band contrast, native form validation, navbar geometry in both languages, translation coverage ([tests/i18n.spec.js](tests/i18n.spec.js)), and 10 committed visual baselines under `tests/visual.spec.js-snapshots/`.
 
 [tests/i18n.spec.js](tests/i18n.spec.js) is worth knowing about: it scans every German page for English strings that appeared in the pre-migration markup, so the "only the nav translates" bug cannot come back silently.
 
